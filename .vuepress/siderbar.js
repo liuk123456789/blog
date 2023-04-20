@@ -43,6 +43,6 @@ module.exports = {
     createSideBarConfig('rollup', ROLL_UP_PATH)
   ],
   [CI_PATH]: [
-    createSideBarConfig('ci', CI_PATH + '/github-actions')
+    createSideBarConfig('github actions', CI_PATH + '/github-actions')
   ]
 }
