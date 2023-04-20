@@ -59,7 +59,7 @@ module.exports = {
           {
             "text": "Github",
             "link": "https://github.com/liuk123456789/blog",
-            "icon" "reco-github"
+            "icon": "reco-github"
           }
         ]
       }
