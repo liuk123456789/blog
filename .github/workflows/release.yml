@@ -27,9 +27,9 @@ jobs:
       - name: Copy Public file with SCP
         uses: appleboy/scp-action@v0.0.1
         with: 
-          host: ${{secrets.SECRET_HOST}}
-          username: ${{secrets.SECRET_NAME}}
-          password: ${{secrets.SECRET_PWD}}
+          host: ${{ secrets.SECRET_HOST }}
+          username: ${{ secrets.SECRET_NAME }}
+          password: ${{ secrets.SECRET_PWD }}
           port: 22
           souce: 'public/'
-          target: ${{secrets.SECRET_TARGET}}
+          target: ${{ secrets.SECRET_TARGET }}
