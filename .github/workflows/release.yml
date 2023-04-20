@@ -24,12 +24,12 @@ jobs:
         # 打包应用
         run: npm run build
       # 拷贝打包的资源public
-      - name: Copy Public file with SCP
-        uses: appleboy/scp-action@v0.0.1
-        with: 
-          host: ${{ secrets.SECRET_HOST }}
-          username: ${{ secrets.SECRET_NAME }}
-          password: ${{ secrets.SECRET_PWD }}
+      - name: copy file via ssh password
+        uses: appleboy/scp-action@master
+        with:
+          host: ${{ secrets.REMOTE_HOST }}
+          username: ${{ secrets.REMOTE_USER }}
+          password: ${{ secrets.REMOTE_PASS }}
           port: 22
-          source: 'public/'
-          target: ${{ secrets.SECRET_TARGET }}
+          source: "docs/"
+          target: ${{ secrets.REMOTE_TARGET }}  
