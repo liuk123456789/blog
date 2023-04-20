@@ -60,8 +60,7 @@ sidebar: auto
 
 3.  `actions secrets`的设置
 
-   上面我们可以看到使用`${{ secrets.REMOTE_HOST }}`等变量形式，所以这里的变量是如何配置呢，步骤如下
+   上面我们可以看到使用`REMOTE_HOST`等变量形式，所以这里的变量是如何配置呢，步骤如下
 
-   
 
 4. 
