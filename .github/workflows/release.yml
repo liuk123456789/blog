@@ -31,5 +31,5 @@ jobs:
           username: ${{ secrets.SECRET_NAME }}
           password: ${{ secrets.SECRET_PWD }}
           port: 22
-          souce: 'public/'
+          source: 'public/'
           target: ${{ secrets.SECRET_TARGET }}
