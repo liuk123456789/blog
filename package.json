@@ -1,0 +1,15 @@
+{
+  "name": "my-blog",
+  "version": "1.0.0",
+  "author": "crazyLay",
+  "scripts": {
+    "dev": "vuepress dev . --open --host \"localhost\"",
+    "build": "vuepress build .",
+    "deploy": "bash deploy.sh"
+  },
+  "devDependencies": {
+    "vuepress": "1.8.2",
+    "vuepress-theme-reco": "1.6.16"
+  },
+  "description": ""
+}
