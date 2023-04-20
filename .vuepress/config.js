@@ -58,11 +58,8 @@ module.exports = {
         "items": [
           {
             "text": "Github",
-            "link": "https://github.com/liuk123456789/my-blog",
-          },
-          {
-            "text": "Gitee",
-            "link": "https://gitee.com/crazylay/my-blog",
+            "link": "https://github.com/liuk123456789/blog",
+            "icon" "reco-github"
           }
         ]
       }
