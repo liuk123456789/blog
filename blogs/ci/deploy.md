@@ -2,7 +2,7 @@
 title: github actions流水线
 date: 2023-04-20
 categories:
- - ci
+ - CI
 tags:
  - github actions
 sidebar: auto
