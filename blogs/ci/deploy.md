@@ -45,16 +45,20 @@ sidebar: auto
          - name: Build
            # 打包应用
            run: npm run build
-         # 利用scp拷贝打包的资源 public
+         	# 拷贝打包的资源public
          - name: copy file via ssh password
-           uses: appleboy/scp-action@master
+           # 因为构建之后，需要把代码上传到服务器上，所以需要连接到ssh，并且做一个拷贝操作
+           uses: cross-the-world/scp-pipeline@master
+           env:
+             WELCOME: "ssh scp ssh pipelines"
+             LASTSSH: "Doing something after copying"
            with:
              host: ${{ secrets.REMOTE_HOST }}
-             username: ${{ secrets.REMOTE_USER }}
-             password: ${{ secrets.REMOTE_PASS }}
-             port: 22
-             source: "public/"
-             target: ${{ secrets.REMOTE_TARGET }}  
+             user: ${{ secrets.REMOTE_USER }}
+             pass: ${{ secrets.REMOTE_PASS }}
+             connect_timeout: 10s
+             local: './public/*'
+             remote: /home/my-blog
    
    ```
 
@@ -62,7 +66,9 @@ sidebar: auto
 
    上面我们可以看到使用`REMOTE_HOST`等变量形式，所以这里的变量是如何配置呢，步骤如下
    
-   
+   1. ![Dingtalk_20230421103726](/my-blog/ci/actions/Dingtalk_20230421103726.jpg)
+   2. ![Dingtalk_20230421104049](/my-blog/ci/actions/Dingtalk_20230421104049.jpg)
+   3. ![Dingtalk_20230421104150](/my-blog/ci\actions/Dingtalk_20230421104150.jpg)
 
 
 4. 提交代码时，便会触发流水线
@@ -98,9 +104,15 @@ sidebar: auto
        }
    ```
 
-   
+6. 然后重新启动下`nginx`
 
-6. 然后启动下nginx
+   ```shell
+   systemctl start nginx
+   ```
+
+7. 效果图
+
+   ![image-20230421103355889](/my-blog/ci/actions/image-20230421103355889.png)
 
 ## TODO
 
