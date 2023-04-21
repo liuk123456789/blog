@@ -8,7 +8,7 @@ tags:
 sidebar: auto
 ---
 
-## 1. 使用github Actions 进行流水线作业
+## 使用github Actions 部署博客
 
 1. `github`新建`workflow`
 
@@ -61,6 +61,47 @@ sidebar: auto
 3.  `actions secrets`的设置
 
    上面我们可以看到使用`REMOTE_HOST`等变量形式，所以这里的变量是如何配置呢，步骤如下
+   
+   
 
 
-4. 
+4. 提交代码时，便会触发流水线
+
+   ![image-20230420232821542](/my-blog/ci/actions/image-20230420232821542.png)
+
+5. 我们需要配置下服务器的nginx,核心代码如下
+
+   ```nginx
+   server {
+           listen       80;
+           listen       [::]:80;
+           server_name  _;
+           root         /usr/share/nginx/html;
+   
+           # Load configuration files for the default server block.
+           include /etc/nginx/default.d/*.conf;
+           
+           # 因为我的博客basicUrl是:/my-blog/, 所以location这里匹配使用basicUrl
+           location /my-blog/ {
+             # 项目打包后的存在在服务器的地址
+             alias /home/my-blog/;
+             index index.html;
+           }
+   
+           error_page 404 /404.html;
+           location = /404.html {
+           }
+   
+           error_page 500 502 503 504 /50x.html;
+           location = /50x.html {
+           }
+       }
+   ```
+
+   
+
+6. 然后启动下nginx
+
+## TODO
+
+因为`github Action`涉及到很多的玩法，这里只是简单的发布，可以参考官方文档进行相应的配置
