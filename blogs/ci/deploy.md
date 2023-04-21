@@ -68,7 +68,7 @@ sidebar: auto
    
    1. ![Dingtalk_20230421103726](/my-blog/ci/actions/Dingtalk_20230421103726.jpg)
    2. ![Dingtalk_20230421104049](/my-blog/ci/actions/Dingtalk_20230421104049.jpg)
-   3. ![Dingtalk_20230421104150](/my-blog/ci\actions/Dingtalk_20230421104150.jpg)
+   3. ![Dingtalk_20230421104150](/my-blog/ci/actions/Dingtalk_20230421104150.jpg)
 
 
 4. 提交代码时，便会触发流水线
@@ -87,7 +87,7 @@ sidebar: auto
            # Load configuration files for the default server block.
            include /etc/nginx/default.d/*.conf;
            
-           # 因为我的博客basicUrl是:/my-blog/, 所以location这里匹配使用basicUrl
+           # 因为我的博客baseUrl是/my-blog/, 所以location这里匹配使用basicUrl
            location /my-blog/ {
              # 项目打包后的存在在服务器的地址
              alias /home/my-blog/;
@@ -107,7 +107,7 @@ sidebar: auto
 6. 然后重新启动下`nginx`
 
    ```shell
-   systemctl start nginx
+   systemctl reload nginx
    ```
 
 7. 效果图
