@@ -27,6 +27,6 @@ jobs:
           # Personal Access Token with permission to the repository
           githubToken: ${{secrets.GITHUB_TOKEN}}
           # Repository to push building page
-          repo: git@github.com:liuk123456789/my-blog.git
+          repo: liuk123456789/my-blog
           # Branch to push building page
           branch: gh-pages
