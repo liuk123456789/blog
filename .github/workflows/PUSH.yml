@@ -19,14 +19,14 @@ jobs:
       # 安装依赖
       - name: Installing Dependencies
         run: npm install
-      - name: GitHub Push
+      - name: Cobalt deploy gh-pages
         # You may pin to the exact commit or the version.
-        # uses: ad-m/github-push-action@40bf560936a8022e68a3c00e7d2abefaf01305a6
-        uses: ad-m/github-push-action@v0.6.0
+        # uses: saidgeek/cobalt-deploy-gh-pages@1cacc6d9853c34da0b29a61c8114fec2df5de0cd
+        uses: saidgeek/cobalt-deploy-gh-pages@v1.0.0
         with:
-          # Token for the repo. Can be passed in using $\{{ secrets.GITHUB_TOKEN }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          # Repository name to push. Default or empty value represents current github repository (${GITHUB_REPOSITORY})
-          repository: 'git@github.com:liuk123456789/my-blog.git'
-          # Destination branch to push changes
-          branch: master:gh-pages
+          # Personal Access Token with permission to the repository
+          githubToken: ${{secrets.GITHUB_TOKEN}}
+          # Repository to push building page
+          repo: git@github.com:liuk123456789/my-blog.git
+          # Branch to push building page
+          branch: gh-pages
