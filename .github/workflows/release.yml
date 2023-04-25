@@ -37,3 +37,9 @@ jobs:
           connect_timeout: 10s
           local: './public/*'
           remote: /home/my-blog
+        - name: Deploy gh-pages
+          uses: JamesIves/github-pages-deploy-action@releases/v3
+          with:
+            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            BRANCH: gh-pages # The branch the action should deploy to.
+            FOLDER: public # The folder the action should deploy.
