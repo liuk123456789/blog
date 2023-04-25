@@ -10,7 +10,7 @@ jobs:
     steps:
       # 拉取项目代码
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       # 给当前环境下载node
       - name: Use Node.js
         uses: actions/setup-node@v2.5.2
@@ -38,9 +38,38 @@ jobs:
           local: './public/*'
           remote: /home/my-blog
       # Deploy gh page
-      - name: Deploy gh-pages
-        uses: JamesIves/github-pages-deploy-action@releases/v3
+      - name: GitHub Pages
+        # You may pin to the exact commit or the version.
+        # uses: crazy-max/ghaction-github-pages@c0d7ff0487ee0415efb7f32dab10ea880330b1dd
+        uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages # The branch the action should deploy to.
-          FOLDER: public # The folder the action should deploy.
+          # Git domain (default github.com)
+          domain: github.com
+          # GitHub repository where assets will be deployed (default $GITHUB_REPOSITORY)
+          repo: liuk123456789/my-blog
+          # Git branch where assets will be deployed
+          target_branch: gh-pages
+          # Create incremental commit instead of doing push force
+          keep_history: false
+          # Allow an empty commit to be created
+          allow_empty_commit: true
+          # Build directory to deploy
+          build_dir: ./public
+          # Whether to treat build_dir as an absolute path
+          absolute_build_dir: false
+          # If enabled, the content of symbolic links will be copied
+          follow_symlinks: false
+          # The committer name and email address
+          committer: liuk123456789<18329177975@163.com>
+          # The author name and email address
+          author: kona
+          # Commit message
+          commit_message: Deploy
+          # Write the given domain name to the CNAME file
+          # fqdn: # optional
+          # Allow Jekyll to build your site
+          jekyll: true
+          # If enabled, nothing will be pushed
+          dry_run: false
+          # Enable verbose output
+          verbose: false
