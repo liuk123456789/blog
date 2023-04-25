@@ -43,10 +43,11 @@ jobs:
         # uses: crazy-max/ghaction-github-pages@c0d7ff0487ee0415efb7f32dab10ea880330b1dd
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
+          GITHUB_TOKEN : ${secrets.GITHUB_TOKEN},
           # Git domain (default github.com)
           domain: github.com
           # GitHub repository where assets will be deployed (default $GITHUB_REPOSITORY)
-          repo: liuk123456789/my-blog
+          repo: liuk123456789/blog
           # Git branch where assets will be deployed
           target_branch: gh-pages
           # Create incremental commit instead of doing push force
