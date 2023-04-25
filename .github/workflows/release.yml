@@ -47,3 +47,4 @@ jobs:
           build_dir: public
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_PAT: ${{ secrets.ACCESS_TOKEN }}
