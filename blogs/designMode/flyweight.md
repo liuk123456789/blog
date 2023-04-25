@@ -2,7 +2,7 @@
 title: 享元模式
 date: 2023-02-09
 categories: 
- - design partten
+ - Design Partten
 tags:
  - flyweight
 sidebar: auto

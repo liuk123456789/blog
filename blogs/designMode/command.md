@@ -2,7 +2,7 @@
 title: 命令模式
 date: 2023-02-08
 categories: 
- - design partten
+ - Design Partten
 tags:
  - command
 sidebar: auto

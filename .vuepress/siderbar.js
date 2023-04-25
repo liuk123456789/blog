@@ -9,6 +9,8 @@ const TS_PATH = '/blogs/ts'
 const SOURCE_PATH = '/blogs/source'
 const ROLL_UP_PATH = '/blogs/rollup'
 const CI_PATH = '/blogs/ci'
+const NODE_PATH = '/blogs/Node'
+const LINUX_PATH = '/blogs/Linux'
 
 module.exports = {
   [ES6_PATH]: [
@@ -43,6 +45,12 @@ module.exports = {
     createSideBarConfig('rollup', ROLL_UP_PATH)
   ],
   [CI_PATH]: [
-    createSideBarConfig('CI', CI_PATH)
+    createSideBarConfig('ci', CI_PATH)
+  ],
+  [NODE_PATH]: [
+    createSideBarConfig('Node', NODE_PATH)
+  ],
+  [LINUX_PATH]: [
+    createSideBarConfig('Linux', LINUX_PATH)
   ]
 }

@@ -1,10 +1,10 @@
 ---
-title: sass的基本用法
+title: Sass的基本用法
 date: 2023-01-12
 categories: 
- - sass
+ - Sass
 tags:
- - sass basic usage
+ - Sass basic usage
 sidebar: auto
 ---
 

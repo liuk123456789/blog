@@ -1,10 +1,10 @@
 ---
-title: sass的进阶用法
+title: Sass的进阶用法
 date: 2023-01-13
 categories: 
- - sass
+ - Sass
 tags:
- - sass advance usage
+ - Sass advance usage
 sidebar: auto
 ---
 

@@ -1,10 +1,10 @@
 ---
-title: rollup 基础用法
+title: Rollup 基础用法
 date: 2023-04-12
 categories: 
- - rollup 
+ - Rollup 
 tags:
- - rollup basic
+ - Rollup basic
 sidebar: auto
 ---
 

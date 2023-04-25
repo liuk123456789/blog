@@ -1,10 +1,10 @@
 ---
-title: rollup 打包实践
+title: Rollup 打包实践
 date: 2023-04-14
 categories: 
- - rollup 
+ - Rollup 
 tags:
- - rollup library
+ - Rollup library
 sidebar: auto
 ---
 

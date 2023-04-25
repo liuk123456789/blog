@@ -1,10 +1,10 @@
 ---
-title: sass的内置模块
+title: Sass的内置模块
 date: 2023-01-13
 categories: 
- - sass
+ - Sass
 tags:
- - sass built-in module
+ - Sass built-in module
 sidebar: auto
 ---
 

@@ -2,7 +2,7 @@
 title: 状态模式
 date: 2023-03-02
 categories: 
- - design partten
+ - Design Partten
 tags:
  - state
 sidebar: auto
