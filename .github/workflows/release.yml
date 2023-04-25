@@ -41,6 +41,8 @@ jobs:
         # uses: crazy-max/ghaction-github-pages@c0d7ff0487ee0415efb7f32dab10ea880330b1dd
         uses: crazy-max/ghaction-github-pages@v3.1.0
         with:
+          domain: github.com
+          repo: ${{ secrets. GH_PAGE_REPO }}
           target_branch: gh-pages
           build_dir: public
         env:
