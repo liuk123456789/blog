@@ -117,3 +117,34 @@ sidebar: auto
 ## TODO
 
 因为`github Action`涉及到很多的玩法，这里只是简单的发布，可以参考官方文档进行相应的配置
+
+
+
+## 2023.04.26
+
+因为博客还通过`github page`部署了，原先是通过项目中的`deploy.sh`的脚本部署，觉得这样太过于麻烦，所以使用`github action`完成部署
+
+我们需要修改的就是`release.yml`，修改如下
+
+```yaml
+- name: Deploy GitHub Pages site
+	# uses: crazy-max/ghaction-github-			     pages@c0d7ff0487ee0415efb7f32dab10ea880330b1dd
+	uses: crazy-max/ghaction-github-pages@v3.1.0
+    with:
+      target_branch: gh-pages
+      build_dir: public
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+```
+
+💡：GITHUB_TOKEN是自动生成的，我们无需在`action`的`secrets`中进行配置，我们也可以使用`github.token`进行替换
+
+我们看下`CI`的结果是否可以正常跑通
+
+![image-20230426094657890](/my-blog/ci/actions/image-20230426094657890.png)
+
+复制`github page`的`site`，看下博客是否正常
+
+![image-20230426094917339](/my-blog/ci/actions/image-20230426094917339.png)
+
+正常发布了，这样的话，我们每次提交代码的时候，都会自动部署到服务器&`github page`
