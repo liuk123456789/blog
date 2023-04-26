@@ -10,6 +10,7 @@ const SOURCE_PATH = '/blogs/source'
 const ROLL_UP_PATH = '/blogs/rollup'
 const CI_PATH = '/blogs/ci'
 const LINUX_PATH = '/blogs/Linux'
+const WEBPACK_PATH = '/blogs/Webpack'
 
 module.exports = {
   [ES6_PATH]: [
@@ -48,5 +49,8 @@ module.exports = {
   ],
   [LINUX_PATH]: [
     createSideBarConfig('Linux', LINUX_PATH)
+  ],
+  [WEBPACK_PATH]: [
+    createSideBarConfig('Webpack', WEBPACK_PATH)
   ]
 }
