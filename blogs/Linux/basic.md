@@ -599,6 +599,411 @@ chown root test
 
 `ctrl + l/ clear`清空终端内容
 
+### 软件安装包
+
+#### yum
+
+含义：RPM包软件管理器，用于自动化安装配置Linux软件，并可以自动解决依赖问题
+
+语法：`yum [-y] [install | remove | search]  软件名称`
+
+- 选项： -y，自动确认，无需手动确认安装或卸载过程
+- install: 安装
+- remove: 卸载
+- search:搜索
+
+yum命令需要root权限哦，可以su切换到root，或使用sudo提权
+
+yum命令需要联网
+
+### systemctl
+
+含义：控制软件的启动、停止、开启
+
+能够被`systemctl`管理的软件，也被称之为服务
+
+语法:`systemctl start | stop | status | enable | disable 服务名`
+
+系统内置服务比较多，比如：
+
+- NetworkManager,主网络服务
+- network，副网络服务
+- firewalld，防火墙服务
+- sshd,ssh服务（FinalShell远程登录Linux使用的就是这个服务）
+
+###  ln 创建软连接
+
+含义：在系统中创建软连接，可以将文件、文件夹链接到其他位置
+
+语法：`ln -s 参数1 参数2`
+
+- -s 选项，创建软连接
+- 参数1：被链接的文件或文件夹
+- 参数2：要链接去的目的地
+
+实例：
+
+- `ln -s /etc/yum.conf~/yum.conf`
+- `ln -s /etc/yum~/yum`
+
+```bash
+cd
+ln -s /etc/yum ~/yum
+ln -s /etc/yum.conf ~/yum.conf
+```
+
+### 日期和时区
+
+#### date
+
+语法：`date  [-d] [+格式化字符串]`
+
+- -d 按照给定的字符串显示日期，一般用于日期计算
+
+- 格式化字符串：通过特定的字符串标记，来控制显示的日期格式
+
+  - %Y 年
+
+  - %y 年分后两位数字
+
+  - %m 月份
+
+  - %d 日
+
+  - %H 小时
+
+  - %M 分钟
+
+  - %S 秒
+
+  - %s 自1970-01-01 00:00:00 UTC 到现在的秒数
+
+    ```bash
+    date +%Y-%m-%d
+    date "+%Y-%m-%d %H:%M:%S"
+    ```
+
+`date`命令进行日期加减
+
+- -d选项，可以按照给定的字符串显示日期，一般用于日期计算
+
+- 支持的时间标记：
+
+  - year年
+  - Month月
+  - day天
+  - hour小时
+  - Minute分钟
+  - second秒
+
+- -d 选项可以和格式化字符串配合使用
+
+  ```bash
+  # 2024
+  date -d "+1 year" +%Y
+  # 2022
+  date -d "-1 year" +%Y
+  # 2023-04-26
+  date -d "+1 day" +%Y-%m-%d
+  # 2023-04-24
+  date -d "-1 day" +%Y-%m-%d
+  # 05
+  date -d "+1 Month" +%m
+  # 03
+  date -d "-1 Month" +%m
+  # 26
+  date -d "+1 day" +%d
+  # 24
+  date -d "-1 day" +%d
+  ```
+
+  💡：以上结果不准是因为时区的原因，下面会说到修改时区的问题
+
+#### 时区
+
+1. 修改时区：通过删除本地时间文件
+
+   ```bash
+   su - root
+   rm -f /etc/localtime
+   ln -s /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+   ```
+
+2. 时间校准：ntp时间校准
+
+   ```bash
+   su - root
+   yum -y install ntp
+   # 启动并设置开机自启
+   systemctl start ntpd
+   systemctl enable ntpd
+   ```
+
+   手动校准（需要root权限）
+
+   ```bash
+   # 26 Apr 11:49:25 ntpdate[66958]: adjust time server 203.107.6.88 offset 0.000370 sec
+   
+   ntpdate -u ntp.aliyun.com
+   ```
+
+### IP地址&主机名
+
+#### IP地址
+
+查看`ip`地址，可以使用`ifconfig`，如果无法使用可以安装：`yum -y install net-tools`
+
+#### 主机名
+
+查看主机名：`hostname`
+
+修改主机名：`hostnamectl set-hostname 主机名`，需要`root`权限
+
+#### 配置主机名和IP的映射关系
+
+`FinalShell(windows)`: 修改`C:\Windows\System32\drivers\etc\hosts`配置`IP`和`主机`映射关系
+
+`linux`: 修改`/etc/hosts`配置`IP`和`主机`映射关系
+
+#### 固定IP地址
+
+`VMware`中配置
+
+修改`vim /etc/sysconfig/network-scripts/ifcfg-ens33`
+
+```
+# IP地址
+IPADDR="192.168.154.30"
+# 子网掩码
+NETMASK="255.255.255.0"
+# 网关
+GATEWAY="192.168.154.2"
+# DNS
+DNS1="192.168.154.2"
+```
+
+#### ping
+
+用于检查网络服务器是否是可联通状态
+
+语法：`ping [-c num] ip或主机名`
+
+- 选项：-c，检查的次数，不使用-c选项，将无限次数持续检查
+- 参数：ip或主机名，被检查的服务器的ip地址或主机名地址
+
+```bash
+ping baidu.com
+ping 33.56.88.20
+```
+
+#### wget
+
+`wget`是非交互式的文件下载器，可以在命令行内下载网络文件
+
+语法：`wget [-b] url`
+
+- 选项：-b，可选，后台下载，会将日志写入到当前工作目录的`wget-log`文件
+- 参数：url，下载链接
+
+#### curl
+
+`curl`可以发送http网络请求，可用于：下载文件、获取信息等
+
+语法：`curl [-O] url`
+
+- 选项：-O,用于下载文件，当url是下载链接时，可以使用此选项保存文件
+- 参数：url，要发起请求的网路地址
+
+
+### 进程
+
+程序运行在操作系统中，是被操作系统所管理的
+
+为管理运行的程序，每一个程序在运行的时候，便被操作系统注册为系统中的一个：进程
+
+并会为每一个进程分配一个独有的：进程ID
+
+#### 查看进程
+
+语法：`ps [-e -f]`
+
+- 选项：-e，显示全部进程
+- 选项：-f，完成格式化的形式展示信息
+
+```bash
+ps -ef
+# UID         PID   PPID  C STIME TTY          TIME CMD
+# root          1      0  0 23:30 ?        00:00:04 # /usr/lib/systemd/systemd --switc
+# root          2      0  0 23:30 ?        00:00:00 [kthreadd]
+# root          3      2  0 23:30 ?        00:00:00 [ksoftirqd/0]
+# root          4      2  0 23:30 ?        00:00:00 [kworker/0:0]
+# root          5      2  0 23:30 ?        00:00:00 [kworker/0:0H]
+# root          6      2  0 23:30 ?        00:00:00 [kworker/u256:0]
+
+```
+
+从左到右分别是：
+
+- UID: 进程所属用户
+- PID: 进程的进程号
+- PPD: 进程的父ID(启动此进程的其他进程)
+- C: 此进程的CPU占用率
+- STIME: 进程的启动时间
+- TTY: 启动此进程的终端序号，如显示？，则表示非终端启动
+- TIME: 进程占用CPU的时间
+- CMD: 进程的启动命令或路径
+
+#### 关闭进程
+
+语法：`kill [-9] 进程ID`
+
+- 选项：-9，表示强制关闭进程。不使用此选项会向进程发送信号要求关闭，但是否关闭看进程自身的处理机制
+
+### 主机状态监控
+
+#### 查看系统资源占用
+
+语法：`top`
+
+`top`命令内容详解
+
+TODO: ppt搬过来
+
+- 选项： -p 只显示某个进程的信息 `top -p 进程id`
+- 选项： -d 设置刷新时间，默认5s
+- 选项： -c 显示产生进程的完整命令，默认是进程名
+- 选项： -n 执行刷新次数`top -n 次数`
+- 选项： -b  以非交互非全屏模式运行，以批次方式执行`top`，一般配合`-n`指定输出几次统计信息，将输出重定向到指定文件，如：`top -b -n 3 > /temp/top.tmp`
+- 选项： -i 不显示任何闲置（idle)或无用（zombie）的进程
+- 选项：-u 查找特定用户启动的进程`top -u user`
+
+#### top交互式选项
+
+交互式模式中，可用快捷键：
+
+![image-20221027221354137](/my-blog/linux/20221027221354.png)
+
+#### 磁盘信息监控
+
+语法：`df [-h ]`
+
+选项：-h,更人性化的单位显示
+
+可以使用`iosstat`查看`CPU`、磁盘的相关信息
+
+语法：`iostat [-x] [num1][num2]`
+
+- 选项： -x，显示更多信息
+- num1: 数字，刷新间隔，num2: 数字，刷新几次 
+
+#### 网络状态监控
+
+语法：`sar -n DEV num1 num2`
+
+选项： -n，查看网络，DEV表示查看网络接口
+
+num1: 刷新间隔（不填就查看一次结束），num2: 查看次数（不填无限次数） 
+
+### 环境变量
+
+- 临时设置：export 变量名=变量值
+
+- 永久设置：
+  - 针对用户，设置用户HOME目录内：`.bashrc`文件
+  
+    ```bash
+    vim ~/.bashrc
+    ```
+  
+  - 针对全局，设置`/etc/profile`
+  
+    ```bash
+    su -
+    vim /etc/profile
+    # 让配置生效
+    source /etc/profile
+    # ***代表配置的变量名，example:echo $customEnv
+    echo $***
+    ```
+  
+    
+
+### PATH变量
+
+记录执行程序的搜索路径
+
+可以将自定义路径加入PATH内，实现自定义命令在任意地方均可执行的效果
+
+### $符号
+
+可以取出指定的环境变量的值
+
+语法：`$变量名`
+
+示例：
+
+`echo $PATH`,输出PATH环境变量的值
+
+`echo ${PATH}ABC`,输出PATH环境变量的值以及ABC
+
+如果变量名和其他内容混淆在一起，可以使用${}
+
+### 文件上传和下载
+
+安装服务：`yum -y install lrzsz`
+
+下载：`sz ***.gz`
+
+上传：`rz`
+
+### 解压缩
+
+1. tar
+
+   语法：`tar [-c -v -x -f- z- C] 参数1 参数2 ... 参数N`
+
+   - -c：创建压缩文件，用于压缩模式
+   - -v：显示压缩、解压过程，用于查看进度
+   - -x：解压模式
+   - -f：要创建的文件，或要解压的文件，-f选项必须在所有选项中位置处于最后一个
+   -  -z：gzip模式，不适用-z就是普通的tarball模式
+   - -C: 选择解压的目的地，用于 解压模式
+
+   **tar压缩常用的组合**
+
+   - `tar -cvf test.tar 1.txt 2.text 3.txt`
+   - `tar -zcvf test.tar.gz 1.txt 2.txt 3.txt`
+
+   注意：
+
+   - -z选项如果使用的话，一般处于选项位第一个
+   - -f选项，必须在选项位最后一个
+
+   **tar解压常用组合**
+
+   `tar -zxvf 被解压的文件 -C 要解压去的地方`
+
+   - -z表示使用gzip，可以省略
+   - -C，可以省略，指定要解压去的地方，不写解压到当前目录
+
+2. `zip`和`unzip`
+
+   - `zip`
+
+     语法：`zip [-r] 参数1 参数2 参数N`
+
+     ![image-20221027221906247](/my-blog/linux/20221027221906.png)
+
+   - `unzip`
+
+     语法：`unzip [-d] 参数`
+
+     ![image-20221027221939899](/my-blog/linux/20221027221939.png)
+
+
+
+
+
 
 
 
