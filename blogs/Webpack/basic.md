@@ -22,6 +22,8 @@ sidebar: auto
 >
 > typescript: 5.0.4
 
+[Github项目地址](https://github.com/liuk123456789/webpack-vue)
+
 ## 2. 代码规范相关配置
 
 ### eslint + prettier
@@ -142,11 +144,11 @@ sidebar: auto
       }
       ```
 
-5. `commitzen `提交信息参考这篇文件配置
+5. `commitizen `参考这篇文件配置
 
    [参考链接](https://segmentfault.com/a/1190000039813329)
 
-### 3. Typescript支持
+## 3. Typescript支持
 
 安装依赖
 
@@ -228,7 +230,7 @@ pnpm install @types/node
    
    import { VueLoaderPlugin } from 'vue-loader'
    
-   const baseConfig:Configuration = {
+   const webpackBaseConfig:Configuration = {
        entry: path.join(__dirname, '../src/main.ts'),
        output: {
            filename: '[name]_[contentHash:8].js',
@@ -273,6 +275,8 @@ pnpm install @types/node
            })
        ]
    }
+   
+   export default webpackBaseConfig
    ```
 
 3. `.babelrc`的配置
@@ -389,46 +393,168 @@ pnpm install @types/node
 9. 💡：
 
    1. 原本解析`.vue`需要`vue-loader & @vue/compiler-sfc`依赖进行模板解析的，但是`vue 3.2.13+`已经内置了`@vue/compile-sfc`
-   2. `webpack5`的`output`中配置了`clean: true`代表清除打包目录，所以无需安装`clean-webpack-plugin`
+   2. `.vue`的解析除了需要配置`vue-loader`,还必须通过`VueLoaderPlugin`插件进行解析
+   3. `webpack5`的`output`中配置了`clean: true`代表清除打包目录，所以无需安装`clean-webpack-plugin`
 
 ## 5. webpack.dev.ts配置
 
-```typescript
-import path from 'path'
+1. 配置相关
 
-import { merge } from 'webpack-merge'
+   ```typescript
+   import path from 'path'
+   
+   import { merge } from 'webpack-merge'
+   
+   import { Configuration as WebpackConfiguration } from 'webpack'
+   
+   import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server'
+   
+   interface WebpackDevConfiguraion extends WebpackConfiguration {
+     devServer: WebpackDevServerConfiguration
+   }
+   
+   import webpackBaseConfig from './webpack.base'
+   
+   const webpackDevConfig: WebpackDevConfiguraion = merge(webpackBaseConfig, {
+     mode: 'development',
+     devtool: 'eval-cheap-module-source-map',
+     devServer: {
+       host: '0.0.0.0',
+       port: 9527,
+       open: true,
+       compress: false,
+       hot: true,
+       historyApiFallback: true, // history 404
+       setupExitSignals: true, // 允许SIGINT和SIGTERM信号关闭开发服务器和退出进程
+       static: {
+         directory: path.join(__dirname, '../public')
+       },
+       headers: { 'Access-Control-Allow-Origin': '*' }
+     }
+   }) as WebpacDevConfiguraion
+   
+   export default webpackDevConfig
+   
+   ```
 
-import { Configuration as WebpackConfiguration } from 'webpack'
+2. 脚本修改
 
-import { Configuration as WebpackDevServerConfiguration } from 'webpack-dev-server'
+   ```json
+   "scripts": {
+   	"dev": "webpack serve --config  build/webpack.dev.ts","
+   }
+   ```
 
-interface WebpacDevConfiguraion extends WebpackConfiguration {
-  devServer: WebpackDevServerConfiguration
-}
+3. 重新启动下
 
-import baseConfig from './webpack.base'
+   ```powershell
+   pnpm run dev
+   ```
 
-const webpackDevConfig: WebpacDevConfiguraion = merge(baseConfig, {
-  mode: 'development',
-  devtool: 'eval-cheap-module-source-map',
-  devServer: {
-    host: '127.0.0.1',
-    port: 9527,
-    open: true,
-    compress: false,
-    hot: true,
-    historyApiFallback: true, // history 404
-    setupExitSignals: true, // 允许SIGINT和SIGTERM信号关闭开发服务器和退出进程
-    static: {
-      directory: path.join(__dirname, '../public')
-    },
-    headers: { 'Access-Control-Allow-Origin': '*' }
-  }
-}) as WebpacDevConfiguraion
+   ![Dingtalk_20230428095008](/my-blog/webpack/Dingtalk_20230428095008.jpg)
 
-export default webpackDevConfig
+## 6. webpack.prod.ts配置
 
-```
+1. 配置如下
+
+   ```typescript
+   import { Configuration } from 'webpack'
+   
+   import merge from 'webpack-merge'
+   
+   import webpackBaseConfig from './webpack.base'
+   
+   const webpackProdConfig: Configuration = merge(webpackBaseConfig, {
+     mode: 'production'
+   })
+   
+   export default webpackProdConfig
+   ```
+
+2. 脚本修改
+
+   ```json
+   "scripts": {
+       "build": "webpack --config build/webpack.prod.ts"
+   }
+   ```
+
+3. `pnpm run build`打包下，看下是否正常
+
+## 7. 预览打包后的文件
+
+1. 可以使用`serve`报预览打包后的文件
+
+   ```powershell
+   pnpm install serve -D
+   ```
+
+2. 查看下`serve`有哪些配置
+
+   ```powershell
+   ./node_modules/.bin/serve --help
+   ```
+
+3. 配置脚本
+
+   ```powershell
+   "scripts": {
+   	"preview": "serve -s dist -C"
+   }
+   ```
+
+4. 运行脚本`pnpm run preview`
+
+   ![Dingtalk_20230428105705](/my-blog/webpack/Dingtalk_20230428105705.jpg)
+
+## 8. 拷贝静态资源
+
+1. `favicon.ico`放入`public`文件目录下
+
+2. 安装依赖`copyWebpackPlugin`
+
+   ```powershell
+   pnpm install copyWebpackPlugin -D
+   ```
+
+3.    修改下`webpack.prod.ts`的配置
+
+   ```typescript
+   import { Configuration } from 'webpack'
+   
+   import merge from 'webpack-merge'
+   
+   import webpackBaseConfig from './webpack.base'
+   
+   import CopyPlugin from 'copy-webpack-plugin'
+   
+   import path from 'path'
+   
+   const webpackProdConfig: Configuration = merge(webpackBaseConfig, {
+     mode: 'production',
+     plugins: [
+       new CopyPlugin({
+         patterns: [
+           {
+             from: path.resolve(__dirname, '../public'),
+             to: path.resolve(__dirname, '../dist'),
+             filter: (source) => !source.includes("index.html")
+           }
+         ]
+       })
+     ]
+   })
+   
+   export default webpackProdConfig
+   ```
+
+4. `pnpm run dev`本地运行结果
+
+5. `pnpm run build`后`pnpm run preview`查看运行结果
+
+
+
+
 
 
 
