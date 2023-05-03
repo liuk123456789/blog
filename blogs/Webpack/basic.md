@@ -100,7 +100,7 @@ sidebar: auto
    };
    ```
 
-### husky&lint-staged&commitizen 
+### husky&lint-staged&commitizen
 
 1. 安装依赖
 
@@ -552,23 +552,143 @@ pnpm install @types/node
 
 5. `pnpm run build`后`pnpm run preview`查看运行结果
 
+## 9. 环境变量配置
 
+1. 安装依赖
 
+   ```shell
+   pnpm install cross-env dotenv-webpack -D
+   pnpm install @types/dotenv-webpack
+   ```
 
+2. 修改`scripts`
 
+   ```json
+   "scripts": {
+       "dev": "cross-env BASE_ENV=dev webpack serve --config  build/webpack.dev.ts",
+       "build": "cross-env BASE_ENV=pro webpack --config build/webpack.prod.ts"
+   }
+   ```
 
+   其中的`BASE_ENV`是为了区分环境使用，使用`cross-env`是为了兼容平台
 
+3. 修改`webpack.base.ts`的配置
 
+   ```diff
+   import { Configuration, DefinePlugin } from 'webpack'
+   
+   import path from 'path'
+   
+   import HtmlWebpackPlugin from 'html-webpack-plugin'
+   
+   import { VueLoaderPlugin } from 'vue-loader'
+   
+   import Dotenv from 'dotenv-webpack'
+   
+   const webpackBaseConfig: Configuration = {
+     entry: path.join(__dirname, '../src/main.ts'),
+       new Dotenv({
+         path: path.join(__dirname, '../.env.' + process.env.BASE_ENV)
+       }),
+       // 配置的全局变量
+       new DefinePlugin({
+         __VUE_OPTIONS_API__: false,
+         __VUE_PROD_DEVTOOLS__: false,
+         GLOBAL_INFO: JSON.stringify({
+           BASE_ENV: process.env.BASE_ENV,
+           NODE_ENV: process.env.NODE_ENV
+         })
+       })
+     ]
+   }
+   ```
 
+4. 新建环境配置文件（目前设置了两个）
 
+   `.env.dev`
 
+   ```
+   APP_API_URL=https://development.com
+   ```
 
+   `.env.pro`
 
+   ```
+   APP_API_URL=https://production.com
+   ```
 
+   💡:文件名的后缀需要和`BASE_ENV`的值保持一致
 
+5. 将`definePlugin`配置的环境变量进行声明
 
+   `global.d.ts`
 
+   ```typescript
+   declare global {
+     const __VUE_OPTIONS_API__: boolean
+     const __VUE_PROD_DEVTOOLS__: boolean
+     const GLOBAL_INFO: {
+       NODE_ENV: string
+       BASE_ENV: string
+     }
+     // ***
+   }
+   ```
 
+6. `APP.vue`文件中进行使用
 
+   ```vue
+   <script lang="ts" setup>
+   const { BASE_ENV } = GLOBAL_INFO
+   const { NODE_ENV } = process.env
+   </script>
+   <template>
+     <div>Webpack Build Vue3.x</div>
+     <div>{{ BASE_ENV }}</div>
+     <div>{{ NODE_ENV }}</div>
+   </template>
+   ```
 
+   💡:此时的`GLOBAL_INFO`的`eslint`会报错，我是通过在`eslint`中添加`globals`解决的，如果有更好的方案，可以提`issue`
 
+7. 测试
+
+   `pnpm run dev`
+
+   ![image-20230503155705368](/my-blog/webpack/image-20230503155705368.png)
+
+   `pnpm run build`&`pnpm run preview`
+
+   ![image-20230503160224114](/my-blog/webpack/image-20230503160224114.png)
+
+## 10.文件别名
+
+1. 修改下`webpack.base.ts`的配置
+
+   ```typescript
+   resolve: {
+       extensions: ['.vue', '.ts', '.tsx', '.js'],
+       alias: {
+         "@": path.join(__dirname, "../src")
+       },
+       modules: [path.resolve(__dirname, "../node_modules")], // 只在本项目的node_modules中查找
+   },
+   ```
+
+2. 修改下`tsconfig.json`的配置
+
+   ```json
+   "paths": {
+     "@/*": ["src/*"]
+   }
+   ```
+
+## 11. 样式文件处理
+
+1. 安装相关依赖
+
+   ```shell
+   pnpm install less less-loader sass-loader sass stylus stylus-loader -D
+   ```
+
+2. 
