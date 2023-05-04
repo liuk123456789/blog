@@ -688,7 +688,244 @@ pnpm install @types/node
 1. 安装相关依赖
 
    ```shell
-   pnpm install less less-loader sass-loader sass stylus stylus-loader -D
+   pnpm install css css-loader style-loader less less-loader sass-loader sass stylus stylus-loader -D
    ```
 
-2. 
+2. 生成`loader`配置
+
+   ```typescript
+   enum STYLE_ENUM {
+     CSS = 'css',
+     SASS = 'sass',
+     LESS = 'less',
+     STYLUS = 'stylus',
+     SCSS = 'sass'
+   }
+   const loaderRegexs = {
+     [STYLE_ENUM.CSS]: /\.css$/,
+     [STYLE_ENUM.SASS]: /\.(scss|sass)$/,
+     [STYLE_ENUM.LESS]: /\.less$/,
+     [STYLE_ENUM.STYLUS]: /\.styl$/
+   }
+   
+   const styleLoadersArray = ['style-loader', 'css-loader']
+   
+   const loaderOptions = [
+     {
+       key: STYLE_ENUM.LESS,
+       options: {
+         lessOptions: {
+           javascriptEnabled: true
+         }
+       }
+     },
+     {
+       key: STYLE_ENUM.SASS
+     },
+     {
+       key: STYLE_ENUM.LESS
+     },
+     {
+       key: STYLE_ENUM.STYLUS
+     }
+   ]
+   
+   export function generateCssLoader() {
+     const ret = []
+     for (const { key, options } of loaderOptions) {
+       if (key === STYLE_ENUM.SASS) {
+         ret.push({
+           test: loaderRegexs.sass,
+           use: [...styleLoadersArray, 'sass-loader']
+         })
+       } else if (key === STYLE_ENUM.CSS) {
+         ret.push({
+           test: loaderRegexs[key],
+           use: [...styleLoadersArray]
+         })
+       } else {
+         options
+           ? ret.push({
+               test: loaderRegexs[key],
+               use: [
+                 ...styleLoadersArray,
+                 {
+                   loader: `${key}-loader`,
+                   options: { ...options }
+                 }
+               ]
+             })
+           : ret.push({
+               test: loaderRegexs[key],
+               use: [...styleLoadersArray, `${key}-loader`]
+             })
+       }
+     }
+     return ret
+   }
+   ```
+
+3. 修改`webpack.base.ts`文件
+
+   ```typescript
+   import { Configuration, DefinePlugin } from 'webpack'
+   
+   import path from 'path'
+   
+   import HtmlWebpackPlugin from 'html-webpack-plugin'
+   
+   import { VueLoaderPlugin } from 'vue-loader'
+   
+   import Dotenv from 'dotenv-webpack'
+   
+   import { generateCssLoader } from './utils'
+   
+   const webpackBaseConfig: Configuration = {
+     entry: path.join(__dirname, '../src/main.ts'),
+     output: {
+       filename: '[name]_[contenthash:8].js',
+       path: path.join(__dirname, '../dist'),
+       clean: true,
+       publicPath: '/'
+     },
+     module: {
+       rules: [
+         {
+           test: /\.vue$/,
+           loader: 'vue-loader'
+         },
+         // babel
+         {
+           test: /\.js$/,
+           exclude: (file) => /node_modules/.test(file) && !/\.vue\.js/.test(file),
+           use: ['babel-loader']
+         },
+         // ts
+         {
+           test: /\.(ts|tsx)$/,
+           exclude: /node_modules/,
+           use: ['babel-loader']
+         },
+         // 这里便是样式loader的规则配置
+         ...generateCssLoader()
+       ]
+     },
+     resolve: {
+       extensions: ['.vue', '.ts', '.tsx', '.js', '.less', '.scss', '.sass', '.styl'],
+       alias: {
+         '@': path.join(__dirname, '../src')
+       }
+     },
+     plugins: [
+       new VueLoaderPlugin(),
+       new HtmlWebpackPlugin({
+         title: 'Koona Webpack',
+         template: path.join(__dirname, '../public/index.html'),
+         filename: 'index.html',
+         // 压缩html资源
+         minify: {
+           collapseWhitespace: true, // 去空格
+           removeComments: true // 去注释
+         }
+       }),
+       new Dotenv({
+         path: path.join(__dirname, '../.env.' + process.env.BASE_ENV)
+       }),
+       new DefinePlugin({
+         __VUE_OPTIONS_API__: false,
+         __VUE_PROD_DEVTOOLS__: false,
+         GLOBAL_INFO: JSON.stringify({
+           BASE_ENV: process.env.BASE_ENV,
+           NODE_ENV: process.env.NODE_ENV
+         })
+       })
+     ]
+   }
+   
+   export default webpackBaseConfig
+   ```
+
+4. 样式文件进行测试（只测试了sass）
+
+   `variable.module.scss`
+
+   ```scss
+   $color: #e5e5e5;
+   $globalBgColor: #F8F8F8;
+   $globalHeaderBg: #fff;
+   
+   $themeColor: #3E68FF;
+   $defaultColor: #333;
+   $secondaryColor: #666;
+   $thirdColor: #999;
+   $titleColor: #13284B;
+   $tipColor: #FF6160;
+   
+   $basicWidth: 1200px;
+   $globalHeaderHeight: 60px;
+   $globalFooterHeight: 40px;
+   ```
+
+5. 引入样式文件
+
+   ```vue
+   <script lang="ts" setup>
+   const { BASE_ENV } = GLOBAL_INFO
+   const { NODE_ENV } = process.env
+   </script>
+   <template>
+     <div>Webpack Build Vue3.x</div>
+     <p>{{ BASE_ENV }}</p>
+     <p class="theme-color">{{ NODE_ENV }}</p>
+   </template>
+   
+   <style lang="scss">
+   @use '@/styles/variable.module.scss' as variableModule;
+   .theme-color {
+     color: variableModule.$themeColor;
+   }
+   </style>
+   ```
+
+6. 兼容`css3`
+
+   1. 依赖安装
+
+      ```shell
+      pnpm install postcss postcss-loader autoprefixer -D
+      ```
+
+   2. 新建`postcss.config.js`
+
+      ```javascript
+      module.exports = {
+        plugins: {
+          autoprefixer: {},
+        },
+      };
+      ```
+
+   3. `.browserslistrc`兼容浏览器清单
+
+      ```
+      > 1%
+      last 2 versions
+      ```
+
+   4. 修改生成样式loader规则
+
+      ```typescript
+      // 将postcss-loader加入默认loader解析列表中
+      const styleLoadersArray = ['style-loader', 'css-loader', 'postcss-loader']
+      ```
+
+7. 测试
+
+   `pnpm run dev`
+
+   ![Dingtalk_20230504103457](/my-blog/webpack/Dingtalk_20230504103457.jpg)
+
+   `pnpm run build`&`pnpm run preview`
+
+   ![Dingtalk_20230504103913](/my-blog/webpack/Dingtalk_20230504103913.jpg)
+
