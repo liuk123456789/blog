@@ -10,211 +10,208 @@ sidebar: auto
 
 ## MySQL数据库系统安装
 
-1. `MySQL5.7`在`centos`的安装
+### `MySQL5.7`在`centos`的安装
 
-   - 配置`yum`仓库
+- 配置`yum`仓库
 
-     ```shell
-     rum --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
-     ```
+  ```shell
+  rum --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+  ```
 
-   - 安装`MySQL`
+- 安装`MySQL`
 
-     ```shell
-     rpm -Uvh http://repo.mysql.com//mysql57-community-release-el7-7.noarch.rpm
-     ```
+  ```shell
+  rpm -Uvh http://repo.mysql.com//mysql57-community-release-el7-7.noarch.rpm
+  ```
 
-   - 使用`yum`安装`MySQL`
+- 使用`yum`安装`MySQL`
 
-     ```shell
-     yum -y install mysql-community-server
-     ```
+  ```shell
+  yum -y install mysql-community-server
+  ```
 
-   - 安装完成后，启动`MySQL`
+- 安装完成后，启动`MySQL`
 
-     `MySQL`安装完成后，会自动配置名称为：`mysqld`的服务，可以被`systemctl`所管理
+  `MySQL`安装完成后，会自动配置名称为：`mysqld`的服务，可以被`systemctl`所管理
 
-     ```shell
-     systemctl start mysqld # 启动
-     systemctl enable mysqlId # 开机自启
-     ```
+  ```shell
+  systemctl start mysqld # 启动
+  systemctl enable mysqlId # 开机自启
+  ```
 
-   2. 配置
+#### 配置
 
-      1. 获取`MySQL`的初始密码
+1. 获取`MySQL`的初始密码
 
-         ```shell
-         grep 'temporary password' /var/log/mysqld.log
-         ```
+   ```shell
+   grep 'temporary password' /var/log/mysqld.log
+   ```
 
-      2. 登录`MySQL`数据库系统
+2. 登录`MySQL`数据库系统
 
-         ```shell
-         mysql -u root -p
-         ```
+   ```shell
+   mysql -u root -p
+   ```
 
-      3. 修改`root`用户密码
+3. 修改`root`用户密码
 
-         ```sql
-         ALTER USER 'root'@'localhost' IDENTIFIED BY '密码';	-- 密码需要符合：大于8位，有大写字母，有特殊符号，不能是连续的简单语句如123，abc
-         ```
+   ```sql
+   ALTER USER 'root'@'localhost' IDENTIFIED BY '密码';	-- 密码需要符合：大于8位，有大写字母，有特殊符号，不能是连续的简单语句如123，abc
+   ```
 
-      4. 配置简单的`root`密码
+4. 配置简单的`root`密码
 
-         ```sql
-         # 如果你想设置简单密码，需要降低Mysql的密码安全级别
-         set global validate_password_policy=LOW; # 密码安全级别低
-         set global validate_password_length=4;	 # 密码长度最低4位即可
-         
-         # 然后就可以用简单密码了（课程中使用简单密码，为了方便，生产中不要这样）
-         ALTER USER 'root'@'localhost' IDENTIFIED BY '简单密码';
-         ```
-
-      5. 配置远程登录
-
-         > 默认情况下，root用户是不运行远程登录的，只允许在MySQL所在的Linux服务器登陆MySQL系统
-         >
-         > 请注意，允许root远程登录会带来安全风险
-
-         ```sql
-         # 授权root远程登录
-         grant all privileges on *.* to root@"IP地址" identified by '密码' with grant option;  
-         # IP地址即允许登陆的IP地址，也可以填写%，表示允许任何地址
-         # 密码表示给远程登录独立设置密码，和本地登陆的密码可以不同
-         
-         # 刷新权限，生效
-         flush privileges;
-         ```
-
-      6. 退出`exit`/`ctrl + D`
-
-      7. 检查端口
-
-         1. MySQL默认绑定了3306端口，可以通过端口占用检查MySQL的网络状态
-
-            ```shell
-            netstat -anp | grep 3306
-            ```
-
-            ![image-20221012183746802](https://image-set.oss-cn-zhangjiakou.aliyuncs.com/img-out/2022/10/12/20221012183746.png)
-
-2. `Mysql8.0`在`centos`的安装
-
-   #### 安装
-
+   ```sql
+   # 如果你想设置简单密码，需要降低Mysql的密码安全级别
+   set global validate_password_policy=LOW; # 密码安全级别低
+   set global validate_password_length=4;	 # 密码长度最低4位即可
    
+   # 然后就可以用简单密码了（课程中使用简单密码，为了方便，生产中不要这样）
+   ALTER USER 'root'@'localhost' IDENTIFIED BY '简单密码';
+   ```
 
-   1. 配置yum仓库
+5. 配置远程登录
 
-      ```shell
-      # 更新密钥
-      rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
-      
-      # 安装Mysql8.x版本 yum库
-      rpm -Uvh https://dev.mysql.com/get/mysql80-community-release-el7-2.noarch.rpm
-      ```
+   > 默认情况下，root用户是不运行远程登录的，只允许在MySQL所在的Linux服务器登陆MySQL系统
+   >
+   > 请注意，允许root远程登录会带来安全风险
 
-   2. 使用yum安装MySQL
+   ```sql
+   # 授权root远程登录
+   grant all privileges on *.* to root@"IP地址" identified by '密码' with grant option;  
+   # IP地址即允许登陆的IP地址，也可以填写%，表示允许任何地址
+   # 密码表示给远程登录独立设置密码，和本地登陆的密码可以不同
+   
+   # 刷新权限，生效
+   flush privileges;
+   ```
 
-      ```shell
-      # yum安装Mysql
-      yum -y install mysql-community-server
-      ```
+6. 退出`exit`/`ctrl + D`
 
-   3. 安装完成后，启动MySQL并配置开机自启动
+7. 检查端口
 
-      ```shell
-      systemctl start mysqld		# 启动
-      systemctl enable mysqld		# 开机自启
-      ```
-
-      > MySQL安装完成后，会自动配置为名称叫做：`mysqld`的服务，可以被systemctl所管理
-
-   4. 检查MySQL的运行状态
-
-      ```shell
-      systemctl status mysqld
-      ```
-
-   #### 配置
-
-   主要修改root密码和允许root远程登录
-
-   1. 获取MySQL的初始密码
-
-      ```shell
-      # 通过grep命令，在/var/log/mysqld.log文件中，过滤temporary password关键字，得到初始密码
-      grep 'temporary password' /var/log/mysqld.log
-      ```
-
-   2. 登录MySQL数据库系统
-
-      ```shell
-      # 执行
-      mysql -uroot -p
-      # 解释
-      # -u，登陆的用户，MySQL数据库的管理员用户同Linux一样，是root
-      # -p，表示使用密码登陆
-      
-      # 执行完毕后输入刚刚得到的初始密码，即可进入MySQL数据库
-      ```
-
-   3. 修改root密码
-
-      ```sql
-      ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '密码';	-- 密码需要符合：大于8位，有大写字母，有特殊符号，不能是连续的简单语句如123，abc
-      ```
-
-   4. [扩展]，配置root的简单密码
-
-      > 我们可以给root设置简单密码，如123456.
-      >
-      > 请注意，此配置仅仅是用于测试环境或学习环境的MySQL，如果是正式使用，请勿设置简单密码
-
-      ```sql
-      set global validate_password.policy=0;		# 密码安全级别低
-      set global validate_password.length=4;		# 密码长度最低4位即可
-      ```
-
-      
-
-   5. 允许root远程登录，并设置远程登录密码
-
-      > 默认情况下，root用户是不运行远程登录的，只允许在MySQL所在的Linux服务器登陆MySQL系统
-      >
-      > 请注意，允许root远程登录会带来安全风险
-
-      ```sql
-      # 第一次设置root远程登录，并配置远程密码使用如下SQL命令
-      create user 'root'@'%' IDENTIFIED WITH mysql_native_password BY '密码!';	-- 密码需要符合：大于8位，有大写字母，有特殊符号，不能是连续的简单语句如123，abc
-      
-      # 后续修改密码使用如下SQL命令
-      ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '密码';
-      ```
-
-   6. 退出MySQL控制台页面
-
-      ```sql
-      # 退出命令
-      exit
-      
-      # 或者通过快捷键退出：ctrl + d
-      ```
-
-   7. 检查端口
-
-      MySQL默认绑定了3306端口，可以通过端口占用检查MySQL的网络状态
+   1. MySQL默认绑定了3306端口，可以通过端口占用检查MySQL的网络状态
 
       ```shell
       netstat -anp | grep 3306
       ```
 
-      ![image-20221012192303607](https://image-set.oss-cn-zhangjiakou.aliyuncs.com/img-out/2022/10/12/20221012192303.png)
+      ![image-20221012183746802](https://image-set.oss-cn-zhangjiakou.aliyuncs.com/img-out/2022/10/12/20221012183746.png)
+
+### `Mysql8.0`在`centos`的安装
+
+#### 安装
+
+1. 配置yum仓库
+
+   ```shell
+   # 更新密钥
+   rpm --import https://repo.mysql.com/RPM-GPG-KEY-mysql-2022
+   
+   # 安装Mysql8.x版本 yum库
+   rpm -Uvh https://dev.mysql.com/get/mysql80-community-release-el7-2.noarch.rpm
+   ```
+
+2. 使用yum安装MySQL
+
+   ```shell
+   # yum安装Mysql
+   yum -y install mysql-community-server
+   ```
+
+3. 安装完成后，启动MySQL并配置开机自启动
+
+   ```shell
+   systemctl start mysqld		# 启动
+   systemctl enable mysqld		# 开机自启
+   ```
+
+   > MySQL安装完成后，会自动配置为名称叫做：`mysqld`的服务，可以被systemctl所管理
+
+4. 检查MySQL的运行状态
+
+   ```shell
+   systemctl status mysqld
+   ```
+
+#### 配置
+
+主要修改root密码和允许root远程登录
+
+1. 获取MySQL的初始密码
+
+   ```shell
+   # 通过grep命令，在/var/log/mysqld.log文件中，过滤temporary password关键字，得到初始密码
+   grep 'temporary password' /var/log/mysqld.log
+   ```
+
+2. 登录MySQL数据库系统
+
+   ```shell
+   # 执行
+   mysql -uroot -p
+   # 解释
+   # -u，登陆的用户，MySQL数据库的管理员用户同Linux一样，是root
+   # -p，表示使用密码登陆
+   
+   # 执行完毕后输入刚刚得到的初始密码，即可进入MySQL数据库
+   ```
+
+3. 修改root密码
+
+   ```sql
+   ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '密码';	-- 密码需要符合：大于8位，有大写字母，有特殊符号，不能是连续的简单语句如123，abc
+   ```
+
+4. [扩展]，配置root的简单密码
+
+   > 我们可以给root设置简单密码，如123456.
+   >
+   > 请注意，此配置仅仅是用于测试环境或学习环境的MySQL，如果是正式使用，请勿设置简单密码
+
+   ```sql
+   set global validate_password.policy=0;		# 密码安全级别低
+   set global validate_password.length=4;		# 密码长度最低4位即可
+   ```
 
    
 
+5. 允许root远程登录，并设置远程登录密码
 
-## MySQL5.7版本在Ubuntu（WSL环境）系统安装
+   > 默认情况下，root用户是不运行远程登录的，只允许在MySQL所在的Linux服务器登陆MySQL系统
+   >
+   > 请注意，允许root远程登录会带来安全风险
+
+   ```sql
+   # 第一次设置root远程登录，并配置远程密码使用如下SQL命令
+   create user 'root'@'%' IDENTIFIED WITH mysql_native_password BY '密码!';	-- 密码需要符合：大于8位，有大写字母，有特殊符号，不能是连续的简单语句如123，abc
+   
+   # 后续修改密码使用如下SQL命令
+   ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '密码';
+   ```
+
+6. 退出MySQL控制台页面
+
+   ```sql
+   # 退出命令
+   exit
+   
+   # 或者通过快捷键退出：ctrl + d
+   ```
+
+7. 检查端口
+
+   MySQL默认绑定了3306端口，可以通过端口占用检查MySQL的网络状态
+
+   ```shell
+   netstat -anp | grep 3306
+   ```
+
+   ![image-20221012192303607](https://image-set.oss-cn-zhangjiakou.aliyuncs.com/img-out/2022/10/12/20221012192303.png)
+
+
+
+### MySQL5.7版本在Ubuntu（WSL环境）系统安装
 
 > 课程中配置的WSL环境是最新的Ubuntu22.04版本，这个版本的软件商店内置的MySQL是8.0版本
 >
@@ -232,9 +229,7 @@ sidebar: auto
 
 
 
-
-
-### 安装
+#### 安装
 
 1. 下载apt仓库文件
 
@@ -365,9 +360,7 @@ sidebar: auto
 
 
 
-
-
-## MySQL8.0版本在Ubuntu（WSL环境）系统安装
+### MySQL8.0版本在Ubuntu（WSL环境）系统安装
 
 > 课程中配置的WSL环境是最新的Ubuntu22.04版本，这个版本的软件商店内置的MySQL是8.0版本
 >
@@ -387,9 +380,7 @@ sidebar: auto
 
 2. 或在每一个命令前，加上sudo，用来临时提升权限
 
-
-
-### 安装
+#### 安装
 
 1. 如果已经安装过MySQL5.7版本，需要卸载仓库信息哦
 
