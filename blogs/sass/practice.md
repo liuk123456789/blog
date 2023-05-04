@@ -1,10 +1,10 @@
 ---
-title: sass的实践
+title: Sass的实践
 date: 2023-04-03
 categories: 
- - sass
+ - Sass
 tags:
- - sass practice
+ - Sass practice
 sidebar: auto
 ---
 

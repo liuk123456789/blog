@@ -2,7 +2,7 @@
 title: 代理模式
 date: 2023-02-01
 categories: 
- - design partten
+ - Design Partten
 tags:
  - proxy
 sidebar: auto

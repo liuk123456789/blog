@@ -2,7 +2,7 @@
 title: 中介者模式
 date: 2023-03-01
 categories: 
- - design partten
+ - Design Partten
 tags:
  - intermediary
 sidebar: auto

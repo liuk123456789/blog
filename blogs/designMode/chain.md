@@ -2,7 +2,7 @@
 title: 职责链模式
 date: 2023-02-14
 categories: 
- - design partten
+ - Design Partten
 tags:
  - chain
 sidebar: auto

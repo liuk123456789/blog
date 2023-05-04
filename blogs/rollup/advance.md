@@ -1,10 +1,10 @@
 ---
-title: rollup打包vue
+title: Rollup打包vue
 date: 2023-04-17
 categories: 
- - rollup
+ - Rollup
 tags:
- - rollup&vue
+ - Rollup&vue
 sidebar: auto
 ---
 

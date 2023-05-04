@@ -1,10 +1,10 @@
 ---
-title: nginx指令
+title: Nginx指令
 date: 2023-01-29
 categories:
- - nginx
+ - Nginx
 tags:
- - nginx directive
+ - Nginx directive
 sidebar: auto
 ---
 

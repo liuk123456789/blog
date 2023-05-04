@@ -2,7 +2,7 @@
 title: 单例模式
 date: 2022-12-28
 categories: 
- - design partten
+ - Design Partten
 tags:
  - single
 sidebar: auto

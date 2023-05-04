@@ -2,7 +2,7 @@
 title: 发布订阅模式
 date: 2023-02-01
 categories: 
- - design partten
+ - Design Partten
 tags:
  - observer
 sidebar: auto

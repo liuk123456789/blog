@@ -2,9 +2,9 @@
 title: nginx 基本用法
 date: 2023-01-29
 categories: 
- - nginx 
+ - Nginx 
 tags:
- - nginx basic
+ - Nginx basic
 sidebar: auto
 ---
 

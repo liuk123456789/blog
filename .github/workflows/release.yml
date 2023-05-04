@@ -10,12 +10,12 @@ jobs:
     steps:
       # 拉取项目代码
       - name: Checkout repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       # 给当前环境下载node
       - name: Use Node.js
-        uses: actions/setup-node@v2.5.2
+        uses: actions/setup-node@v3
         with:
-          node-version: "12.x"
+          node-version: "14.x"
       # 安装依赖
       - name: Installing Dependencies
         run: npm install
@@ -37,3 +37,11 @@ jobs:
           connect_timeout: 10s
           local: './public/*'
           remote: /home/my-blog
+      - name: Deploy GitHub Pages site
+        # uses: crazy-max/ghaction-github-pages@c0d7ff0487ee0415efb7f32dab10ea880330b1dd
+        uses: crazy-max/ghaction-github-pages@v3.1.0
+        with:
+          target_branch: gh-pages
+          build_dir: public
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
