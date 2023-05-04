@@ -929,3 +929,78 @@ pnpm install @types/node
 
    ![Dingtalk_20230504103913](/my-blog/webpack/Dingtalk_20230504103913.jpg)
 
+## 12. 图片字体媒体json文件等资源处理
+
+### 1. 图片字体媒体
+
+`webpack5`之前，通常使用`raw-loader`、`url-loader`、`file-loader`处理图片字体文件，`webpack`使用`assets module`进行静态资源处理
+
+修改下`webpack.base.ts`配置
+
+```typescript
+{
+    test: /\.(png|jpe?g|gif|svg|bmp)$/i,
+    type: 'asset',
+    parser: {
+      dataUrlCondition: {
+        maxSize: 30 * 1024 // 小于30kb 转 base64
+      }
+    },
+    generator: {
+      filename: 'images/[hash][ext][query]'
+    }
+},
+{
+    test: /.(woff2?|eot|ttf|otf)$/, // 匹配字体图标文件
+    type: 'asset', // type选择asset
+    parser: {
+      dataUrlCondition: {
+        maxSize: 10 * 1024
+      }
+    },
+    generator: {
+      filename: 'fonts/[hash][ext][query]' // 文件输出目录和命名
+    }
+},
+{
+    test: /.(mp4|webm|ogg|mp3|wav|flac|aac)$/, // 匹配媒体文件
+    type: 'asset', // type选择asset
+    parser: {
+      dataUrlCondition: {
+        maxSize: 30 * 1024
+      }
+    },
+    generator: {
+      filename: 'media/[hash][ext][query]' // 文件输出目录和命名
+    }
+}
+```
+
+### 2. json文件
+
+修改下`webpack.base.ts`
+
+```typescript
+{
+    // 匹配json文件
+    test: /\.json$/,
+    type: "asset/resource", // 将json文件视为文件类型
+    generator: {
+      // 这里专门针对json文件的处理
+      filename: "json/[name].[hash][ext][query]",
+    },
+}
+```
+
+整体效果如下
+
+![Dingtalk_20230504130945](/my-blog/webpack/Dingtalk_20230504130945.jpg)
+
+## 13. 热更新
+
+在`webpack4`中，还需要在插件中添加了`HotModuleReplacementPlugin`，在`webpack5`中，只要`devServer.hot`为`true`了，该插件就已经内置了。
+
+## 完结
+
+只此，我们完成基础的框架搭建以及常见资源的`loader`配置，下一篇主要是针对的是打包性能优化
+
