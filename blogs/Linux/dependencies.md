@@ -8,7 +8,7 @@ tags:
 sidebar: auto
 ---
 
-## MySQL数据库系统安装
+## MySQL安装
 
 ### `MySQL5.7`在`centos`的安装
 
@@ -477,4 +477,104 @@ sidebar: auto
 
    ![image-20221016110414182](https://image-set.oss-cn-zhangjiakou.aliyuncs.com/img-out/2022/10/16/20221016110414.png)
 
+
+### 远程连接数据库
+
+我是使用`Navicat`连接的，如果连接不上，[参考此篇](https://www.jianshu.com/p/b6dda0a1aa78)
+
+![20230504150609.jpg](/my-blog/linux/Dingtalk_20230504150609.jpg)
+
+## Nginx安装
+
+### 安装
+
+Nginx同样需要配置额外的yum仓库，才可以使用yum安装
+
+> 安装Nginx的操作需要root身份
+
+
+
+1. 安装yum依赖程序
+
+   ```shell
+   # root执行
+   yum install -y yum-utils
+   ```
+
+2. 手动添加，nginx的yum仓库
+
+   yum程序使用的仓库配置文件，存放在：`/etc/yum.repo.d`内。
+
+   ```shell
+   # root执行
+   # 创建文件使用vim编辑
+   vim /etc/yum.repos.d/nginx.repo
+   # 填入如下内容并保存退出
+   [nginx-stable]
+   name=nginx stable repo
+   baseurl=http://nginx.org/packages/centos/$releasever/$basearch/
+   gpgcheck=1
+   enabled=1
+   gpgkey=https://nginx.org/keys/nginx_signing.key
+   module_hotfixes=true
    
+   [nginx-mainline]
+   name=nginx mainline repo
+   baseurl=http://nginx.org/packages/mainline/centos/$releasever/$basearch/
+   gpgcheck=1
+   enabled=0
+   gpgkey=https://nginx.org/keys/nginx_signing.key
+   module_hotfixes=true
+   ```
+
+   > 通过如上操作，我们手动添加了nginx的yum仓库
+
+3. 通过yum安装最新稳定版的nginx
+
+   ```shell
+   # root执行
+   yum install -y nginx
+   ```
+
+4. 启动
+
+   ```shell
+   # nginx自动注册了systemctl系统服务
+   systemctl start nginx		# 启动
+   systemctl stop nginx		# 停止
+   systemctl status nginx		# 运行状态
+   systemctl enable nginx		# 开机自启
+   systemctl disable nginx		# 关闭开机自启
+   ```
+
+5. 配置防火墙放行
+
+   nginx默认绑定80端口，需要关闭防火墙或放行80端口
+
+   ```shell
+   # 方式1，关闭防火墙
+   systemctl stop firewalld		# 关闭
+   systemctl disable firewalld		# 关闭开机自启
+   
+   # 方式2(推荐)，放行80端口
+   firewall-cmd --add-port=80/tcp --permanent		# 放行tcp规则下的80端口，永久生效
+   firewall-cmd --reload						    # 重新加载防火墙规则
+   # 查看新增端口是否对外开放
+   firewall-cmd --list-all
+   ```
+
+6. 启动后浏览器输入Linux服务器的IP地址或主机名即可访问
+
+   http://192.168.154.30 或 http://centos-koona
+
+   > ps：80端口是访问网站的默认端口，所以后面无需跟随端口号
+   >
+   > 显示的指定端口也是可以的比如：
+   >
+   > - http://192.168.154.30:80
+   > - http://centos-koona:80
+
+至此，Nginx安装配置完成。
+
+![20230504165457](/my-blog/linux/Dingtalk_20230504165457.jpg)
+
