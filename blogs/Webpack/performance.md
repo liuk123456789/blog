@@ -510,7 +510,7 @@ const webpackProdConfig: Configuration = merge(webpackBaseConfig, {
 
 其余剩下的基本就是我们的业务代码，改动频率就很大了，是每次发布版本都会变的。
 
-![img](https://cdn.nlark.com/yuque/0/2022/webp/2634037/1669732833078-9def05b6-1d15-47ec-8188-1252af7de665.webp)
+![img](/my-blog/webpack/1669732833078-9def05b6-1d15-47ec-8188-1252af7de665.webp)
 
 ### 常用的代码分离与方法
 
