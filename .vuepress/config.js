@@ -88,7 +88,7 @@ module.exports = {
     "searchMaxSuggestions": 10,
     "lastUpdated": "更新时间",
     "author": "科纳",
-    "authorAvatar": "/avatar.jpg",
+    "authorAvatar": "/avatar.png",
     "record": "记录所见所得",
     "startYear": "2018"
   },
