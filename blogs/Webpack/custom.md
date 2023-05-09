@@ -298,4 +298,218 @@ export const raw = true;
 
 ## 3. plugin
 
-。。。待更新
+### tabable
+
+在自定义插件前，必须先了解`tapable`，`tappable`是`webpack`的一个核心工具，它也可适用于其他地方，以提供类似的插件接口
+
+`webpack`中许多对象扩展自`Tapable`类，这个类暴露`tap`，`tapAsync`，`tapPromise`注册事件方法，对应的调用方法call，callAsync，promise，可以使用这些方法，注入自定义的构建步骤，这个编译过程中不同时机触发
+
+`tapable`给我们暴露很多钩子类，能为我们的插件提供挂载的钩子。那么这些钩子可以分为2个类别，即 "同步" 和 "异步"， 异步又分为两个类别，"并行" 还是 "串行"，同步的钩子它只有 "串行"。
+
+```markdown
+## 同步钩子
+SyncHook
+SyncBailHook
+SyncWaterfallHook
+SyncLoopHook
+
+## 异步钩子
+
+### 并行
+AsyncParallelHook
+AsyncParallelBailHook
+
+### 串行
+AsyncSeriesHook
+AsyncSeriesBailHook
+AsyncSeriesWaterHook
+
+```
+
+**hook分类**
+
+- Basic 按顺序执行每个事件函数，不关系函数返回值
+  - SyncHook
+  - AsyncParallelHook
+  - AsyncSeriesHook
+- Bail 执行每个事件函数，遇到结果不为undefined则结束执行
+  - SyncBailHook
+  - AsyncParallelBailHook
+- Waterfall 将最近上一个函数的返回值作为下一个函数的参数，如果上一个函数没有返回值(返回undefined)，那么就继续找上上个，如果找不到就用自己传入的参数
+- Loop 不停循环执行事件函数，直到所有函数结果result === undefined,每次循环都是从头开始
+  - SyncLoopHook
+
+### 创建插件
+
+webpack 插件由以下组成：
+
+- 一个 JavaScript 命名函数或 JavaScript 类。
+- 在插件函数的 prototype 上定义一个 `apply` 方法。
+- 指定一个绑定到 webpack 自身的[事件钩子](https://webpack.docschina.org/api/compiler-hooks/)。
+- 处理 webpack 内部实例的特定数据。
+- 功能完成后调用 webpack 提供的回调
+
+如下所示
+
+```javascript
+class MyCustomWebpackPlugin {
+    // 原型对象上定义apply方法，参数为compiler
+    // compiler 是webpack的核心引擎
+    apply(compiler) {
+        compiler.hooks.emit.tagAsync(
+        	'MyCustomWebpackPlugin',
+            (compilation, callback) => {
+                console.log('这是我的自定义插件')
+                compilation.addModule(/*...*/)
+                callback()
+            }
+        )
+    }
+    
+}
+```
+
+在上述的demo中，看到使用了`compiler`&`compilation`两个核心`api`
+
+## Compiler&Compilation
+
+### Complier
+
+Compiler 对象包含了Webpack环境所有的配置信息，包含options (loaders, plugins...) 这些项，这个对象在webpack启动时候被实例化，它是全局唯一的。我们可以把它理解为webpack的实列。
+
+### Compilation
+
+compilation 对象包含了当前的模块资源、编译生成资源、文件的变化等。当webpack在开发模式下运行时，每当检测到一个文件发生改变的时候，那么一次新的 Compilation将会被创建。从而生成一组新的编译资源。
+
+**Compiler对象 与 Compilation 对象 的区别是：** Compiler代表了是整个webpack从启动到关闭的生命周期。Compilation 对象只代表了一次新的编译。
+
+## plugin中常用的api
+
+#### 1. 读取输出资源、模块、依赖
+
+`Compiler`中的`emit`钩子官方的解释为
+
+> 输出 asset 到 output 目录之前执行。这个钩子 *不会* 被复制到子编译器。
+
+因此我们可以读取输出的资源、代码块、模块以及对应依赖，大致为
+
+```typescript
+import { Compiler, WebpackPluginInstance } from 'webpack'
+
+export default class CustomChunksPlugin implements WebpackPluginInstance {
+  apply(compiler: Compiler) {
+      // 使用tapAsync 代表异步钩子
+      compiler.hooks.emit.tapAsync('CustomChunksPlugin', (compilation, callback) => {
+        console.log(compilation.chunks)
+        callback()
+      })
+  }
+}
+```
+
+#### 2. 监听文件变化
+
+webpack读取文件的时候，它会从入口模块去读取，然后依次找出所有的依赖模块。当入口模块或依赖的模块发生改变的时候，那么就会触发一次新的 Compilation。
+
+在我们开发插件的时候，我们需要知道是那个文件发生改变，导致了新的Compilation, 我们可以添加如下代码进行监听
+
+```typescript
+import { Compiler, WebpackPluginInstance } from 'webpack'
+
+export default class CustomWatchPlugin implements WebpackPluginInstance {
+  apply(compiler: Compiler) {
+      // 使用tapAsync 代表异步钩子
+      compiler.hooks.watchRun.tapAsync('CustomWatchPlugin', (compilation, callback) => {
+        // dosomething
+        callback()
+      })
+  }
+}
+```
+
+#### 3. 修改输出资源
+
+我们在第一点说过：在我们的emit钩子事件发生时，表示的含义是：源文件的转换和组装已经完成了，在这里事件钩子里面我们可以读取到最终将输出的资源、代码块、模块及对应的依赖文件。因此如果我们现在要修改输出资源的内容的话，我们可以在emit事件中去做修改。那么所有输出的资源会存放在 compilation.assets中，compilation.assets是一个键值对，键为需要输出的文件名，值为文件对应的内容
+
+```typescript
+import { Compiler, WebpackPluginInstance } from 'webpack'
+
+export default class CustomAssetsPlugin implements WebpackPluginInstance {
+  apply(compiler: Compiler) {
+      // 使用tapAsync 代表异步钩子
+      compiler.hooks.emit.tapAsync('CustomAssetsPlugin', (compilation, callback) => {
+        // dosomething
+        compilation.assets[filename] = {
+            source: () => {
+                // fileContent 即可以代表文本文件的字符串，也可以是代表二进制文件的bufferreturn fileContent;
+            },
+            size: () => {
+                return Buffer.byteLength(fileContent, 'utf8')
+            }
+        }
+        callback()
+      });
+      
+      compiler.hooks.emit.tapAsync('CustomAssetsPlugin', (compilation, callback) => {
+          const asset = compilation.assets[filename];
+          callback()
+      })
+  }
+}
+```
+
+## 实现一个日志插件
+
+```typescript
+import { Compiler, WebpackPluginInstance } from 'webpack'
+
+export default class LogWebpackPlugin implements WebpackPluginInstance {
+  emitCallback: () => void
+  doneCallback: () => void
+  constructor(doneCallback: () => void, emitCallback: () => void) {
+    this.emitCallback = emitCallback
+    this.doneCallback = doneCallback
+  }
+  apply(compiler: Compiler) {
+    compiler.hooks.emit.tap('LogWebpackPlugin', () => {
+      this.emitCallback()
+    })
+    compiler.hooks.done.tap('LogWebpackPlugin', () => {
+      this.doneCallback()
+    })
+    		          compiler.hooks.compilation.tap('LogWebpackPlugin', () => {
+      // compilation（'编译器'对'编译ing'这个事件的监听）
+      console.log('The compiler is starting a new compilation...')
+    })
+    compiler.hooks.compile.tap('LogWebpackPlugin', () => {
+      // compile（'编译器'对'开始编译'这个事件的监听）
+      console.log('The compiler is starting to compile...')
+    })
+  }
+}
+```
+
+**Usage**
+
+```typescript
+import CustomLoggerPlugin from './plugins/CustomLoggerPlugin'
+
+const webpackBaseConfig: Configuration = {
+    plugins: [
+        new CustomLoggerPlugin(
+        () => {
+            // Webpack 模块完成转换成功
+            console.log('emit 事件发生啦，所有模块的转换和代码块对应的文件已经生成好~')
+      	},
+        () => {
+            // Webpack 构建成功，并且文件输出了后会执行到这里，在这里可以做发布文件操作
+            console.log('done 事件发生啦，成功构建完成~')
+          }
+        )
+    ]
+}
+```
+
+**效果**
+
+![20230509173004](/my-blog/webpack/plugin_20230509173004.png)
