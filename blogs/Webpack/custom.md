@@ -8,7 +8,7 @@ tags:
 sidebar: auto
 ---
 
-# 1. 前言
+## 1. 前言
 
 因为`webpack`涉及到了很多`loader`和`plugin`配置，所以看下`webpack`中如何实现`loader`和`plugin`
 
@@ -371,19 +371,19 @@ class MyCustomWebpackPlugin {
 
 在上述的demo中，看到使用了`compiler`&`compilation`两个核心`api`
 
-## Compiler&Compilation
+### Compiler&Compilation
 
-### Complier
+####  Complier
 
 Compiler 对象包含了Webpack环境所有的配置信息，包含options (loaders, plugins...) 这些项，这个对象在webpack启动时候被实例化，它是全局唯一的。我们可以把它理解为webpack的实列。
 
-### Compilation
+####  Compilation
 
 compilation 对象包含了当前的模块资源、编译生成资源、文件的变化等。当webpack在开发模式下运行时，每当检测到一个文件发生改变的时候，那么一次新的 Compilation将会被创建。从而生成一组新的编译资源。
 
 **Compiler对象 与 Compilation 对象 的区别是：** Compiler代表了是整个webpack从启动到关闭的生命周期。Compilation 对象只代表了一次新的编译。
 
-## plugin中常用的api
+### plugin中常用的api
 
 #### 1. 读取输出资源、模块、依赖
 
@@ -458,7 +458,7 @@ export default class CustomAssetsPlugin implements WebpackPluginInstance {
 }
 ```
 
-## 实现一个日志插件
+### 实现一个日志插件
 
 ```typescript
 import { Compiler, WebpackPluginInstance } from 'webpack'
