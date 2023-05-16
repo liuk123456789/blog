@@ -39,7 +39,8 @@ module.exports = {
     createSideBarConfig('dayjs', SOURCE_PATH + '/dayjs'),
     createSideBarConfig('vitual-scroll', SOURCE_PATH + '/vitual-scroll'),
     createSideBarConfig('vue cli', SOURCE_PATH + '/vue-cli'),
-    createSideBarConfig('async validator', SOURCE_PATH + '/async-validator')
+    createSideBarConfig('async validator', SOURCE_PATH + '/async-validator'),
+    createSideBarConfig('vue router', SOURCE_PATH + '/vue-router')
   ],
   [ROLL_UP_PATH]: [
     createSideBarConfig('rollup', ROLL_UP_PATH)
