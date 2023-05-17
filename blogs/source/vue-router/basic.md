@@ -1,5 +1,5 @@
 ---
-title: vue-router
+title: vue-router 第一篇
 date: 2023-05-15
 categories: 
  - 源码解读
@@ -19,7 +19,77 @@ vite: '4.3.5'
 typescript: '4.9.4'
 ```
 
-## 2. 入口
+## 2. HTML5 history
+
+开始源码前，我们有必要知道关于`HTML5`的`history`的一些`api`，以下内容大部分都是从[MDN](https://developer.mozilla.org/zh-CN/docs/Web/API/History)获取的
+
+- 含义：`history`允许操作浏览器的曾经在标签页或者框架访问的历史绘画记录
+
+- 属性
+
+  length: 表示会话历史中元素的数目，包括当前加载的页
+
+  scrollRestoration:允许 web 应用程序在历史导航上显式地设置默认滚动恢复行为
+
+  state:history 栈顶的 `任意` 值的拷贝。通过这种方式可以查看 state 值，不必等待 [`popstate`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/popstate_event)事件发生后再查看。
+
+  > 需要注意的是如果不调用replaceState/pushState，那么state的值是null
+
+- 方法
+
+  `back()`
+
+  ​	会话历史记录中向后移动一页。如果没有上一页，则此方法调用不执行任何操作
+
+  `forward()`
+
+  ​	在会话历史中向前移动一页。它与使用`delta`参数为 1 时调用 `history.go(delta)`的效果相同。
+
+  `go()`
+
+  ​	会话历史记录中加载特定页面。你可以使用它在历史记录中前后移动，具体取决于`delta`参数的值。
+
+  `pushState()`
+
+  ​	向浏览器的会话历史栈增加了一个条目
+
+  ​	该方法是[异步](https://developer.mozilla.org/zh-CN/docs/Glossary/Asynchronous)的。为 [`popstate`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/popstate_event) 事件增加监听器，以确定导航何时完成。`state` 参数将在其中可用。
+
+  > ​	`history.push(state, unused, url)`
+
+  - state
+
+    `state` 对象是一个 JavaScript 对象，其与通过 `pushState()` 创建的新历史条目相关联。每当用户导航到新的 `state`，都会触发 [`popstate`](https://developer.mozilla.org/zh-CN/docs/Web/API/Window/popstate_event) 事件，并且该事件的 `state` 属性包含历史条目 `state` 对象的副本。
+
+    `state` 对象可以是任何可以序列化的对象。因为 Firefox 将 `state` 对象保存到用户的磁盘上，以便用户重启浏览器可以恢复，我们对 `state` 对象序列化的表示施加了 16 MiB 的限制。如果你传递的 `state` 对象的序列化表示超出了 `pushState()` 可接受的大小，该方法将抛出异常
+
+  - unused
+
+    由于历史原因，该参数存在且不能忽略；传递一个空字符串是安全的，以防将来对该方法进行更改
+
+  - url
+
+    新历史条目的 URL。请注意，浏览器不会在调用 `pushState()` 之后尝试加载该 URL，但是它可能会在以后尝试加载该 URL，例如，在用户重启浏览器之后。新 URL 可以不是绝对路径；如果它是相对的，它将相对于当前的 URL 进行解析。新的 URL 必须与当前 URL 同[源](https://developer.mozilla.org/zh-CN/docs/Glossary/Origin)；否则，`pushState()` 将抛出异常。如果该参数没有指定，则将其设置为当前文档的 URL
+
+  `replaceState()`
+
+  ​	使用`state objects`, `title`,和 `URL` 作为参数，修改当前历史记录实体，如果你想更新当前的 state 	对象或者当前历史实体的 URL 来响应用户的的动作的话这个方法将会非常有用。
+
+  ​	语法
+
+  > `history.replaceState(stateObj, title[, url])`
+
+- popstate
+
+  每当激活的历史记录发生变化时，都会触发`popstate`事件。如果被激活的历史记录条目是由`pushState`所创建，或是被`replaceState`方法影响到的，`popstate`事件的状态属性将包含历史记录的状态对象的一个拷贝。所以我们可以通过监听`popstate`
+
+  > window.addEventListener('popstate', function(event) {
+  >
+  > ​	//做一些操作
+  >
+  > })
+
+## 3. 入口
 
 三种路由模式
 
@@ -33,7 +103,7 @@ export { createWebHashHistory } from './history/hash'
 
 先看下三种方法
 
-## 3. createWebHistory
+## 4. createWebHistory
 
 ```typescript
 function createWebHistory(base?: string): RouterHistory {
@@ -308,7 +378,7 @@ function createWebHistory(base?: string): RouterHistory {
 
      替换当前历史记录
 
-   **二次封装的location**
+   **基于pushState/replaceState的二次封装**
 
    ```typescript
    function changeLocation(
@@ -522,9 +592,62 @@ function createWebHistory(base?: string): RouterHistory {
      }
    ```
 
-   创建完`historyNavigation`、`historyListeners`之后，紧跟着声明一个go函数。该函数接收两个变量：`delta`历史记录移动的步数，`triggerListeners`是否触发监听。
+   - 初始判定是否存在，不存在执行`replace`的逻辑
+   - 更新`currentLoaction`&`historyState`
+   - 设置`delta`（主要用于判定forward还是back)
+   - 遍历监听数组，执行回调,`delta` 如果是大于0,那么`forward`,否则`back`
 
-4. 最后创建一个`routerHistory`对象，并将其返回。
+   **构建`state`对象**
+
+   ```typescript
+   /**
+    * Creates a state object
+    */
+   function buildState(
+     back: HistoryLocation | null,
+     current: HistoryLocation,
+     forward: HistoryLocation | null,
+     replaced: boolean = false,
+     computeScroll: boolean = false
+   ): StateEntry {
+     return {
+       back,
+       current,
+       forward,
+       replaced,
+       position: window.history.length,
+       scroll: computeScroll ? computeScrollPosition() : null,
+     }
+   }
+   ```
+
+   这个方法主要是外部调用`push`，`replace`时，构建`state`对象，对象内容包括如下
+
+   - back
+
+     back的url
+
+   - current
+
+     当前url
+
+   - forward
+
+     forward的url
+
+   - replaced
+
+     是否是replace，replace 执行replaceState
+
+   - position
+
+     路由栈历史记录
+
+   - scroll
+
+     滚动条位置
+
+   最后创建一个`routerHistory`对象，并将其返回。
 
    ```typescript
    const routerHistory: RouterHistory = assign(
@@ -554,4 +677,191 @@ function createWebHistory(base?: string): RouterHistory {
    ```
 
 ## 3. createHashHistory
+
+基于`createWebHistory`实现
+
+代码如下
+
+```typescript
+export function createWebHashHistory(base?: string): RouterHistory {
+  // 对于使用文件协议打开的页面location.host是空字符串，这时的base为''
+  // 也就是说在使用文件协议打开页面时，设置了base是不生效的，因为base始终是''
+  base = location.host ? base || location.pathname + location.search : ''
+  // 允许中间的#: `/base/#/app`
+  if (!base.includes('#')) base += '#'
+
+  if (__DEV__ && !base.endsWith('#/') && !base.endsWith('#')) {
+    warn(
+      `A hash base must end with a "#":\n"${base}" should be "${base.replace(
+        /#.*$/,
+        '#'
+      )}".`
+    )
+  }
+  return createWebHistory(base)
+}
+```
+
+## 4. createMemoryHistory
+
+代码如下
+
+```typescript
+/**
+ * Creates an in-memory based history. The main purpose of this history is to handle SSR. It starts in a special location that is nowhere.
+ * It's up to the user to replace that location with the starter location by either calling `router.push` or `router.replace`.
+ *
+ * @param base - Base applied to all urls, defaults to '/'
+ * @returns a history object that can be passed to the router constructor
+ */
+export function createMemoryHistory(base: string = ''): RouterHistory {
+  let listeners: NavigationCallback[] = []
+  let queue: HistoryLocation[] = [START]
+  let position: number = 0
+  base = normalizeBase(base)
+
+  function setLocation(location: HistoryLocation) {
+    position++
+    if (position === queue.length) {
+      // we are at the end, we can simply append a new entry
+      queue.push(location)
+    } else {
+      // we are in the middle, we remove everything from here in the queue
+      queue.splice(position)
+      queue.push(location)
+    }
+  }
+
+  function triggerListeners(
+    to: HistoryLocation,
+    from: HistoryLocation,
+    { direction, delta }: Pick<NavigationInformation, 'direction' | 'delta'>
+  ): void {
+    const info: NavigationInformation = {
+      direction,
+      delta,
+      type: NavigationType.pop,
+    }
+    for (const callback of listeners) {
+      callback(to, from, info)
+    }
+  }
+
+  const routerHistory: RouterHistory = {
+    // rewritten by Object.defineProperty
+    location: START,
+    // TODO: should be kept in queue
+    state: {},
+    base,
+    createHref: createHref.bind(null, base),
+
+    replace(to) {
+      // remove current entry and decrement position
+      queue.splice(position--, 1)
+      setLocation(to)
+    },
+
+    push(to, data?: HistoryState) {
+      setLocation(to)
+    },
+
+    listen(callback) {
+      listeners.push(callback)
+      return () => {
+        const index = listeners.indexOf(callback)
+        if (index > -1) listeners.splice(index, 1)
+      }
+    },
+    destroy() {
+      listeners = []
+      queue = [START]
+      position = 0
+    },
+
+    go(delta, shouldTrigger = true) {
+      const from = this.location
+      const direction: NavigationDirection =
+        // we are considering delta === 0 going forward, but in abstract mode
+        // using 0 for the delta doesn't make sense like it does in html5 where
+        // it reloads the page
+        delta < 0 ? NavigationDirection.back : NavigationDirection.forward
+      position = Math.max(0, Math.min(position + delta, queue.length - 1))
+      if (shouldTrigger) {
+        triggerListeners(this.location, from, {
+          direction,
+          delta,
+        })
+      }
+    },
+  }
+
+  Object.defineProperty(routerHistory, 'location', {
+    enumerable: true,
+    get: () => queue[position],
+  })
+
+  if (__TEST__) {
+    // @ts-expect-error: only for tests
+    routerHistory.changeURL = function (url: string) {
+      const from = this.location
+      queue.splice(position++ + 1, queue.length, url)
+      triggerListeners(this.location, from, {
+        direction: NavigationDirection.unknown,
+        delta: 0,
+      })
+    }
+  }
+
+  return routerHistory
+}
+```
+
+返回的还是`routerHistory`对象
+
+- 定义了`listeners`，`quene`，`position`三个变量，分别代表监听器集合，历史记录队列，历史记录在队列的位置
+
+- 设置记录
+
+  ```typescript
+  function setLocation(location: HistoryLocation) {
+      position++
+      if (position === queue.length) {
+        // we are at the end, we can simply append a new entry
+        queue.push(location)
+      } else {
+        // we are in the middle, we remove everything from here in the queue
+        queue.splice(position)
+        queue.push(location)
+      }
+  }
+  ```
+
+  调用阶段，position自增，判定下此时position是否和对象的长度一直，如果一致，那么入栈，
+
+  否则，当历史记录在队列的非末尾位置时，删除position及之后的记录，然后再push，如果某一刻处在非结尾的历史记录时，这时要进行push或reqlace操作，此时position之后的记录就会失效
+
+- go 方法
+
+  ```typescript
+  go(delta, shouldTrigger = true) {
+    const from = this.location
+    // go的方向。delta < 0 为 back，相反为 forward
+    const direction: NavigationDirection =
+      delta < 0 ? NavigationDirection.back : NavigationDirection.forward
+    // go之后所处的position：Math.min(position + delta, queue.length - 1)保证了position<=queue.length - 1, 如果position + delta超出了数组最大索引，就取最大索引
+    // Math.max(0, Math.min(position + delta, queue.length - 1))进一步保证了position>=0，如果position + delta < 0, 则取0
+    position = Math.max(0, Math.min(position + delta, queue.length - 1))
+    // 根据shouldTrigger决定是否触发监听函数
+    if (shouldTrigger) {
+      triggerListeners(this.location, from, {
+        direction,
+        delta,
+      })
+    }
+  }
+  ```
+
+## 下篇
+
+第一篇主要就是构建三种路由模式的源码，下一篇对应了源码中的`createRouterMatcher`
 

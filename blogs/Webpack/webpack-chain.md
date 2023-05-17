@@ -31,7 +31,7 @@ sidebar: auto
 
 4. `package.json`增加个脚本`test:chain: ts-node build/webpack.chain.ts`
 
-### 3. 入口配置
+## 3. 入口配置
 
 1. 单入口
 
