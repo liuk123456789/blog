@@ -676,7 +676,7 @@ function createWebHistory(base?: string): RouterHistory {
    return routerHistory
    ```
 
-## 3. createHashHistory
+## 5. createHashHistory
 
 基于`createWebHistory`实现
 
@@ -702,7 +702,7 @@ export function createWebHashHistory(base?: string): RouterHistory {
 }
 ```
 
-## 4. createMemoryHistory
+## 6. createMemoryHistory
 
 代码如下
 
