@@ -59,6 +59,90 @@ sidebar: auto
   >
   ```
 
+**涉及的ts类型说明**
+
+1. RouterMatcher
+
+   `createRouterMatcher`的返回类型
+
+   ```typescript
+   export interface RouterMatcher {
+     addRoute: (record: RouteRecordRaw, parent?: RouteRecordMatcher) => () => void
+     removeRoute: {
+       (matcher: RouteRecordMatcher): void
+       (name: RouteRecordName): void
+     }
+     getRoutes: () => RouteRecordMatcher[]
+     getRecordMatcher: (name: RouteRecordName) => RouteRecordMatcher | undefined
+   
+     /**
+      * Resolves a location. Gives access to the route record that corresponds to the actual path as well as filling the corresponding params objects
+      *
+      * @param location - MatcherLocationRaw to resolve to a url
+      * @param currentLocation - MatcherLocation of the current location
+      */
+     resolve: (
+       location: MatcherLocationRaw,
+       currentLocation: MatcherLocation
+     ) => MatcherLocation
+   }
+   ```
+
+2. RouteRecordMatcher
+
+   路由记录的`matcher`
+
+   ```typescript
+   export interface RouteRecordMatcher extends PathParser {
+     record: RouteRecord
+     parent: RouteRecordMatcher | undefined
+     children: RouteRecordMatcher[]
+     // aliases that must be removed when removing this record
+     alias: RouteRecordMatcher[]
+   }
+   ```
+
+   ```typescript
+   export interface PathParser {
+     /**
+      * The regexp used to match a url
+      */
+     re: RegExp
+   
+     /**
+      * The score of the parser
+      */
+     score: Array<number[]>
+   
+     /**
+      * Keys that appeared in the path
+      */
+     keys: PathParserParamKey[]
+     /**
+      * Parses a url and returns the matched params or null if it doesn't match. An
+      * optional param that isn't preset will be an empty string. A repeatable
+      * param will be an array if there is at least one value.
+      *
+      * @param path - url to parse
+      * @returns a Params object, empty if there are no params. `null` if there is
+      * no match
+      */
+     parse(path: string): PathParams | null
+   
+     /**
+      * Creates a string version of the url
+      *
+      * @param params - object of params
+      * @returns a url
+      */
+     stringify(params: PathParams): string
+   }
+   ```
+
+3. RouteRecordRaw
+
+   路由记录原始数据
+
 **返回说明**
 
 ```typescript
@@ -76,7 +160,7 @@ return {
 参数：
 
 - record:  RouteRecordRaw 新增的路由
-- parent?: RouteRecordMatcher 父matcher
+- parent?: RouteRecordMatcher  父matcher
 - originalRecord?: RouteRecordMatcher 原始matcher
 
 代码如下
@@ -422,6 +506,109 @@ return {
 
    逻辑就是通过传入的`segments`，获取路由记录的`score`
 
+   **涉及类型说明**
+   
+   ```typescript
+   /**
+    * A param in a url like `/users/:id`
+    */
+   interface PathParserParamKey {
+     name: string
+     repeatable: boolean
+     optional: boolean
+   }
+   
+   /**
+    * @internal
+    */
+   export interface _PathParserOptions {
+     /**
+      * Makes the RegExp case-sensitive.
+      *
+      * @defaultValue `false`
+      */
+     sensitive?: boolean
+   
+     /**
+      * Whether to disallow a trailing slash or not.
+      *
+      * @defaultValue `false`
+      */
+     strict?: boolean
+   
+     /**
+      * Should the RegExp match from the beginning by prepending a `^` to it.
+      * @internal
+      *
+      * @defaultValue `true`
+      */
+     start?: boolean
+   
+     /**
+      * Should the RegExp match until the end by appending a `$` to it.
+      *
+      * @defaultValue `true`
+      */
+     end?: boolean
+   }
+   
+   // tokensToParser 的返回类型
+   export interface PathParser {
+     /**
+      * The regexp used to match a url
+      */
+     re: RegExp
+   
+     /**
+      * The score of the parser
+      */
+     score: Array<number[]>
+   
+     /**
+      * Keys that appeared in the path
+      */
+     keys: PathParserParamKey[]
+     /**
+      * Parses a url and returns the matched params or null if it doesn't match. An
+      * optional param that isn't preset will be an empty string. A repeatable
+      * param will be an array if there is at least one value.
+      *
+      * @param path - url to parse
+      * @returns a Params object, empty if there are no params. `null` if there is
+      * no match
+      */
+     parse(path: string): PathParams | null
+   
+     /**
+      * Creates a string version of the url
+      *
+      * @param params - object of params
+      * @returns a url
+      */
+     stringify(params: PathParams): string
+   }
+   ```
+   
+   **源码如下**
+   
+   `segments`参考数据
+   
+   ```typescript
+   [
+     [
+       {
+         type: 1,
+         value: 'orderId',
+         regexp: '\\d+',
+         repeatable: false,
+         optional: true
+       }
+     ]
+   ]
+   ```
+   
+   具体源码
+   
    ```typescript
    /**
     * Creates a path parser from an array of Segments (a segment is an array of Tokens)
@@ -453,7 +640,7 @@ return {
        // 根路径 [PathScore.Root]
        const segmentScores: number[] = segment.length ? [] : [PathScore.Root]
    
-       // 允许尾部斜线
+       // 允许尾部斜线 用于匹配根路由
        if (options.strict && !segment.length) pattern += '/'
        for (let tokenIndex = 0; tokenIndex < segment.length; tokenIndex++) {
          const token = segment[tokenIndex]
@@ -462,10 +649,11 @@ return {
            // 基础分数 + 是否区分大小写？BounsCaseSensitive : 0 
            PathScore.Segment +
            (options.sensitive ? PathScore.BonusCaseSensitive : 0)
-   
+   	  // 静态Type
          if (token.type === TokenType.Static) {
-           // prepend the slash if we are starting a new segment
+           // 如果是初始值，那么需要变成这种格式^/
            if (!tokenIndex) pattern += '/'
+           // REGEX_CHARS_RE 正则的意思特殊字符需要进行转义
            pattern += token.value.replace(REGEX_CHARS_RE, '\\$&')
            // 静态路由的分数 
            subSegmentScore += PathScore.Static
@@ -476,9 +664,11 @@ return {
              repeatable,
              optional,
            })
+           // 非自定义正则读默认值
            const re = regexp ? regexp : BASE_PARAM_PATTERN
-           // the user provided a custom regexp /:id(\\d+)
+           // 自定义正则，如：/:id(\\d+)
            if (re !== BASE_PARAM_PATTERN) {
+             // 那么需要加上自定义正则对应的得分 
              subSegmentScore += PathScore.BonusCustomRegExp
              // 校验路由中的正则是否合法
              try {
@@ -491,10 +681,11 @@ return {
              }
            }
    
-           // 是否可以重复 /:id(\\d+)* 或者 /:id(\\d+)+ 这种格式的路由
+           // 是否可以重复 /:chapters* 或者 /:chapters+ 这种格式的路由
+           // TODO: 如果可重复 生成的正则没看懂，否则取re
            let subPattern = repeatable ? `((?:${re})(?:/(?:${re}))*)` : `(${re})`
    
-           // prepend the slash if we are starting a new segment
+           // 如果是初始值，那么需要进行subPattern的拼接
            if (!tokenIndex)
              subPattern =
                // avoid an optional / if there are more segments e.g. /:p?-static
@@ -502,16 +693,20 @@ return {
                optional && segment.length < 2
                  ? `(?:/${subPattern})`
                  : '/' + subPattern
+           // 如果可配置，拼接?
            if (optional) subPattern += '?'
-   
+   		// 得到最后的正则
            pattern += subPattern
-   		
+   		// subSegmentScore加上Dynamic对应的分数
            subSegmentScore += PathScore.Dynamic
+           // 可配置 计算值加上BonusOptional
            if (optional) subSegmentScore += PathScore.BonusOptional
+           // 重复参数路由 计算值加上BonusRepeatable
            if (repeatable) subSegmentScore += PathScore.BonusRepeatable
+           // /:pathMatch(.*)* 异常类路由
            if (re === '.*') subSegmentScore += PathScore.BonusWildcard
          }
-   
+   	  
          segmentScores.push(subSegmentScore)
        }
    
@@ -521,7 +716,7 @@ return {
        score.push(segmentScores)
      }
    
-     // only apply the strict bonus to the last score
+     // 如果禁止尾部斜线并且必须以$结尾的话
      if (options.strict && options.end) {
        const i = score.length - 1
        score[i][score[i].length - 1] += PathScore.BonusStrict
@@ -536,6 +731,8 @@ return {
    
      const re = new RegExp(pattern, options.sensitive ? '' : 'i')
    
+     // 具体path路径转成对象格式的参数
+     // 如：matcher.parse('/2333-fddds') => { id: 23333, w: 'fdddds' }
      function parse(path: string): PathParams | null {
        const match = path.match(re)
        const params: PathParams = {}
@@ -550,7 +747,9 @@ return {
    
        return params
      }
-   
+     
+     // 对象格式的参数转成具体路径
+     // 如：matcher.stringify({ id: '2', w: 'hey' } => /2-hey  
      function stringify(params: PathParams): string {
        let path = ''
        // for optional parameters to allow to be empty
@@ -605,9 +804,9 @@ return {
      }
    }
    ```
-
+   
    **PathScore**枚举配置
-
+   
    ```typescript
    const enum PathScore {
      _multiplier = 10,
@@ -625,8 +824,8 @@ return {
      BonusCaseSensitive = 0.025 * _multiplier, // when options strict: true is passed, as the regex omits \/?
    }
    ```
-
-   **其中存在一些pattern的转化，因为个人正则确实不怎么好，所以暂时没有特别详细的说这里的内容**
+   
+   **其中存在一些pattern的拼接，个人正则确实不怎么好，所以有些地方进行TODO标记**
 
 回到`createRouteRecordMatcher`
 
@@ -893,7 +1092,7 @@ function compareScoreArray(a: number[], b: number[]): number {
 }
 ```
 
-**栗子如下：**
+**🌰如下：**
 
 假设`matcherA`是需要添加的，`matchers`中此时只有一个`matcherB`，`matcherA.score=[[20, 30]]`，`matcherB.score=[[20,40]`，那么`matcherA`是怎么添加到`matchers`中的呢？过程如下：
 
