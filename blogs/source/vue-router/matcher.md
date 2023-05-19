@@ -883,7 +883,8 @@ function resolve(
     let params: PathParams = {}
     let path: MatcherLocation['path']
     let name: MatcherLocation['name']
-
+    // 匹配路由记录的name
+    // 如：resolve({ name: '', params: {} })
     if ('name' in location && location.name) {
       matcher = matcherMap.get(location.name)
 
@@ -927,6 +928,8 @@ function resolve(
       // throws if cannot be stringified
       path = matcher.stringify(params)
     } else if ('path' in location) {
+ 	   // 匹配路由记录的path
+       // 如：resolve({ name: '', params: {} })
       // no need to resolve the path with the matcher as it was provided
       // this also allows the user to control the encoding
       path = location.path
@@ -947,7 +950,7 @@ function resolve(
       }
       // location is a relative path
     } else {
-      // match by name or path of current route
+      // 匹配当前路由
       matcher = currentLocation.name
         ? matcherMap.get(currentLocation.name)
         : matchers.find(m => m.re.test(currentLocation.path))
@@ -965,6 +968,7 @@ function resolve(
 
     const matched: MatcherLocation['matched'] = []
     let parentMatcher: RouteRecordMatcher | undefined = matcher
+    // 递归下，让父级路由位于数组头部
     while (parentMatcher) {
       // reversed order so parents are at the beginning
 
