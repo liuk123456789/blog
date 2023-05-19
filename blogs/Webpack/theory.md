@@ -261,7 +261,7 @@ _sendStats() {
 }
 ```
 
-### 4. webpack监听文件变化
+#### 4. webpack监听文件变化
 
 每次修改代码，就会触发编译。说明我们还需要监听本地代码的变化，主要是通过`setupDevMiddleware`方法实现的。
 

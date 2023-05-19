@@ -775,8 +775,107 @@ if (fs.existsSync(targetDir) && !options.merge) {
       })
       ```
 
-   4. **shouldInitGit**
+      读取`package.json`的配置方法如下
 
+      ```javascript
+      const fs = require('fs')
+      const path = require('path')
+      const readPkg = require('read-pkg')
+      
+      exports.resolvePkg = function (context) {
+        if (fs.existsSync(path.join(context, 'package.json'))) {
+          return readPkg.sync({ cwd: context })
+        }
+        return {}
+      }
+      ```
+   
+      **测试下这个小功能**
+   
+      读取`package.json`
+   
+      ```javascript
+      const fs = require('fs')
+      const path = require('path')
+      const readPkg = require('read-pkg')
+      
+      function resolvePkg(context = process.cwd()) {
+        if(fs.existsSync(path.join(context, 'package.json'))) {
+          return readPkg.sync({ cwd: context})
+        }
+        return {}
+      }
+      ```
+   
+      新的配置写入`package.json`
+   
+      ```javascript
+      const fs = require('fs-extra')
+      const path = require('path')
+      const readPkg = require('read-pkg')
+      const writeFileTree = require('../utils/writeFileTree')
+      
+      function resolvePkg(context = process.cwd()) {
+        if(fs.existsSync(path.join(context, 'package.json'))) {
+          return readPkg.sync({ cwd: context})
+        }
+        return {}
+      }
+      
+      const initWritePkg = async () => {
+        const pkg = {
+          version: '0.1.0',
+          private: true,
+          devDependencies: {},
+          ...resolvePkg(context=process.cwd())
+        }
+      
+        const preset = {
+          plugins: {
+            '@vue/cli-service': { bare: true },
+            '@vue/cli-plugin-router': {
+              history: true
+            },
+            '@vue/cli-plugin-vuex': {}
+          }
+        }
+      
+        const deps = Object.keys(preset.plugins)
+      
+        deps.forEach(dep => {
+          if (preset.plugins[dep]._isPreset) {
+            return
+          }
+      
+          let { version } = preset.plugins[dep]
+      
+          if (!version) {
+            version = 'latest'
+          }
+      
+          pkg.devDependencies[dep] = version
+        })
+      
+        await writeFileTree(process.cwd(), {
+          'package.json': JSON.stringify(pkg, null, 2)
+        })
+      }
+      
+      initWritePkg()
+      ```
+   
+      生成的`package.json`
+   
+      ```json
+      "devDependencies": {
+          "@vue/cli-service": "latest",
+          "@vue/cli-plugin-router": "latest",
+          "@vue/cli-plugin-vuex": "latest"
+      }
+      ```
+   
+   4. **shouldInitGit**
+   
       ```javascript
       const shouldInitGit = this.shouldInitGit(cliOptions)
       if (shouldInitGit) {
