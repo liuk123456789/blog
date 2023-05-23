@@ -457,7 +457,7 @@ export function createRouter(options:RouterOptions):Router {
        applyToParams.bind(null, decode)
    ```
 
-## 4. addRoute
+## 3. addRoute
 
 ```typescript
 function addRoute(
@@ -480,7 +480,7 @@ function addRoute(
 1. 判定下`parentOrRoute`是否是路由名称，那么添加的是嵌套路由
 2. 如果不是，那么为非嵌套路由
 
-## 5. removeRoute
+## 4. removeRoute
 
 ```typescript
 function removeRoute(name: RouteRecordName) {
@@ -496,7 +496,7 @@ function removeRoute(name: RouteRecordName) {
 
 ```
 
-## 6. getRoutes
+## 5. getRoutes
 
 ```typescript
 function getRoutes() {
@@ -505,7 +505,7 @@ function getRoutes() {
 }
 ```
 
-## 7. hasRoute
+## 6. hasRoute
 
 ```typescript
 function hasRoute(name: RouteRecordName): boolean {
@@ -515,7 +515,7 @@ function hasRoute(name: RouteRecordName): boolean {
 
 用于判定路由是否存在，这里传参需要注意的是，必须传递路由名称
 
-## 8. resolve
+## 7. resolve
 
 代码相对复杂，所以我们一步步分析
 
