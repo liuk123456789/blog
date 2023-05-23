@@ -998,11 +998,17 @@ function removeRoute(matcherRef: RouteRecordName | RouteRecordMatcher) {
       const matcher = matcherMap.get(matcherRef)
       if (matcher) {
         matcherMap.delete(matcherRef)
+      	// TODO: 这里我存在疑惑，因为matcherRef类型 RouteRecordName
+        // matchers类型 RouteRecordMatcher[]
+        // 所以感觉这里的index似乎永远都是-1
         matchers.splice(matchers.indexOf(matcher), 1)
         matcher.children.forEach(removeRoute)
         matcher.alias.forEach(removeRoute)
       }
     } else {
+      // TODO: 这里我存在疑惑，因为matcherRef 类型时RouteRecordMatcher
+      // matchers类型 RouteRecordMatcher[]
+      // 所以感觉这里的index似乎永远都是-1
       const index = matchers.indexOf(matcherRef)
       if (index > -1) {
         matchers.splice(index, 1)
