@@ -457,8 +457,6 @@ export function createRouter(options:RouterOptions):Router {
        applyToParams.bind(null, decode)
    ```
 
-6. 
-
 ## 4. addRoute
 
 ```typescript
