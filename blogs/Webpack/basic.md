@@ -1004,3 +1004,68 @@ pnpm install @types/node
 
 只此，我们完成基础的框架搭建以及常见资源的`loader`配置，下一篇主要是针对的是打包性能优化
 
+## 2023.5.24
+
+本次更新主要是让`vue3`支持`jsx/tsx`
+
+1. 安装依赖
+
+   ```shell
+   pnpm add @vue/babel-plugin-jsx -D
+   ```
+
+2. 修改`.babelrc`的配置
+
+   ```js
+   {
+     "presets": [
+       [
+         "@babel/preset-env",
+         {
+           // 设置兼容目标浏览器版本,也可以在根目录配置.browserslistrc文件,babel-loader会自动寻找上面配置好的文件.browserslistrc
+           "useBuiltIns": "usage", // 根据配置的浏览器兼容,以及代码中使用到的api进行引入polyfill按需添加
+           "corejs": 3, // 配置使用core-js使用的版本
+           "loose": true
+         }
+       ],
+       [
+         "@babel/preset-typescript",
+         {
+           "isTSX": true, // 必须设置，否者编译tsx时会报错
+           "allowNamespaces": true,
+           "allExtensions": true // 必须设置，否者编译.vue 文件中ts 代码会报错
+         }
+       ]
+     ],
+     "plugins": ["@vue/babel-plugin-jsx", ["@babel/plugin-transform-runtime"]]
+   }
+   ```
+
+3. 新建`tsx`
+
+   ```tsx
+   import { defineComponent } from 'vue'
+   
+   export default defineComponent({
+     setup() {
+       return () => <div>This is Vue JSX Component!</div>
+     }
+   })
+   
+   ```
+
+4. 重新编译后，发现热更新存在问题，个人的解决方案是开发环境配置`runtime chunk`
+
+   ```typescript
+   const webpackBaseConfig: Configuration = {
+       //...
+     	optimization: {
+       	runtimeChunk: {
+         		name: 'runtimeChunk'
+       	}
+     	}
+   }
+   ```
+
+
+
