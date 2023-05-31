@@ -1,19 +1,18 @@
 ---
-title: 第二篇 generator
+title: vue-cli第二篇
 date: 2023-03-24
 categories: 
  - 源码解读
 tags:
- - vue cli generator
+ - vue-cli第二篇
 sidebar: auto
 ---
 
-## 说明
-上一篇提到了`creator`中还剩**resolvePlugins**和**generator**未涉及，同时Generator也是`vue create`最为核心的部分
+## 1. 前言
 
-## resolvePlugins
+在第一篇中，我们剩下了`generator`生成器没有说，这也是`vue create ***`命令最为核心的部分，同时也回顾下`resolvePlugins`的功能
 
-### 代码
+## 2. resolvePlugins
 
 ```javascript
 // { id: options } => [{ id, apply, options }]
@@ -50,9 +49,9 @@ async resolvePlugins (rawPlugins, pkg) {
 }
 ```
 
-我们先看下**`sortObject`**和**`loadModule`**
+看下**`sortObject`**和**`loadModule`**
 
-#### **`sortObject`**
+### 2.1 sortObject
 
 ```javascript
 module.exports = function sortObject (obj, keyOrder, dontSortByUnicode) {
@@ -81,7 +80,7 @@ module.exports = function sortObject (obj, keyOrder, dontSortByUnicode) {
 
 主要作用解释将`@vue/cli-service`核心插件放在对象的第一位
 
-#### **`loadModule`**
+### 2.2 loadModule
 
 ```javascript
 exports.loadModule = function (request, context, force = false) {
@@ -127,9 +126,9 @@ exports.loadModule = function (request, context, force = false) {
 ]
 ```
 
-## Generator
+## 3. Generator
 
-`resolvePlugins`之后便是实例化`Generator`，接下来就是调用`generatre`方法
+`Create.js`代码中`resolvePlugins`之后便是实例化`Generator`，接下来就是调用`generatre`方法
 
 ```javascript
 const generator = new Generator(context, {
@@ -144,7 +143,7 @@ await generator.generate({
 })
 ```
 
-### Generator类
+### 3.1 Generator类
 
 ```javascript
 module.exports = class Generator {
@@ -200,9 +199,9 @@ module.exports = class Generator {
 }
 ```
 
-确实，我一眼看到这么多字段，蒙蔽了，所以暂时先不管每个字段代表什么，跟着流程往下走，初始化中调用了`resolveAllPlugins`，所以先看下这个方法
+因为构造器方法中太多的字段了，确实跟人很难进入的感觉，所以我们先跳过这些字段，其中存在这行代码`this.allPlugins = this.resolveAllPlugins()`，所以，我们先去看下`resolveAllPlugins`的功能
 
-#### **ResolveAllPlugins**
+### 3.2 **ResolveAllPlugins**
 
 ```javascript
 resolveAllPlugins () {
@@ -220,15 +219,14 @@ resolveAllPlugins () {
 }
 ```
 
-解析`package.json`的所有依赖包，同时查找`require(***/generator)`，将它挂到`apply`属性
+解析`package.json`的所有依赖包，同时查找`require(***/generator)`，将它挂到`apply`属性，最后对`plugins`进行排序
 
-实例化`Generator`后，调用了`generate`方法
-
-#### **generate**
+### 3.3 generate
 
 ```javascript
 async generate ({
-    extractConfigFiles = false, // babel.config.js postcss.config.js eslint.config.js等额外的配置文件
+    // babel.config.js postcss.config.js eslint.config.js等额外的配置文件
+    extractConfigFiles = false, 
     checkExisting = false,
     sortPackageJson = true
   } = {}) {
@@ -252,21 +250,21 @@ async generate ({
 
 首先我们看下`initPlugins`
 
-#### **initPlugins**
+#### 3.3.1 initPlugins
 
 ```javascript
 async initPlugins () {
     const { rootOptions, invoking } = this
     const pluginIds = this.plugins.map(p => p.id)
 
-    // avoid modifying the passed afterInvokes, because we want to ignore them from other plugins
+    // 避免修改afterInvokeCbs
     const passedAfterInvokeCbs = this.afterInvokeCbs
     this.afterInvokeCbs = []
     // apply hooks from all plugins to collect 'afterAnyHooks'
     for (const plugin of this.allPlugins) {
       const { id, apply } = plugin
       const api = new GeneratorAPI(id, this, {}, rootOptions)
-
+      // 如果apply存在hooks，那么执行hooks
       if (apply.hooks) {
         await apply.hooks(api, {}, rootOptions, pluginIds)
       }
@@ -299,70 +297,46 @@ async initPlugins () {
 }
 ```
 
-这段代码主要解释解析插件目录的`generator`，当然核心就是`GeneratorAPI`
-
-#### GenerateAPI
-
-`GeneratorAPI` 是一个比较重要的部分了,@vue/cli 插件所提供的 generator 向外暴露一个函数，接收的第一个参数 api，然后通过该 api 提供的方法去完成应用的拓展工作，这里所说 的 api 就是 `GeneratorAPI`，下面看一下 `GeneratorAPI` 提供了哪些方法。
-
-- **hasPlugin**：判断项目中是否有某个插件
-- **extendPackage**：拓展 package.json 配置
-- **render**：利用 ejs 渲染模板文件
-- **onCreateComplete**：内存中保存的文件字符串全部被写入文件后的回调函数
-- **exitLog**：当 generator 退出的时候输出的信息
-- **genJSConfig**：将 json 文件生成为 js 配置文件
-- **injectImports**：向文件当中注入import语法的方法
-- **injectRootOptions**：向 Vue 根实例中添加选项
-- ...
-
-我们看下插件的generator的暴露的方法，以`cli-plugin-router`为例
+**rootOptions**
 
 ```javascript
-module.exports = (api, options = {}, rootOptions = {}) => {
-  const isVue3 = (rootOptions.vueVersion === '3')
+const cliService = plugins.find(p => p.id === '@vue/cli-service')
 
-  api.injectImports(api.entryFile, `import router from './router'`)
+// 如果没有cliService(resolvePlugins传入)，那么会从package.json的依赖项中生成rootOptions
+// rootOptions的配置大致如下
+// {
+// "vueVersion": '2' | '3',
+// "bare": boolean,
+// "useConfigFiles": boolean | 'file',
+// "router": boolean,
+// "vuex": boolean,
+// "cssPreprocessor": 'sass' | 'less' | 'stylus',
+// "plugins": {
+//   "@vue/cli-plugin-babel": object,
+//   "@vue/cli-plugin-typescript": object
+// },
+// "config": object
+//   
+// }
+const rootOptions = cliService
+  ? cliService.options
+  : inferRootOptions(pkg)
 
-  if (isVue3) {
-    api.transformScript(api.entryFile, require('./injectUseRouter'))
-    api.extendPackage({
-      dependencies: {
-        'vue-router': '^4.0.3'
-      }
-    })
-  } else {
-    api.injectRootOptions(api.entryFile, `router`)
-
-    api.extendPackage({
-      dependencies: {
-        'vue-router': '^3.5.1'
-      }
-    })
-  }
-
-  api.render('./template', {
-    historyMode: options.historyMode,
-    doesCompile: api.hasPlugin('babel') || api.hasPlugin('typescript'),
-    hasTypeScript: api.hasPlugin('typescript')
-  })
-
-  if (isVue3) {
-    api.render('./template-vue3', {
-      historyMode: options.historyMode,
-      doesCompile: api.hasPlugin('babel') || api.hasPlugin('typescript'),
-      hasTypeScript: api.hasPlugin('typescript')
-    })
-  }
-
-  if (api.invoking) {
-    if (api.hasPlugin('typescript')) {
-      /* eslint-disable-next-line node/no-extraneous-require */
-      const convertFiles = require('@vue/cli-plugin-typescript/generator/convert')
-      convertFiles(api)
-    }
-  }
-}
+this.rootOptions = rootOptions
 ```
+
+#### 3.3.2 GenerateAPI
+
+`GeneratorAPI` 是一个比较重要的部分了,`@vue/cli `插件所提供的 generator 向外暴露一个函数，接收的第一个参数 `api`，然后通过该 `api` 提供的方法去完成应用的拓展工作，这里所说 的 `api` 就是 `GeneratorAPI`，下面看一下 `GeneratorAPI` 提供了哪些方法。
+
+- **hasPlugin**：判断项目中是否有某个插件
+- **extendPackage**：拓展 `package.json` 配置
+- **render**：利用 `ejs` 渲染模板文件
+- **onCreateComplete**：内存中保存的文件字符串全部被写入文件后的回调函数
+- **exitLog**：当 `generator` 退出的时候输出的信息
+- **genJSConfig**：将 `json` 文件生成为` js` 配置文件
+- **injectImports**：向文件当中注入`import`语法的方法
+- **injectRootOptions**：向 `Vue` 根实例中添加选项
 
 其中`api`就是`GeneratorApi`的示例，可以看下`cli-plugin-**`的目录结构，对比`GeneratorApi`的原型方法，感受下`generator`的强大功能
 
@@ -588,5 +562,5 @@ module.exports = async function writeFileTree (dir, files, previousFiles, includ
 
 ## TODO: 
 
-- [ ] 这部分的内容确实很复杂，也没有完全梳理整个逻辑，后续会考虑参考源码实现简单的Generator
+- [x] 这部分的内容确实很复杂，也没有完全梳理整个逻辑，后续会考虑参考源码实现简单的Generator
 - [x] `add`,`inspect`,`init`等剩余其他命令的源码[参考文档](https://kuangpf.com/vue-cli-analysis)
