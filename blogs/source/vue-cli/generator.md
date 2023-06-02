@@ -509,7 +509,7 @@ async resolveFiles () {
 
 `injectImportsAndOptions` 就是将` generator` 注入的` import` 和 `rootOption` 解析到对应的文件中，比如选择了 `vuex`, 会在 `src/main.js` 中添加 `import store from './store'`，以及在 `vue` 根实例中添加 `router` 选项。
 
-`postProcessFilesCbs` 是在所有普通文件在内存中渲染成字符串完成之后要执行的遍历回调。例如将 `@vue/cli-service/generator/index.js` 中的 render 是放在了 `fileMiddlewares` 里面，而将 `@vue/cli-service/generator/router/index.js` 中将替换 `src/App.vue` 文件的方法放在了 `postProcessFiles` 里面，原因是对 `src/App.vue` 文件的一些替换一定是发生在 render 函数之后，如果在之前，修改后的 src/App.vue 在之后 render 函数执行时又会被覆盖，这样显然不合理。
+`postProcessFilesCbs` 是在所有普通文件在内存中渲染成字符串完成之后要执行的遍历回调。例如将 `@vue/cli-service/generator/index.js` 中的 render 是放在了 `fileMiddlewares` 里面，而将 `@vue/cli-service/generator/router/index.js` 中将替换 `src/App.vue` 文件的方法放在了 `postProcessFiles` 里面，原因是对 `src/App.vue` 文件的一些替换一定是发生在 `render` 函数之后，如果在之前，修改后的` src/App.vue `在之后 `render` 函数执行时又会被覆盖，这样显然不合理。
 
 #### 3.3.5 **writeFileTree**
 
