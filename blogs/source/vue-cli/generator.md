@@ -327,7 +327,7 @@ this.rootOptions = rootOptions
 
 #### 3.3.2 GenerateAPI
 
-`GeneratorAPI` 是一个比较重要的部分了,`@vue/cli `插件所提供的 generator 向外暴露一个函数，接收的第一个参数 `api`，然后通过该 `api` 提供的方法去完成应用的拓展工作，这里所说 的 `api` 就是 `GeneratorAPI`，下面看一下 `GeneratorAPI` 提供了哪些方法。
+`GeneratorAPI` 是一个比较重要的部分了,`@vue/cli `插件所提供的 `generator` 向外暴露一个函数，接收的第一个参数 `api`，然后通过该 `api` 提供的方法去完成应用的拓展工作，这里所说 的 `api` 就是 `GeneratorAPI`，下面看一下 `GeneratorAPI` 提供了哪些方法。
 
 - **hasPlugin**：判断项目中是否有某个插件
 - **extendPackage**：拓展 `package.json` 配置
@@ -338,17 +338,9 @@ this.rootOptions = rootOptions
 - **injectImports**：向文件当中注入`import`语法的方法
 - **injectRootOptions**：向 `Vue` 根实例中添加选项
 
-其中`api`就是`GeneratorApi`的示例，可以看下`cli-plugin-**`的目录结构，对比`GeneratorApi`的原型方法，感受下`generator`的强大功能
+#### 3.3.3 extractConfigFiles
 
-`initPlugins`就要到生成文件目录部分，所以接下就是
-
-- `extractConfigFiles`(postcss.config.js .eslintrc 等这些)
-- `resolveFiles`模板渲染
-- `writeFileTree` 文件目录写入
-
-#### extractConfigFiles
-
-提取配置文件指的是将一些插件（比如 eslint，babel）的配置从 `package.json` 的字段中提取到专属的配置文件中。下面以 eslint 为例进行分析： 在初始化项目的时候，如果选择了 eslint 插件，在调用 `@vue/cli-plugin-eslint` 的 generator 的时候，就会向 `package.json` 注入 eslintConfig 字段：
+提取配置文件指的是将一些插件（比如 `eslint`，`babel`）的配置从 `package.json` 的字段中提取到专属的配置文件中。下面以` eslint` 为例进行分析： 在初始化项目的时候，如果选择了 `eslint `插件，在调用 `@vue/cli-plugin-eslint` 的 `generator` 的时候，就会向 `package.json` 注入 `eslintConfig` 字段：
 
 ```javascript
 const fs = require('fs')
@@ -358,6 +350,7 @@ module.exports = (api, { config, lintOn = [] }, rootOptions, invoking) => {
   const eslintConfig = require('../eslintOptions').config(api, config, rootOptions)
   const devDependencies = require('../eslintDeps').getDeps(api, config, rootOptions)
 
+  // package.json的配置
   const pkg = {
     scripts: {
       lint: 'vue-cli-service lint'
@@ -365,7 +358,7 @@ module.exports = (api, { config, lintOn = [] }, rootOptions, invoking) => {
     eslintConfig,// eslint配置
     devDependencies
   }
-
+  // editorConfig的模板路径 主要就是airbnb | standard
   const editorConfigTemplatePath = path.resolve(__dirname, `./template/${config}/_editorconfig`)
   if (fs.existsSync(editorConfigTemplatePath)) {
     if (fs.existsSync(api.resolve('.editorconfig'))) {
@@ -459,11 +452,11 @@ module.exports.applyTS = api => {
 
 ```
 
-如果 preset 的 `useConfigFiles` 为 true ，或者以 Manually 模式初始化 preset 的时候选择 In dedicated config files 存放配置文件:
+如果 `preset` 的 `useConfigFiles` 为 true ，或者以 `Manually` 模式初始化 `preset` 的时候选择 `In dedicated config files` 存放配置文件:
 
-那么 `extractConfigFiles` 方法就会将 `package.json` 中 eslintConfig 字段内容提取到 `.eslintrc.js` 文件中，内存中 `.eslintrc.js` 内容如下：
+那么 `extractConfigFiles` 方法就会将 `package.json` 中 `eslintConfig` 字段内容提取到 `.eslintrc.js` 文件中，内存中 `.eslintrc.js` 内容如下：
 
-#### resolveFiles
+#### 3.3.4 resolveFiles
 
 resolveFiles 主要分为以下三个部分执行：
 
@@ -512,13 +505,13 @@ async resolveFiles () {
 }
 ```
 
-`fileMiddlewares` 里面包含了 `ejs render` 函数，所有插件调用 `api.render` 时候只是把对应的渲染函数 push 到了 `fileMiddlewares` 中，等所有的 插件执行完以后才会遍历执行 `fileMiddlewares` 里面的所有函数，即在内存中生成模板文件字符串。
+`fileMiddlewares` 里面包含了 `ejs render` 函数，所有插件调用 `api.render` 时候只是把对应的渲染函数 `push` 到 `fileMiddlewares` 中，等所有的 插件执行完以后才会遍历执行 `fileMiddlewares` 里面的所有函数，即在内存中生成模板文件字符串。
 
-`injectImportsAndOptions` 就是将 generator 注入的 import 和 rootOption 解析到对应的文件中，比如选择了 vuex, 会在 `src/main.js` 中添加 `import store from './store'`，以及在 vue 根实例中添加 router 选项。
+`injectImportsAndOptions` 就是将` generator` 注入的` import` 和 `rootOption` 解析到对应的文件中，比如选择了 `vuex`, 会在 `src/main.js` 中添加 `import store from './store'`，以及在 `vue` 根实例中添加 `router` 选项。
 
 `postProcessFilesCbs` 是在所有普通文件在内存中渲染成字符串完成之后要执行的遍历回调。例如将 `@vue/cli-service/generator/index.js` 中的 render 是放在了 `fileMiddlewares` 里面，而将 `@vue/cli-service/generator/router/index.js` 中将替换 `src/App.vue` 文件的方法放在了 `postProcessFiles` 里面，原因是对 `src/App.vue` 文件的一些替换一定是发生在 render 函数之后，如果在之前，修改后的 src/App.vue 在之后 render 函数执行时又会被覆盖，这样显然不合理。
 
-#### **writeFileTree**
+#### 3.3.5 **writeFileTree**
 
 ```javascript
 const fs = require('fs-extra')
@@ -559,8 +552,3 @@ module.exports = async function writeFileTree (dir, files, previousFiles, includ
   })
 }
 ```
-
-## TODO: 
-
-- [x] 这部分的内容确实很复杂，也没有完全梳理整个逻辑，后续会考虑参考源码实现简单的Generator
-- [x] `add`,`inspect`,`init`等剩余其他命令的源码[参考文档](https://kuangpf.com/vue-cli-analysis)
