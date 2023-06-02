@@ -1,5 +1,5 @@
 ---
-title: 第一篇 creator
+title: vue-cli 第一篇
 date: 2023-03-15 
 categories: 
  - 源码解读
@@ -14,7 +14,11 @@ sidebar: auto
 vue-cli: 5.0.8
 ```
 
-## 2. 入口
+## 2. 前言
+
+源码分析的目的主要还是为了说使用`vue-cli`更加的熟练，同时学习如何自己完成一些`CLI`的操作。当然，在解读源码过程中，可能一些地方存在问题，也希望能够被指出和改正。之前写过，感觉不尽人意，所以重新梳理，希望通过这一系列能够帮助到想了解`vue-cli`的同行
+
+## 3. 入口
 
 打开项目的`package.json`文件，如下
 
@@ -62,7 +66,7 @@ vue-cli: 5.0.8
 
 - workspaces
 
-  npm install 时将 workspaces 下面的包，软链到根目录的 node_modules 中，不用手动执行 `npm link` 操作。
+  `npm install` 时将` workspaces` 下面的包，软链到根目录的 `node_modules` 中，不用手动执行 `npm link` 操作。
 
 - resolutions
 
@@ -84,9 +88,9 @@ npm install -g @vue/cli
 yarn install -g @vue/cli
 ```
 
-## 3. @vue/cli 文件分析
+## 4. @vue/cli 相关
 
-### package.json
+### 3.1 package.json
 
 ```
 {
@@ -101,7 +105,7 @@ yarn install -g @vue/cli
 `vue`就是注册的命令，全局安装或者链接全局后就可以使用该命令
 
 分析
-在安装第三方带有bin字段的`npm`包时，可执行文件就会被链接到当前项目的`./node_modules/.bin`中，就可以使用`node node_modules/.bin/vue`执行
+在安装第三方带有`bin`字段的`npm`包时，可执行文件就会被链接到当前项目的`./node_modules/.bin`中，就可以使用`node node_modules/.bin/vue`执行
 
 但如果是把包全局安装，`npm`就会把文件链接到`prefix/bin`中，我们就可以直接全局使用`vue`命令执行脚本了
 
@@ -117,7 +121,7 @@ yarn install -g @vue/cli
 
 可以看到，最终执行的是`vue.js`的脚本，对应了`bin`配置的`bin/vue.js`
 
-### vue.js文件
+### 3.2 package/@vue/cli/bin/vue.js
 
 **头部注释 #!/usr/bin/env node**
 
@@ -171,11 +175,28 @@ if (
     fs.existsSync(path.resolve(process.cwd(), '../../@vue'))
   )
 ) {
+  // 这里通过pakcage.json中的cross-env VUE_CLI_DEBUG配置了node 环境变量  
   process.env.VUE_CLI_DEBUG = true
 }
 ```
 
-### **commander**
+其中`slash`包主要就是兼容不同环境的路径，官方栗子
+
+```javascript
+// 因为node 16+ 全面支持esm
+import path from 'node:path';
+import slash from 'slash';
+
+const string = path.join('foo', 'bar');
+// Unix    => foo/bar
+// Windows => foo\\bar
+
+slash(string);
+// Unix    => foo/bar
+// Windows => foo/bar
+```
+
+#### **commander**
 
 脚本最为核心的一块，我们从头开始，先看下`commander`包的使用说明
 
@@ -276,19 +297,15 @@ program
 
 - invoke 调用插件生成器
 
-- inspect 使用vue-cli服务检查项目中的webpack配置 （项目中可以使用配置脚本命令，看看vue-cli 对webpack做了哪些集成）
+- inspect 使用`vue-cli`服务检查项目中的`webpack`配置 （项目中可以使用配置脚本命令，看看`vue-cli` 对`webpack`做了哪些集成）
 
-  如下
+- serve 启用本地服务,运行项目（`npm run serve`）
 
-  
-
-- serve 启用本地服务,运行项目（npm run serve）
-
-- build 打包项目 （npm run build)
+- build 打包项目 （`npm run build`)
 
 - ui 使用`vue ui`可视化界面创建`vue`项目初始模板
 
-- init (vue-cli 2.x)老模板的创建，参考官网的说明
+- init (`vue-cli 2.x`)老模板的创建，参考官网的说明
 
 - outdated（实验阶段） 检查是否有过时的vue-cli服务/插件
 
@@ -302,6 +319,7 @@ program
 
 ```javascript
 // output help information on unknown commands
+// 如：使用vue other 可以看到终端输出Unknown command other
 program.on('command:*', ([cmd]) => {
   program.outputHelp()
   console.log(`  ` + chalk.red(`Unknown command ${chalk.yellow(cmd)}.`))
@@ -311,12 +329,14 @@ program.on('command:*', ([cmd]) => {
 })
 
 // add some useful info on help
+// vue --help 查看可用命令
 program.on('--help', () => {
   console.log()
   console.log(`  Run ${chalk.cyan(`vue <command> --help`)} for detailed usage of given command.`)
   console.log()
 })
 
+// 如： vue create --help
 program.commands.forEach(c => c.on('--help', () => console.log()))
 
 // enhance common error messages
@@ -356,9 +376,9 @@ function suggestCommands (unknownCommand) {
 }
 ```
 
-## create.js
+### 3.3 create.js
 
-#### **inquirer**
+#### **inquirer的使用说明**
 
 [使用文档](https://github.com/SBoudrias/Inquirer.js)
 
@@ -468,7 +488,7 @@ if (fs.existsSync(targetDir) && !options.merge) {
       await fs.remove(targetDir)
     } else {
       await clearConsole()
-      // 是当前目录
+      // 在当前目录生成项目
       if (inCurrent) {
         const { ok } = await inquirer.prompt([
           {
@@ -481,15 +501,16 @@ if (fs.existsSync(targetDir) && !options.merge) {
           return
         }
       } else {
+        // 
         const { action } = await inquirer.prompt([
           {
             name: 'action',
             type: 'list',
             message: `Target directory ${chalk.cyan(targetDir)} already exists. Pick an action:`,
             choices: [
-              { name: 'Overwrite', value: 'overwrite' },
-              { name: 'Merge', value: 'merge' },
-              { name: 'Cancel', value: false }
+              { name: 'Overwrite', value: 'overwrite' }, // 重写
+              { name: 'Merge', value: 'merge' }, // 合并
+              { name: 'Cancel', value: false } // 取消
             ]
           }
         ])
@@ -497,6 +518,7 @@ if (fs.existsSync(targetDir) && !options.merge) {
           return
         } else if (action === 'overwrite') {
           console.log(`\nRemoving ${chalk.cyan(targetDir)}...`)
+          // 移除目标目录的文件内容
           await fs.remove(targetDir)
         }
       }
@@ -504,390 +526,698 @@ if (fs.existsSync(targetDir) && !options.merge) {
 }
 ```
 
-**Creator**
+### **3.4 Creator**
 
-1. **promptModules**
+#### 3.4.1 promptModules
 
-   ```javascript
-   exports.getPromptModules = () => {
-     return [
-       'vueVersion',
-       'babel',
-       'typescript',
-       'pwa',
-       'router',
-       'vuex',
-       'cssPreprocessors',
-       'linter',
-       'unit',
-       'e2e'
-     ].map(file => require(`../promptModules/${file}`))
-   }
-   ```
+```javascript
+// prompt选项生成对应的依赖
+exports.getPromptModules = () => {
+  return [
+    'vueVersion',
+    'babel',
+    'typescript',
+    'pwa',
+    'router',
+    'vuex',
+    'cssPreprocessors',
+    'linter',
+    'unit',
+    'e2e'
+  ].map(file => require(`../promptModules/${file}`))
+}
+```
 
-   这些是我们在通过`vue create app-name`时的配置信息，如下
+这些是我们在通过`vue create app-name`时的配置信息，如下
 
-   ![vue-cli-terminal](/my-blog/source/vue-cli/vue-cli-terminal.jpg)
+![vue-cli-terminal](/my-blog/source/vue-cli/vue-cli-terminal.jpg)
 
-2. **resolveIntroPrompts**
+#### 3.4.2 resolveIntroPrompts
 
-   ```javascript
-   // 手动配置
-   const isManualMode = answers => answers.preset === '__manual__'
-   
-   resolveIntroPrompts () {
-   	const presets = this.getPresets()
-       const presetChoices = Object.entries(presets).map(([name, preset]) => {
-         let displayName = name
-         // Vue version will be showed as features anyway,
-         // so we shouldn't display it twice.
-         if (name === 'Default (Vue 2)' || name === 'Default (Vue 3)') {
-           displayName = 'Default'
-         }
-   
-         return {
-           name: `${displayName} (${formatFeatures(preset)})`,
-           value: name
-         }
-       })
-       const presetPrompt = {
-         name: 'preset',
-         type: 'list',
-         message: `Please pick a preset:`,
-         choices: [
-           ...presetChoices,
-           {
-             name: 'Manually select features',
-             value: '__manual__'
-           }
-         ]
-       }
-       const featurePrompt = {
-         name: 'features',
-         when: isManualMode,
-         type: 'checkbox',
-         message: 'Check the features needed for your project:',
-         choices: [],
-         pageSize: 10
-       }
-       return {
-         presetPrompt,
-         featurePrompt
-       }
-   }
-   ```
+```javascript
+// 手动配置
+const isManualMode = answers => answers.preset === '__manual__'
 
-   设置`prompt`的命令流程，`presetPrompt`初始预设，`featurePrompt`自定义设置
-
-3. **resolveOutroPrompts**
-
-   ```javascript
-   resolveOutroPrompts () {
-       const outroPrompts = [
-         {
-           name: 'useConfigFiles',
-           when: isManualMode,
-           type: 'list',
-           message: 'Where do you prefer placing config for Babel, ESLint, etc.?',
-           choices: [
-             {
-               name: 'In dedicated config files',
-               value: 'files'
-             },
-             {
-               name: 'In package.json',
-               value: 'pkg'
-             }
-           ]
-         },
-         {
-           name: 'save',
-           when: isManualMode,
-           type: 'confirm',
-           message: 'Save this as a preset for future projects?',
-           default: false
-         },
-         {
-           name: 'saveName',
-           when: answers => answers.save,
-           type: 'input',
-           message: 'Save preset as:'
-         }
-       ]
-   
-       // ask for packageManager once
-       const savedOptions = loadOptions()
-       if (!savedOptions.packageManager && (hasYarn() || hasPnpm3OrLater())) {
-         const packageManagerChoices = []
-   
-         if (hasYarn()) {
-           packageManagerChoices.push({
-             name: 'Use Yarn',
-             value: 'yarn',
-             short: 'Yarn'
-           })
-         }
-   
-         if (hasPnpm3OrLater()) {
-           packageManagerChoices.push({
-             name: 'Use PNPM',
-             value: 'pnpm',
-             short: 'PNPM'
-           })
-         }
-   
-         packageManagerChoices.push({
-           name: 'Use NPM',
-           value: 'npm',
-           short: 'NPM'
-         })
-   
-         outroPrompts.push({
-           name: 'packageManager',
-           type: 'list',
-           message: 'Pick the package manager to use when installing dependencies:',
-           choices: packageManagerChoices
-         })
-       }
-   
-       return outroPrompts
-   }
-   ```
-
-   主要用于模板保存
-
-4. **PromptModuleAPI**
-
-   功能就是将手动选择项对应的`prompt`压入`featurePrompts`和`injectedPrompts`
-
-5. **create**
-
-   1. 判定是否做了预设/保存过预设模板/使用默认预设
-
-      ```javascript
-      if (!preset) {
-        if (cliOptions.preset) {
-          // vue create foo --preset bar
-          preset = await this.resolvePreset(cliOptions.preset, cliOptions.clone)
-        } else if (cliOptions.default) {
-          // vue create foo --default
-          preset = defaults.presets['Default (Vue 3)']
-        } else if (cliOptions.inlinePreset) {
-          // vue create foo --inlinePreset {...}
-          try {
-            preset = JSON.parse(cliOptions.inlinePreset)
-          } catch (e) {
-            error(`CLI inline preset is not valid JSON: ${cliOptions.inlinePreset}`)
-            exit(1)
-          }
-        }
+resolveIntroPrompts () {
+    // 获取预设配置
+	const presets = this.getPresets()
+    const presetChoices = Object.entries(presets).map(([name, preset]) => {
+      let displayName = name
+      // Vue version will be showed as features anyway,
+      // so we shouldn't display it twice.
+      if (name === 'Default (Vue 2)' || name === 'Default (Vue 3)') {
+        displayName = 'Default'
       }
-      ```
 
-   2. 否则调用**promptAndResolvePreset**
-
-      ```javascript
-      async promptAndResolvePreset (answers = null) {
-          // prompt
-          if (!answers) {
-            await clearConsole(true)
-            answers = await inquirer.prompt(this.resolveFinalPrompts())
-          }
-          debug('vue-cli:answers')(answers)
-      
-          if (answers.packageManager) {
-            saveOptions({
-              packageManager: answers.packageManager
-            })
-          }
-      
-          let preset
-          if (answers.preset && answers.preset !== '__manual__') {
-            preset = await this.resolvePreset(answers.preset)
-          } else {
-            // manual
-            preset = {
-              useConfigFiles: answers.useConfigFiles === 'files',
-              plugins: {}
-            }
-            answers.features = answers.features || []
-            // run cb registered by prompt modules to finalize the preset
-            this.promptCompleteCbs.forEach(cb => cb(answers, preset))
-          }
-      
-          // validate
-          validatePreset(preset)
-      
-          // save preset
-          if (answers.save && answers.saveName && savePreset(answers.saveName, preset)) {
-            log()
-            log(`🎉  Preset ${chalk.yellow(answers.saveName)} saved in ${chalk.yellow(rcPath)}`)
-          }
-      
-          debug('vue-cli:preset')(preset)
-          return preset
+      return {
+        name: `${displayName} (${formatFeatures(preset)})`,
+        value: name
       }
-      ```
-
-      1. 通过`resolveFinalPrompts`获取`prompt`的配置，然后`inquirer`触发
-      2. 获取包管理工具，进行存储，
-      3. 获取预设，是否需要进行保留预设，如果选择是进行预设的保存
-      4. `promptCompleteCbs`可以看下`promptModules`下的各个配置项的`onPromptComplete`方法做了具体哪些事（主要是对应的依赖项配置）
-      5. 返回设置
-
-      下面自己仿照源码实现的一个简单预设命令,效果如下
-
-      ![vue-cli-pormpt](/my-blog/source/vue-cli/vue-cli-prompt.jpg)
-
-   3. 将依赖项添加到`package.json`的`devDependencies`
-
-      ```javascript
-      const pkg = {
-        name,
-        version: '0.1.0',
-        private: true,
-        devDependencies: {},
-        ...resolvePkg(context)
-      }
-      const deps = Object.keys(preset.plugins)
-      deps.forEach(dep => {
-        if (preset.plugins[dep]._isPreset) {
-          return
+    })
+    const presetPrompt = {
+      name: 'preset',
+      type: 'list',
+      message: `Please pick a preset:`,
+      choices: [
+        ...presetChoices,
+        {
+          name: 'Manually select features',
+          value: '__manual__'
         }
-      
-        let { version } = preset.plugins[dep]
-        // 没有版本号
-        if (!version) {
-           // 官方的 || cli-service || babel-preset-env
-          if (isOfficialPlugin(dep) || dep === '@vue/cli-service' || dep === '@vue/babel-preset-env') {
-            version = isTestOrDebug ? `latest` : `~${latestMinor}`
-          } else {
-            version = 'latest'
-          }
-        }
-      
-        pkg.devDependencies[dep] = version
-      })
-      
-      // 写入 package.json
-      await writeFileTree(context, {
-        'package.json': JSON.stringify(pkg, null, 2)
-      })
-      ```
+      ]
+    }
+    const featurePrompt = {
+      name: 'features',
+      when: isManualMode,
+      type: 'checkbox',
+      message: 'Check the features needed for your project:',
+      choices: [],
+      pageSize: 10
+    }
+    return {
+      presetPrompt,
+      featurePrompt
+    }
+}
+```
 
-      读取`package.json`的配置方法如下
+设置`prompt`的命令流程，`presetPrompt`初始预设，`featurePrompt`自定义设置
 
-      ```javascript
-      const fs = require('fs')
-      const path = require('path')
-      const readPkg = require('read-pkg')
-      
-      exports.resolvePkg = function (context) {
-        if (fs.existsSync(path.join(context, 'package.json'))) {
-          return readPkg.sync({ cwd: context })
-        }
-        return {}
-      }
-      ```
-   
-      **测试下这个小功能**
-   
-      读取`package.json`
-   
-      ```javascript
-      const fs = require('fs')
-      const path = require('path')
-      const readPkg = require('read-pkg')
-      
-      function resolvePkg(context = process.cwd()) {
-        if(fs.existsSync(path.join(context, 'package.json'))) {
-          return readPkg.sync({ cwd: context})
-        }
-        return {}
-      }
-      ```
-   
-      新的配置写入`package.json`
-   
-      ```javascript
-      const fs = require('fs-extra')
-      const path = require('path')
-      const readPkg = require('read-pkg')
-      const writeFileTree = require('../utils/writeFileTree')
-      
-      function resolvePkg(context = process.cwd()) {
-        if(fs.existsSync(path.join(context, 'package.json'))) {
-          return readPkg.sync({ cwd: context})
-        }
-        return {}
-      }
-      
-      const initWritePkg = async () => {
-        const pkg = {
-          version: '0.1.0',
-          private: true,
-          devDependencies: {},
-          ...resolvePkg(context=process.cwd())
-        }
-      
-        const preset = {
-          plugins: {
-            '@vue/cli-service': { bare: true },
-            '@vue/cli-plugin-router': {
-              history: true
-            },
-            '@vue/cli-plugin-vuex': {}
-          }
-        }
-      
-        const deps = Object.keys(preset.plugins)
-      
-        deps.forEach(dep => {
-          if (preset.plugins[dep]._isPreset) {
-            return
-          }
-      
-          let { version } = preset.plugins[dep]
-      
-          if (!version) {
-            version = 'latest'
-          }
-      
-          pkg.devDependencies[dep] = version
+关于`getPresets`获取预设的主要的逻辑都在`options.js`中，代码如下
+
+```javascript
+const fs = require('fs')
+const cloneDeep = require('lodash.clonedeep')
+const { getRcPath } = require('./util/rcPath')
+const { exit } = require('@vue/cli-shared-utils/lib/exit')
+const { error } = require('@vue/cli-shared-utils/lib/logger')
+const { createSchema, validate } = require('@vue/cli-shared-utils/lib/validate')
+
+const rcPath = exports.rcPath = getRcPath('.vuerc')
+
+const presetSchema = createSchema((joi) =>
+  joi
+    .object()
+    .keys({
+      vueVersion: joi.string().valid('2', '3'),
+      bare: joi.boolean(),
+      useConfigFiles: joi.boolean(),
+      router: joi
+        .boolean()
+        .warning('deprecate.error', {
+          message: 'Please use @vue/cli-plugin-router instead.'
         })
-      
-        await writeFileTree(process.cwd(), {
-          'package.json': JSON.stringify(pkg, null, 2)
+        .message({
+          'deprecate.error':
+            'The {#label} option in preset is deprecated. {#message}'
+        }),
+      routerHistoryMode: joi
+        .boolean()
+        .warning('deprecate.error', {
+          message: 'Please use @vue/cli-plugin-router instead.'
+        })
+        .message({
+          'deprecate.error':
+            'The {#label} option in preset is deprecated. {#message}'
+        }),
+      vuex: joi
+        .boolean()
+        .warning('deprecate.error', {
+          message: 'Please use @vue/cli-plugin-vuex instead.'
+        })
+        .message({
+          'deprecate.error':
+            'The {#label} option in preset is deprecated. {#message}'
+        }),
+      cssPreprocessor: joi
+        .string()
+        .valid('sass', 'dart-sass', 'less', 'stylus'),
+      plugins: joi.object().required(),
+      configs: joi.object()
+    })
+)
+
+const schema = createSchema(joi => joi.object().keys({
+  latestVersion: joi.string().regex(/^\d+\.\d+\.\d+(-(alpha|beta|rc)\.\d+)?$/),
+  lastChecked: joi.date().timestamp(),
+  packageManager: joi.string().valid('yarn', 'npm', 'pnpm'),
+  useTaobaoRegistry: joi.boolean(),
+  presets: joi.object().pattern(/^/, presetSchema)
+}))
+
+exports.validatePreset = preset => validate(preset, presetSchema, msg => {
+  error(`invalid preset options: ${msg}`)
+})
+
+exports.defaultPreset = {
+  useConfigFiles: false,
+  cssPreprocessor: undefined,
+  plugins: {
+    '@vue/cli-plugin-babel': {},
+    '@vue/cli-plugin-eslint': {
+      config: 'base',
+      lintOn: ['save']
+    }
+  }
+}
+
+exports.defaults = {
+  lastChecked: undefined,
+  latestVersion: undefined,
+
+  packageManager: undefined,
+  useTaobaoRegistry: undefined,
+  presets: {
+    'Default (Vue 3)': Object.assign({ vueVersion: '3' }, exports.defaultPreset),
+    'Default (Vue 2)': Object.assign({ vueVersion: '2' }, exports.defaultPreset)
+  }
+}
+
+let cachedOptions
+
+exports.loadOptions = () => {
+  if (cachedOptions) {
+    return cachedOptions
+  }
+  if (fs.existsSync(rcPath)) {
+    try {
+      cachedOptions = JSON.parse(fs.readFileSync(rcPath, 'utf-8'))
+    } catch (e) {
+      error(
+        `Error loading saved preferences: ` +
+        `~/.vuerc may be corrupted or have syntax errors. ` +
+        `Please fix/delete it and re-run vue-cli in manual mode.\n` +
+        `(${e.message})`
+      )
+      exit(1)
+    }
+    validate(cachedOptions, schema, () => {
+      error(
+        `~/.vuerc may be outdated. ` +
+        `Please delete it and re-run vue-cli in manual mode.`
+      )
+    })
+    return cachedOptions
+  } else {
+    return {}
+  }
+}
+
+exports.saveOptions = toSave => {
+  const options = Object.assign(cloneDeep(exports.loadOptions()), toSave)
+  for (const key in options) {
+    if (!(key in exports.defaults)) {
+      delete options[key]
+    }
+  }
+  cachedOptions = options
+  try {
+    fs.writeFileSync(rcPath, JSON.stringify(options, null, 2))
+    return true
+  } catch (e) {
+    error(
+      `Error saving preferences: ` +
+      `make sure you have write access to ${rcPath}.\n` +
+      `(${e.message})`
+    )
+  }
+}
+
+exports.savePreset = (name, preset) => {
+  const presets = cloneDeep(exports.loadOptions().presets || {})
+  presets[name] = preset
+  return exports.saveOptions({ presets })
+}
+```
+
+1. rcPath（.vuerc） - 用于存储预设配置的文件名称
+2. presetSchema - `schema`校验预设配置
+3. validatePreset - 校验预设
+4. defaultPreset - 默认的预设
+5. defaults - 默认的基础配置
+6. loadOptions - 读取`.vuerc`配置
+7. saveOptions - 往`.vuerc`中写入预设配置
+8. savePreset - 保存预设配置
+
+#### 3.4.3 resolveOutroPrompts
+
+```javascript
+resolveOutroPrompts () {
+    const outroPrompts = [
+      {
+        name: 'useConfigFiles',
+        when: isManualMode,
+        type: 'list',
+        message: 'Where do you prefer placing config for Babel, ESLint, etc.?',
+        choices: [
+          {
+            name: 'In dedicated config files',
+            value: 'files'
+          },
+          {
+            name: 'In package.json',
+            value: 'pkg'
+          }
+        ]
+      },
+      {
+        name: 'save',
+        when: isManualMode,
+        type: 'confirm',
+        message: 'Save this as a preset for future projects?',
+        default: false
+      },
+      {
+        name: 'saveName',
+        when: answers => answers.save,
+        type: 'input',
+        message: 'Save preset as:'
+      }
+    ]
+
+    // 包管理器的选择
+    const savedOptions = loadOptions()
+    if (!savedOptions.packageManager && (hasYarn() || hasPnpm3OrLater())) {
+      const packageManagerChoices = []
+
+      if (hasYarn()) {
+        packageManagerChoices.push({
+          name: 'Use Yarn',
+          value: 'yarn',
+          short: 'Yarn'
         })
       }
-      
-      initWritePkg()
-      ```
-   
-      生成的`package.json`
-   
-      ```json
-      "devDependencies": {
-          "@vue/cli-service": "latest",
-          "@vue/cli-plugin-router": "latest",
-          "@vue/cli-plugin-vuex": "latest"
+
+      if (hasPnpm3OrLater()) {
+        packageManagerChoices.push({
+          name: 'Use PNPM',
+          value: 'pnpm',
+          short: 'PNPM'
+        })
       }
-      ```
-   
-   4. **shouldInitGit**
-   
-      ```javascript
-      const shouldInitGit = this.shouldInitGit(cliOptions)
-      if (shouldInitGit) {
-        log(`🗃  Initializing git repository...`)
-        this.emit('creation', { event: 'git-init' })
-        await run('git init')
+
+      packageManagerChoices.push({
+        name: 'Use NPM',
+        value: 'npm',
+        short: 'NPM'
+      })
+
+      outroPrompts.push({
+        name: 'packageManager',
+        type: 'list',
+        message: 'Pick the package manager to use when installing dependencies:',
+        choices: packageManagerChoices
+      })
+    }
+
+    return outroPrompts
+}
+```
+
+可以看到`outroPrompts`除了包选择器之外，只有`manual mode`才会触发
+
+#### 3.4.4 PromptModuleAPI
+
+涉及代码
+
+```javascript
+const promptAPI = new PromptModuleAPI(this)
+promptModules.forEach(m => m(promptAPI))
+```
+
+因为**promptModules**得到的是下面格式
+
+```javascript
+[require('../promptModules/babel'), require('../promptModules/cssPreprocessors'),...]
+```
+
+看下**promptModules/babel.js**的代码
+
+```javascript
+module.exports = cli => {
+  cli.injectFeature({
+    name: 'Babel',
+    value: 'babel',
+    short: 'Babel',
+    description: 'Transpile modern JavaScript to older versions (for compatibility)',
+    link: 'https://babeljs.io/',
+    checked: true
+  })
+
+  cli.onPromptComplete((answers, options) => {
+    if (answers.features.includes('ts')) {
+      if (!answers.useTsWithBabel) {
+        return
       }
-      ```
+    } else if (!answers.features.includes('babel')) {
+      return
+    }
+    options.plugins['@vue/cli-plugin-babel'] = {}
+  })
+}
+```
+
+**PromptModuleAPI**的代码
+
+```javascript
+module.exports = class PromptModuleAPI {
+  constructor (creator) {
+    this.creator = creator
+  }
+
+  injectFeature (feature) {
+    this.creator.featurePrompt.choices.push(feature)
+  }
+
+  injectPrompt (prompt) {
+    this.creator.injectedPrompts.push(prompt)
+  }
+
+  injectOptionForPrompt (name, option) {
+    this.creator.injectedPrompts.find(f => {
+      return f.name === name
+    }).choices.push(option)
+  }
+
+  onPromptComplete (cb) {
+    this.creator.promptCompleteCbs.push(cb)
+  }
+}
+```
+
+所以`promptModules.forEach(m => m(promptAPI))`代码就是说执行`promptAPI`对应的原型方法
+
+#### 3.4.5 create
+
+1. 判定是否做了预设/保存过预设模板/使用默认预设
+
+   ```javascript
+   if (!preset) {
+     if (cliOptions.preset) {
+       // vue create foo --preset bar
+       preset = await this.resolvePreset(cliOptions.preset, cliOptions.clone)
+     } else if (cliOptions.default) {
+       // vue create foo --default
+       preset = defaults.presets['Default (Vue 3)']
+     } else if (cliOptions.inlinePreset) {
+       // vue create foo --inlinePreset {...}
+       try {
+         preset = JSON.parse(cliOptions.inlinePreset)
+       } catch (e) {
+         error(`CLI inline preset is not valid JSON: ${cliOptions.inlinePreset}`)
+         exit(1)
+       }
+     }
+   }
+   ```
+
+2. 否则调用**promptAndResolvePreset**
+
+   ```javascript
+   async promptAndResolvePreset (answers = null) {
+       // prompt
+       if (!answers) {
+         await clearConsole(true)
+         answers = await inquirer.prompt(this.resolveFinalPrompts())
+       }
+       debug('vue-cli:answers')(answers)
+   
+       if (answers.packageManager) {
+         saveOptions({
+           packageManager: answers.packageManager
+         })
+       }
+   
+       let preset
+       if (answers.preset && answers.preset !== '__manual__') {
+         preset = await this.resolvePreset(answers.preset)
+       } else {
+         // manual
+         preset = {
+           useConfigFiles: answers.useConfigFiles === 'files',
+           plugins: {}
+         }
+         answers.features = answers.features || []
+         // run cb registered by prompt modules to finalize the preset
+         this.promptCompleteCbs.forEach(cb => cb(answers, preset))
+       }
+   
+       // validate
+       validatePreset(preset)
+   
+       // save preset
+       if (answers.save && answers.saveName && savePreset(answers.saveName, preset)) {
+         log()
+         log(`🎉  Preset ${chalk.yellow(answers.saveName)} saved in ${chalk.yellow(rcPath)}`)
+       }
+   
+       debug('vue-cli:preset')(preset)
+       return preset
+   }
+   ```
+
+   1. 通过`resolveFinalPrompts`获取`prompt`的配置，然后`inquirer`触发
+   2. 获取包管理工具，进行存储，
+   3. 获取预设，是否需要进行保留预设，如果选择是进行预设的保存
+   4. `promptCompleteCbs`可以看下`promptModules`下的各个配置项的`onPromptComplete`方法做了具体哪些事（主要是对应的依赖项配置）
+   5. 返回设置
+
+   下面自己仿照源码实现的一个简单预设命令,效果如下
+
+   ![vue-cli-pormpt](/my-blog/source/vue-cli/vue-cli-prompt.jpg)
+
+3. **writeFileTree**
+
+   ```javascript
+   const pkg = {
+     name,
+     version: '0.1.0',
+     private: true,
+     devDependencies: {},
+     ...resolvePkg(context)
+   }
+   const deps = Object.keys(preset.plugins)
+   deps.forEach(dep => {
+     if (preset.plugins[dep]._isPreset) {
+       return
+     }
+   
+     let { version } = preset.plugins[dep]
+     // 没有版本号
+     if (!version) {
+        // 官方的 || cli-service || babel-preset-env
+       if (isOfficialPlugin(dep) || dep === '@vue/cli-service' || dep === '@vue/babel-preset-env') {
+         version = isTestOrDebug ? `latest` : `~${latestMinor}`
+       } else {
+         version = 'latest'
+       }
+     }
+   
+     pkg.devDependencies[dep] = version
+   })
+   
+   // 写入 package.json
+   await writeFileTree(context, {
+     'package.json': JSON.stringify(pkg, null, 2)
+   })
+   ```
+
+   读取`package.json`的配置方法如下
+
+   ```javascript
+   const fs = require('fs')
+   const path = require('path')
+   const readPkg = require('read-pkg')
+   
+   exports.resolvePkg = function (context) {
+     if (fs.existsSync(path.join(context, 'package.json'))) {
+       return readPkg.sync({ cwd: context })
+     }
+     return {}
+   }
+   ```
+
+   **测试此功能**
+
+   读取`package.json`
+
+   ```javascript
+   const fs = require('fs')
+   const path = require('path')
+   const readPkg = require('read-pkg')
+   
+   function resolvePkg(context = process.cwd()) {
+     if(fs.existsSync(path.join(context, 'package.json'))) {
+       return readPkg.sync({ cwd: context})
+     }
+     return {}
+   }
+   ```
+
+   新的配置写入`package.json`
+
+   ```javascript
+   const fs = require('fs-extra')
+   const path = require('path')
+   const readPkg = require('read-pkg')
+   const writeFileTree = require('../utils/writeFileTree')
+   
+   function resolvePkg(context = process.cwd()) {
+     if(fs.existsSync(path.join(context, 'package.json'))) {
+       return readPkg.sync({ cwd: context})
+     }
+     return {}
+   }
+   
+   const initWritePkg = async () => {
+     const pkg = {
+       version: '0.1.0',
+       private: true,
+       devDependencies: {},
+       ...resolvePkg(context=process.cwd())
+     }
+   
+     const preset = {
+       plugins: {
+         '@vue/cli-service': { bare: true },
+         '@vue/cli-plugin-router': {
+           history: true
+         },
+         '@vue/cli-plugin-vuex': {}
+       }
+     }
+   
+     const deps = Object.keys(preset.plugins)
+   
+     deps.forEach(dep => {
+       if (preset.plugins[dep]._isPreset) {
+         return
+       }
+   
+       let { version } = preset.plugins[dep]
+   
+       if (!version) {
+         version = 'latest'
+       }
+   
+       pkg.devDependencies[dep] = version
+     })
+   
+     await writeFileTree(process.cwd(), {
+       'package.json': JSON.stringify(pkg, null, 2)
+     })
+   }
+   
+   initWritePkg()
+   ```
+
+   生成的`package.json`
+
+   ```json
+   "devDependencies": {
+       "@vue/cli-service": "latest",
+       "@vue/cli-plugin-router": "latest",
+       "@vue/cli-plugin-vuex": "latest"
+   }
+   ```
+
+4. **shouldInitGit**
+
+   ```javascript
+   const shouldInitGit = this.shouldInitGit(cliOptions)
+   if (shouldInitGit) {
+     log(`🗃  Initializing git repository...`)
+     this.emit('creation', { event: 'git-init' })
+     await run('git init')
+   }
+   ```
+
+5. **install plugins**
+
+   ```javascript
+   const pm = new PackageManager({ context, forcePackageManager: packageManager })
+   // ***
+   // install plugins
+   log(`⚙\u{fe0f}  Installing CLI plugins. This might take a while...`)
+   log()
+   this.emit('creation', { event: 'plugins-install' })
+   
+   if (isTestOrDebug && !process.env.VUE_CLI_TEST_DO_INSTALL_PLUGIN) {
+     // in development, avoid installation process
+     await require('./util/setupDevProject')(context)
+   } else {
+     await pm.install()
+   }
+   ```
+
+6. **generator** 下一篇内容
+
+#### 3.4.6 run
+
+其中的`execa`的是基于`node`的`child_process`的封装
+
+```javascript
+run (command, args) {
+    if (!args) { [command, ...args] = command.split(/\s+/) }
+    return execa(command, args, { cwd: this.context })
+}
+```
+
+如执行以下命令
+
+```javascript
+async testRun() {
+    await creator.run('git init')
+    await creator.run('git', ['config', 'user.name', 'test'])
+}
+```
+
+便初始化了`git`&添加了用户名
+
+#### 3.4.7 resolvePlugins
+
+```javascript
+async resolvePlugins (rawPlugins, pkg) {
+    // 确保@vue/cli-service排序放置首位
+    rawPlugins = sortObject(rawPlugins, ['@vue/cli-service'], true)
+    const plugins = []
+    for (const id of Object.keys(rawPlugins)) {
+      // 加载plugin的generatro
+      // 如：id:cli-plugin-router
+      // apply: require('@vue/cli-plugin-router/generator')  
+      const apply = loadModule(`${id}/generator`, this.context) || (() => {})
+      let options = rawPlugins[id] || {}
+
+      if (options.prompts) {
+        // require('@vue/cli-plugin-router/prompts') 
+        let pluginPrompts = loadModule(`${id}/prompts`, this.context)
+
+        if (pluginPrompts) {
+          // 创建提问器模块
+          const prompt = inquirer.createPromptModule()
+
+          if (typeof pluginPrompts === 'function') {
+            pluginPrompts = pluginPrompts(pkg, prompt)
+          }
+          if (typeof pluginPrompts.getPrompts === 'function') {
+            pluginPrompts = pluginPrompts.getPrompts(pkg, prompt)
+          }
+
+          log()
+          log(`${chalk.cyan(options._isPreset ? `Preset options:` : id)}`)
+          options = await prompt(pluginPrompts)
+        }
+      }
+
+      plugins.push({ id, apply, options })
+    }
+    return plugins
+}
+```
 
 ## 结尾
 
-第一步主要还是一些配置&`prompt`相关，下一篇涉及到的就是插件解析&生成器相关，也是最为核心的部分
+第一篇主要还是`vue create ***`时的一些终端交互，下一篇涉及到的就是插件解析&`generator`相关，也是最为核心的部分
 
 
 
