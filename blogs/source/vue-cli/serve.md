@@ -500,7 +500,7 @@ async run (name, args = {}, rawArgv = []) {
    module.exports = PluginAPI
    ```
 
-## 4. commands/serve.js
+## 5. commands/serve.js
 
 ```javascript
 const {
@@ -1155,3 +1155,1074 @@ module.exports.defaultModes = {
      server.start().catch(err => reject(err))
    })
    ```
+
+## 6. webpack配置相关
+
+看完了`serve`相关代码，除了`devServer`，其他的`webpack`配置代码中确认有体现，所以说下这块
+
+**Service.js**
+
+```javascript
+const { defaults } = require('./options')
+const loadFileConfig = require('./util/loadFileConfig')
+```
+
+`options`里面的内容是默认的基础配置，具体代码如下
+
+**options**
+
+```javascript
+const { createSchema, validate } = require('@vue/cli-shared-utils')
+
+const schema = createSchema(joi => joi.object({
+  publicPath: joi.string().allow(''),
+  outputDir: joi.string(),
+  assetsDir: joi.string().allow(''),
+  indexPath: joi.string(),
+  filenameHashing: joi.boolean(),
+  runtimeCompiler: joi.boolean(),
+  transpileDependencies: joi.alternatives().try(
+    joi.boolean(),
+    joi.array()
+  ),
+  productionSourceMap: joi.boolean(),
+  parallel: joi.alternatives().try(
+    joi.boolean(),
+    joi.number().integer()
+  ),
+  devServer: joi.object(),
+  pages: joi.object().pattern(
+    /\w+/,
+    joi.alternatives().try(
+      joi.string().required(),
+      joi.array().items(joi.string().required()),
+
+      joi.object().keys({
+        entry: joi.alternatives().try(
+          joi.string().required(),
+          joi.array().items(joi.string().required())
+        ).required()
+      }).unknown(true)
+    )
+  ),
+  crossorigin: joi.string().valid('', 'anonymous', 'use-credentials'),
+  integrity: joi.boolean(),
+
+  // css
+  css: joi.object({
+    extract: joi.alternatives().try(joi.boolean(), joi.object()),
+    sourceMap: joi.boolean(),
+    loaderOptions: joi.object({
+      css: joi.object(),
+      sass: joi.object(),
+      scss: joi.object(),
+      less: joi.object(),
+      stylus: joi.object(),
+      postcss: joi.object()
+    })
+  }),
+
+  // webpack
+  chainWebpack: joi.func(),
+  configureWebpack: joi.alternatives().try(
+    joi.object(),
+    joi.func()
+  ),
+
+  // known runtime options for built-in plugins
+  lintOnSave: joi.any().valid(true, false, 'error', 'warning', 'default'),
+  pwa: joi.object(),
+
+  // terser
+  terser: joi.object({
+    minify: joi.string().valid('terser', 'esbuild', 'swc', 'uglifyJs'),
+    terserOptions: joi.object()
+  }),
+
+  // 3rd party plugin options
+  pluginOptions: joi.object()
+}))
+
+exports.validate = (options, cb) => {
+  validate(options, schema, cb)
+}
+
+// #2110
+// https://github.com/nodejs/node/issues/19022
+// in some cases cpus() returns undefined, and may simply throw in the future
+function hasMultipleCores () {
+  try {
+    return require('os').cpus().length > 1
+  } catch (e) {
+    return false
+  }
+}
+
+exports.defaults = () => ({
+  // project deployment base
+  publicPath: '/',
+
+  // where to output built files
+  outputDir: 'dist',
+
+  // where to put static assets (js/css/img/font/...)
+  assetsDir: '',
+
+  // filename for index.html (relative to outputDir)
+  indexPath: 'index.html',
+
+  // whether filename will contain hash part
+  filenameHashing: true,
+
+  // boolean, use full build?
+  runtimeCompiler: false,
+
+  // whether to transpile all dependencies
+  transpileDependencies: false,
+
+  // sourceMap for production build?
+  productionSourceMap: !process.env.VUE_CLI_TEST,
+
+  // use thread-loader for babel & TS in production build
+  // enabled by default if the machine has more than 1 cores
+  parallel: hasMultipleCores(),
+
+  // multi-page config
+  pages: undefined,
+
+  // <script type="module" crossorigin="use-credentials">
+  // #1656, #1867, #2025
+  crossorigin: undefined,
+
+  // subresource integrity
+  integrity: false,
+
+  css: {
+    // extract: true,
+    // modules: false,
+    // sourceMap: false,
+    // loaderOptions: {}
+  },
+
+  // whether to use eslint-loader
+  lintOnSave: 'default',
+
+  devServer: {
+    /*
+    open: process.platform === 'darwin',
+    host: '0.0.0.0',
+    port: 8080,
+    https: false,
+    hotOnly: false,
+    proxy: null, // string | Object
+    before: app => {}
+  */
+  }
+})
+```
+
+`loadFileConfig`是读取用户手动的`webpack`配置
+
+**loadFileConfig.js**
+
+```javascript
+const fs = require('fs')
+const path = require('path')
+const { pathToFileURL } = require('url')
+const isFileEsm = require('is-file-esm')
+const { loadModule } = require('@vue/cli-shared-utils')
+
+module.exports = function loadFileConfig (context) {
+  let fileConfig, fileConfigPath
+
+  const possibleConfigPaths = [
+    process.env.VUE_CLI_SERVICE_CONFIG_PATH,
+    './vue.config.js',
+    './vue.config.cjs',
+    './vue.config.mjs'
+  ]
+  for (const p of possibleConfigPaths) {
+    const resolvedPath = p && path.resolve(context, p)
+    if (resolvedPath && fs.existsSync(resolvedPath)) {
+      fileConfigPath = resolvedPath
+      break
+    }
+  }
+
+  if (fileConfigPath) {
+    const { esm } = isFileEsm.sync(fileConfigPath)
+
+    if (esm) {
+      fileConfig = import(pathToFileURL(fileConfigPath))
+    } else {
+      fileConfig = loadModule(fileConfigPath, context)
+    }
+  }
+
+  return {
+    fileConfig,
+    fileConfigPath
+  }
+}
+```
+
+前面提及的`resolvePlugins`起始是加载了`webpack`配置
+
+```javascript
+const builtInPlugins = [
+  './commands/serve',
+  './commands/build',
+  './commands/inspect',
+  './commands/help',
+  // config plugins are order sensitive
+  './config/base',
+  './config/assets',
+  './config/css',
+  './config/prod',
+  './config/app'
+].map((id) => idToPlugin(id))
+```
+
+需要注意的是`app.js assets.js base.js prod.js terserOptions.js`
+
+**app.js**
+
+```javascript
+// config that are specific to --target app
+const fs = require('fs')
+const path = require('path')
+
+// 确保传递给html-webpack插件的文件名是相对路径
+function ensureRelative (outputDir, _path) {
+  if (path.isAbsolute(_path)) {
+    return path.relative(outputDir, _path)
+  } else {
+    return _path
+  }
+}
+
+module.exports = (api, options) => {
+  api.chainWebpack(webpackConfig => {
+    // 只有构建应用是app时触发
+    if (process.env.VUE_CLI_BUILD_TARGET && process.env.VUE_CLI_BUILD_TARGET !== 'app') {
+      return
+    }
+
+    const isProd = process.env.NODE_ENV === 'production'
+    const isLegacyBundle = process.env.VUE_CLI_MODERN_MODE && !process.env.VUE_CLI_MODERN_BUILD
+    const outputDir = api.resolve(options.outputDir)
+
+    const getAssetPath = require('../util/getAssetPath')
+    // 生成文件路径名称
+    const outputFilename = getAssetPath(
+      options,
+      `js/[name]${isLegacyBundle ? `-legacy` : ``}${isProd && options.filenameHashing ? '.[contenthash:8]' : ''}.js`
+    )
+    webpackConfig
+      .output
+        .filename(outputFilename)
+        .chunkFilename(outputFilename)
+
+    // TODO: 这一段没太理解，为什么需要将realContentHash 设置为false
+    // webpack官网对于realContentHash的解释 在处理静态资源后添加额外的哈希编译，以获得正确的静态资源     // 内容哈希。如果 realContentHash 设置为 false，内部数据用于计算哈希值，当静态资源相同时，它可以改变。
+    webpackConfig.optimization
+      .set('realContentHash', false)
+
+    // 代码分割
+    // 初始化阶段 node_modules 包 放入chunk-vendors 其他初始化依赖的模块放入chunk-common
+    // 异步包单独打包（webpack默认的分包策略）
+    if (process.env.NODE_ENV !== 'test') {
+      webpackConfig.optimization.splitChunks({
+        cacheGroups: {
+          defaultVendors: {
+            name: `chunk-vendors`,
+            test: /[\\/]node_modules[\\/]/,
+            priority: -10,
+            chunks: 'initial'
+          },
+          common: {
+            name: `chunk-common`,
+            minChunks: 2,
+            priority: -20,
+            chunks: 'initial',
+            reuseExistingChunk: true
+          }
+        }
+      })
+    }
+
+    // 解析html
+    const resolveClientEnv = require('../util/resolveClientEnv')
+
+    const htmlOptions = {
+      title: api.service.pkg.name,
+      scriptLoading: 'defer',
+      templateParameters: (compilation, assets, assetTags, pluginOptions) => {
+        // enhance html-webpack-plugin's built in template params
+        return Object.assign({
+          compilation: compilation,
+          webpackConfig: compilation.options,
+          htmlWebpackPlugin: {
+            tags: assetTags,
+            files: assets,
+            options: pluginOptions
+          }
+        }, resolveClientEnv(options, true /* raw */))
+      }
+    }
+
+    // handle indexPath
+    if (options.indexPath !== 'index.html') {
+      // why not set filename for html-webpack-plugin?
+      // 1. It cannot handle absolute paths
+      // 2. Relative paths causes incorrect SW manifest to be generated (#2007)
+      webpackConfig
+        .plugin('move-index')
+        .use(require('../webpack/MovePlugin'), [
+          path.resolve(outputDir, 'index.html'),
+          path.resolve(outputDir, options.indexPath)
+        ])
+    }
+
+    // resolve HTML file(s)
+    const HTMLPlugin = require('html-webpack-plugin')
+    // const PreloadPlugin = require('@vue/preload-webpack-plugin')
+    const multiPageConfig = options.pages
+    const htmlPath = api.resolve('public/index.html')
+    const defaultHtmlPath = path.resolve(__dirname, 'index-default.html')
+    const publicCopyIgnore = ['**/.DS_Store']
+
+    if (!multiPageConfig) {
+      // default, single page setup.
+      htmlOptions.template = fs.existsSync(htmlPath)
+        ? htmlPath
+        : defaultHtmlPath
+
+      publicCopyIgnore.push(api.resolve(htmlOptions.template).replace(/\\/g, '/'))
+
+      webpackConfig
+        .plugin('html')
+          .use(HTMLPlugin, [htmlOptions])
+
+      // FIXME: need to test out preload plugin's compatibility with html-webpack-plugin 4/5
+      // if (!isLegacyBundle) {
+      //   // inject preload/prefetch to HTML
+      //   webpackConfig
+      //     .plugin('preload')
+      //       .use(PreloadPlugin, [{
+      //         rel: 'preload',
+      //         include: 'initial',
+      //         fileBlacklist: [/\.map$/, /hot-update\.js$/]
+      //       }])
+
+      //   webpackConfig
+      //     .plugin('prefetch')
+      //       .use(PreloadPlugin, [{
+      //         rel: 'prefetch',
+      //         include: 'asyncChunks'
+      //       }])
+      // }
+    } else {
+      // multi-page setup
+      webpackConfig.entryPoints.clear()
+
+      const pages = Object.keys(multiPageConfig)
+      const normalizePageConfig = c => typeof c === 'string' ? { entry: c } : c
+
+      pages.forEach(name => {
+        const pageConfig = normalizePageConfig(multiPageConfig[name])
+        const {
+          entry,
+          template = `public/${name}.html`,
+          filename = `${name}.html`,
+          chunks = ['chunk-vendors', 'chunk-common', name]
+        } = pageConfig
+
+        // Currently Cypress v3.1.0 comes with a very old version of Node,
+        // which does not support object rest syntax.
+        // (https://github.com/cypress-io/cypress/issues/2253)
+        // So here we have to extract the customHtmlOptions manually.
+        const customHtmlOptions = {}
+        for (const key in pageConfig) {
+          if (
+            !['entry', 'template', 'filename', 'chunks'].includes(key)
+          ) {
+            customHtmlOptions[key] = pageConfig[key]
+          }
+        }
+
+        // 入口
+        const entries = Array.isArray(entry) ? entry : [entry]
+        webpackConfig.entry(name).merge(entries.map(e => api.resolve(e)))
+
+        // trim inline loader
+        // * See https://github.com/jantimon/html-webpack-plugin/blob/master/docs/template-option.md#2-setting-a-loader-directly-for-the-template
+        const templateWithoutLoader = template.replace(/^.+!/, '').replace(/\?.+$/, '')
+
+        // resolve page index template
+        const hasDedicatedTemplate = fs.existsSync(api.resolve(templateWithoutLoader))
+        const templatePath = hasDedicatedTemplate
+          ? template
+          : fs.existsSync(htmlPath)
+            ? htmlPath
+            : defaultHtmlPath
+
+        publicCopyIgnore.push(api.resolve(templateWithoutLoader).replace(/\\/g, '/'))
+
+        // inject html plugin for the page
+        const pageHtmlOptions = Object.assign(
+          {},
+          htmlOptions,
+          {
+            chunks,
+            template: templatePath,
+            filename: ensureRelative(outputDir, filename)
+          },
+          customHtmlOptions
+        )
+
+        webpackConfig
+          .plugin(`html-${name}`)
+            .use(HTMLPlugin, [pageHtmlOptions])
+      })
+
+      // FIXME: preload plugin is not compatible with webpack 5 / html-webpack-plugin 4 yet
+      // if (!isLegacyBundle) {
+      //   pages.forEach(name => {
+      //     const filename = ensureRelative(
+      //       outputDir,
+      //       normalizePageConfig(multiPageConfig[name]).filename || `${name}.html`
+      //     )
+      //     webpackConfig
+      //       .plugin(`preload-${name}`)
+      //         .use(PreloadPlugin, [{
+      //           rel: 'preload',
+      //           includeHtmlNames: [filename],
+      //           include: {
+      //             type: 'initial',
+      //             entries: [name]
+      //           },
+      //           fileBlacklist: [/\.map$/, /hot-update\.js$/]
+      //         }])
+
+      //     webpackConfig
+      //       .plugin(`prefetch-${name}`)
+      //         .use(PreloadPlugin, [{
+      //           rel: 'prefetch',
+      //           includeHtmlNames: [filename],
+      //           include: {
+      //             type: 'asyncChunks',
+      //             entries: [name]
+      //           }
+      //         }])
+      //   })
+      // }
+    }
+
+    // CORS and Subresource Integrity
+    if (options.crossorigin != null || options.integrity) {
+      webpackConfig
+        .plugin('cors')
+          .use(require('../webpack/CorsPlugin'), [{
+            crossorigin: options.crossorigin,
+            integrity: options.integrity,
+            publicPath: options.publicPath
+          }])
+    }
+
+    // 复制public的静态资源
+    const publicDir = api.resolve('public')
+    const CopyWebpackPlugin = require('copy-webpack-plugin')
+    const PlaceholderPlugin = class PlaceholderPlugin { apply () {} }
+
+    const copyOptions = {
+      patterns: [{
+        from: publicDir,
+        to: outputDir,
+        toType: 'dir',
+        noErrorOnMissing: true,
+        globOptions: {
+          ignore: publicCopyIgnore
+        },
+        info: {
+          minimized: true
+        }
+      }]
+    }
+
+    if (fs.existsSync(publicDir)) {
+      if (isLegacyBundle) {
+        webpackConfig.plugin('copy').use(PlaceholderPlugin, [copyOptions])
+      } else {
+        webpackConfig.plugin('copy').use(CopyWebpackPlugin, [copyOptions])
+      }
+    }
+  })
+}
+
+```
+
+
+
+**assets.js**
+
+静态资源的`rules`的配置
+
+```javascript
+/** @type {import('@vue/cli-service').ServicePlugin} */
+module.exports = (api, options) => {
+  const getAssetPath = require('../util/getAssetPath')
+
+  const genAssetSubPath = dir => {
+    return getAssetPath(
+      options,
+      `${dir}/[name]${options.filenameHashing ? '.[hash:8]' : ''}[ext]`
+    )
+  }
+
+  api.chainWebpack(webpackConfig => {
+    webpackConfig.module
+    .rule('svg')
+      .test(/\.(svg)(\?.*)?$/)
+      // do not base64-inline SVGs.
+      // https://github.com/facebookincubator/create-react-app/pull/1180
+      .set('type', 'asset/resource')
+      .set('generator', {
+        filename: genAssetSubPath('img')
+      })
+
+    webpackConfig.module
+      .rule('images')
+        .test(/\.(png|jpe?g|gif|webp|avif)(\?.*)?$/)
+        .set('type', 'asset')
+        .set('generator', {
+          filename: genAssetSubPath('img')
+        })
+
+    webpackConfig.module
+      .rule('media')
+        .test(/\.(mp4|webm|ogg|mp3|wav|flac|aac)(\?.*)?$/)
+        .set('type', 'asset')
+        .set('generator', {
+          filename: genAssetSubPath('media')
+        })
+
+    webpackConfig.module
+      .rule('fonts')
+        .test(/\.(woff2?|eot|ttf|otf)(\?.*)?$/i)
+        .set('type', 'asset')
+        .set('generator', {
+          filename: genAssetSubPath('fonts')
+        })
+  })
+}
+```
+
+
+
+**base.js**
+
+```javascript
+const path = require('path')
+
+/** @type {import('@vue/cli-service').ServicePlugin} */
+module.exports = (api, options) => {
+  const cwd = api.getCwd()
+  const webpack = require('webpack')
+  const vueMajor = require('../util/getVueMajor')(cwd)
+
+  api.chainWebpack(webpackConfig => {
+    const isLegacyBundle = process.env.VUE_CLI_MODERN_MODE && !process.env.VUE_CLI_MODERN_BUILD
+    const resolveLocal = require('../util/resolveLocal')
+
+    // https://github.com/webpack/webpack/issues/14532#issuecomment-947525539
+    webpackConfig.output.set('hashFunction', 'xxhash64')
+
+    // https://github.com/webpack/webpack/issues/11467#issuecomment-691873586
+    webpackConfig.module
+      .rule('esm')
+        .test(/\.m?jsx?$/)
+        .resolve.set('fullySpecified', false)
+
+    webpackConfig
+      .mode('development')
+      .context(api.service.context)
+      .entry('app')
+        .add('./src/main.js')
+        .end()
+      .output
+        .path(api.resolve(options.outputDir))
+        .filename(isLegacyBundle ? '[name]-legacy.js' : '[name].js')
+        .publicPath(options.publicPath)
+
+    webpackConfig.resolve
+      .extensions
+        .merge(['.mjs', '.js', '.jsx', '.vue', '.json', '.wasm'])
+        .end()
+      .modules
+        .add('node_modules')
+        .add(api.resolve('node_modules'))
+        .add(resolveLocal('node_modules'))
+        .end()
+      .alias
+        .set('@', api.resolve('src'))
+
+    webpackConfig.resolveLoader
+      .modules
+        .add('node_modules')
+        .add(api.resolve('node_modules'))
+        .add(resolveLocal('node_modules'))
+
+    webpackConfig.module
+      .noParse(/^(vue|vue-router|vuex|vuex-router-sync)$/)
+
+    // js is handled by cli-plugin-babel ---------------------------------------
+
+    // vue-loader --------------------------------------------------------------
+    let cacheLoaderPath
+    try {
+      cacheLoaderPath = require.resolve('cache-loader')
+    } catch (e) {}
+
+    if (vueMajor === 2) {
+      // for Vue 2 projects
+      const partialIdentifier = {
+        'vue-loader': require('@vue/vue-loader-v15/package.json').version,
+        '@vue/component-compiler-utils': require('@vue/component-compiler-utils/package.json').version
+      }
+
+      try {
+        partialIdentifier['vue-template-compiler'] = require('vue-template-compiler/package.json').version
+      } catch (e) {
+        // For Vue 2.7 projects, `vue-template-compiler` is not required
+      }
+
+      const vueLoaderCacheConfig = api.genCacheConfig('vue-loader', partialIdentifier)
+
+      webpackConfig.resolve
+        .alias
+          .set(
+            'vue$',
+            options.runtimeCompiler
+              ? 'vue/dist/vue.esm.js'
+              : 'vue/dist/vue.runtime.esm.js'
+          )
+
+      if (cacheLoaderPath) {
+        webpackConfig.module
+          .rule('vue')
+            .test(/\.vue$/)
+            .use('cache-loader')
+              .loader(cacheLoaderPath)
+              .options(vueLoaderCacheConfig)
+      }
+
+      webpackConfig.module
+        .rule('vue')
+          .test(/\.vue$/)
+          .use('vue-loader')
+            .loader(require.resolve('@vue/vue-loader-v15'))
+            .options(Object.assign({
+              compilerOptions: {
+                whitespace: 'condense'
+              }
+            }, cacheLoaderPath ? vueLoaderCacheConfig : {}))
+
+      webpackConfig
+        .plugin('vue-loader')
+          .use(require('@vue/vue-loader-v15').VueLoaderPlugin)
+
+      // some plugins may implicitly relies on the `vue-loader` dependency path name
+      // such as vue-cli-plugin-apollo
+      // <https://github.com/Akryum/vue-cli-plugin-apollo/blob/d9fe48c61cc19db88fef4e4aa5e49b31aa0c44b7/index.js#L88>
+      // so we need a hotfix for that
+      webpackConfig
+        .resolveLoader
+          .modules
+            .prepend(path.resolve(__dirname, './vue-loader-v15-resolve-compat'))
+    } else if (vueMajor === 3) {
+      // for Vue 3 projects
+      const vueLoaderCacheConfig = api.genCacheConfig('vue-loader', {
+        'vue-loader': require('vue-loader/package.json').version
+      })
+
+      webpackConfig.resolve
+        .alias
+          .set(
+            'vue$',
+            options.runtimeCompiler
+              ? 'vue/dist/vue.esm-bundler.js'
+              : 'vue/dist/vue.runtime.esm-bundler.js'
+          )
+
+      if (cacheLoaderPath) {
+        webpackConfig.module
+          .rule('vue')
+            .test(/\.vue$/)
+            .use('cache-loader')
+              .loader(cacheLoaderPath)
+              .options(vueLoaderCacheConfig)
+      }
+
+      webpackConfig.module
+        .rule('vue')
+          .test(/\.vue$/)
+          .use('vue-loader')
+            .loader(require.resolve('vue-loader'))
+            .options({
+              ...vueLoaderCacheConfig,
+              babelParserPlugins: ['jsx', 'classProperties', 'decorators-legacy']
+            })
+
+      webpackConfig
+        .plugin('vue-loader')
+          .use(require('vue-loader').VueLoaderPlugin)
+
+      // feature flags <http://link.vuejs.org/feature-flags>
+      webpackConfig
+        .plugin('feature-flags')
+          .use(webpack.DefinePlugin, [{
+            __VUE_OPTIONS_API__: 'true',
+            __VUE_PROD_DEVTOOLS__: 'false'
+          }])
+    }
+
+    // https://github.com/vuejs/vue-loader/issues/1435#issuecomment-869074949
+    webpackConfig.module
+      .rule('vue-style')
+        .test(/\.vue$/)
+          .resourceQuery(/type=style/)
+            .sideEffects(true)
+
+    // Other common pre-processors ---------------------------------------------
+    const maybeResolve = name => {
+      try {
+        return require.resolve(name)
+      } catch (error) {
+        return name
+      }
+    }
+
+    webpackConfig.module
+      .rule('pug')
+        .test(/\.pug$/)
+          .oneOf('pug-vue')
+            .resourceQuery(/vue/)
+            .use('pug-plain-loader')
+              .loader(maybeResolve('pug-plain-loader'))
+              .end()
+            .end()
+          .oneOf('pug-template')
+            .use('raw')
+              .loader(maybeResolve('raw-loader'))
+              .end()
+            .use('pug-plain-loader')
+              .loader(maybeResolve('pug-plain-loader'))
+              .end()
+            .end()
+
+    const resolveClientEnv = require('../util/resolveClientEnv')
+    webpackConfig
+      .plugin('define')
+        .use(webpack.DefinePlugin, [
+          resolveClientEnv(options)
+        ])
+
+    webpackConfig
+      .plugin('case-sensitive-paths')
+        .use(require('case-sensitive-paths-webpack-plugin'))
+
+    // friendly error plugin displays very confusing errors when webpack
+    // fails to resolve a loader, so we provide custom handlers to improve it
+    const { transformer, formatter } = require('../util/resolveLoaderError')
+    webpackConfig
+      .plugin('friendly-errors')
+        .use(require('@soda/friendly-errors-webpack-plugin'), [{
+          additionalTransformers: [transformer],
+          additionalFormatters: [formatter]
+        }])
+
+    const TerserPlugin = require('terser-webpack-plugin')
+    const terserOptions = require('./terserOptions')
+    webpackConfig.optimization
+      .minimizer('terser')
+        .use(TerserPlugin, [terserOptions(options)])
+  })
+
+```
+
+从上述代码中，处理入口、出口、`vue-loader`、`terser-webpack-plugin` 代码压缩等处理
+
+**css.js**
+
+```javascript
+const fs = require('fs')
+const path = require('path')
+const { chalk, semver, loadModule } = require('@vue/cli-shared-utils')
+const isAbsoluteUrl = require('../util/isAbsoluteUrl')
+
+const findExisting = (context, files) => {
+  for (const file of files) {
+    if (fs.existsSync(path.join(context, file))) {
+      return file
+    }
+  }
+}
+
+module.exports = (api, rootOptions) => {
+  api.chainWebpack(webpackConfig => {
+    const getAssetPath = require('../util/getAssetPath')
+    const shadowMode = !!process.env.VUE_CLI_CSS_SHADOW_MODE
+    const isProd = process.env.NODE_ENV === 'production'
+
+    const {
+      extract = isProd,
+      sourceMap = false,
+      loaderOptions = {}
+    } = rootOptions.css || {}
+
+    const shouldExtract = extract !== false && !shadowMode
+    const filename = getAssetPath(
+      rootOptions,
+      `css/[name]${rootOptions.filenameHashing ? '.[contenthash:8]' : ''}.css`
+    )
+    const extractOptions = Object.assign({
+      filename,
+      chunkFilename: filename
+    }, extract && typeof extract === 'object' ? extract : {})
+
+    // when project publicPath is a relative path
+    // use relative publicPath in extracted CSS based on extract location
+    const cssPublicPath = (isAbsoluteUrl(rootOptions.publicPath) || rootOptions.publicPath.startsWith('/'))
+      ? rootOptions.publicPath
+      : process.env.VUE_CLI_BUILD_TARGET === 'lib'
+        // in lib mode, CSS is extracted to dist root.
+        ? './'
+        : '../'.repeat(
+          extractOptions.filename
+            .replace(/^\.[/\\]/, '')
+            .split(/[/\\]/g)
+            .length - 1
+        )
+
+    // check if the project has a valid postcss config
+    // if it doesn't, don't use postcss-loader for direct style imports
+    // because otherwise it would throw error when attempting to load postcss config
+    const hasPostCSSConfig = !!(loaderOptions.postcss || api.service.pkg.postcss || findExisting(api.resolve('.'), [
+      '.postcssrc',
+      '.postcssrc.js',
+      'postcss.config.js',
+      '.postcssrc.yaml',
+      '.postcssrc.json'
+    ]))
+
+    if (!hasPostCSSConfig) {
+      // #6342
+      // NPM 6 may incorrectly hoist postcss 7 to the same level of autoprefixer
+      // So we have to run a preflight check to tell the users how to fix it
+      const autoprefixerDirectory = path.dirname(require.resolve('autoprefixer/package.json'))
+      const postcssPkg = loadModule('postcss/package.json', autoprefixerDirectory)
+      const postcssVersion = postcssPkg.version
+      if (!semver.satisfies(postcssVersion, '8.x')) {
+        throw new Error(
+          `The package manager has hoisted a wrong version of ${chalk.cyan('postcss')}, ` +
+          `please run ${chalk.cyan('npm i postcss@8 -D')} to fix it.`
+        )
+      }
+
+      loaderOptions.postcss = {
+        postcssOptions: {
+          plugins: [
+            require('autoprefixer')
+          ]
+        }
+      }
+    }
+
+    // if building for production but not extracting CSS, we need to minimize
+    // the embbeded inline CSS as they will not be going through the optimizing
+    // plugin.
+    const needInlineMinification = isProd && !shouldExtract
+
+    const cssnanoOptions = {
+      preset: ['default', {
+        mergeLonghand: false,
+        cssDeclarationSorter: false
+      }]
+    }
+    if (rootOptions.productionSourceMap && sourceMap) {
+      cssnanoOptions.map = { inline: false }
+    }
+
+    function createCSSRule (lang, test, loader, options) {
+      const baseRule = webpackConfig.module.rule(lang).test(test)
+
+      // rules for <style module>
+      const vueModulesRule = baseRule.oneOf('vue-modules').resourceQuery(/module/)
+      applyLoaders(vueModulesRule, true)
+
+      // rules for <style>
+      const vueNormalRule = baseRule.oneOf('vue').resourceQuery(/\?vue/)
+      applyLoaders(vueNormalRule)
+
+      // rules for *.module.* files
+      const extModulesRule = baseRule.oneOf('normal-modules').test(/\.module\.\w+$/)
+      applyLoaders(extModulesRule)
+
+      // rules for normal CSS imports
+      const normalRule = baseRule.oneOf('normal')
+      applyLoaders(normalRule)
+
+      function applyLoaders (rule, forceCssModule = false) {
+        if (shouldExtract) {
+          rule
+            .use('extract-css-loader')
+            .loader(require('mini-css-extract-plugin').loader)
+            .options({
+              publicPath: cssPublicPath
+            })
+        } else {
+          rule
+            .use('vue-style-loader')
+            .loader(require.resolve('vue-style-loader'))
+            .options({
+              sourceMap,
+              shadowMode
+            })
+        }
+
+        const cssLoaderOptions = Object.assign({
+          sourceMap,
+          importLoaders: (
+            1 + // stylePostLoader injected by vue-loader
+            1 + // postcss-loader
+            (needInlineMinification ? 1 : 0)
+          )
+        }, loaderOptions.css)
+
+        if (forceCssModule) {
+          cssLoaderOptions.modules = {
+            ...cssLoaderOptions.modules,
+            auto: () => true
+          }
+        }
+
+        if (cssLoaderOptions.modules) {
+          cssLoaderOptions.modules = {
+            localIdentName: '[name]_[local]_[hash:base64:5]',
+            ...cssLoaderOptions.modules
+          }
+        }
+
+        rule
+          .use('css-loader')
+          .loader(require.resolve('css-loader'))
+          .options(cssLoaderOptions)
+
+        if (needInlineMinification) {
+          rule
+            .use('cssnano')
+            .loader(require.resolve('postcss-loader'))
+            .options({
+              sourceMap,
+              postcssOptions: {
+                plugins: [require('cssnano')(cssnanoOptions)]
+              }
+            })
+        }
+
+        rule
+          .use('postcss-loader')
+          .loader(require.resolve('postcss-loader'))
+          .options(Object.assign({ sourceMap }, loaderOptions.postcss))
+
+        if (loader) {
+          let resolvedLoader
+          try {
+            resolvedLoader = require.resolve(loader)
+          } catch (error) {
+            resolvedLoader = loader
+          }
+
+          rule
+            .use(loader)
+            .loader(resolvedLoader)
+            .options(Object.assign({ sourceMap }, options))
+        }
+      }
+    }
+
+    createCSSRule('css', /\.css$/)
+    createCSSRule('postcss', /\.p(ost)?css$/)
+    createCSSRule('scss', /\.scss$/, 'sass-loader', Object.assign(
+      {},
+      loaderOptions.scss || loaderOptions.sass
+    ))
+    createCSSRule('sass', /\.sass$/, 'sass-loader', Object.assign(
+      {},
+      loaderOptions.sass,
+      {
+        sassOptions: Object.assign(
+          {},
+          loaderOptions.sass && loaderOptions.sass.sassOptions,
+          {
+            indentedSyntax: true
+          }
+        )
+      }
+    ))
+    createCSSRule('less', /\.less$/, 'less-loader', loaderOptions.less)
+    createCSSRule('stylus', /\.styl(us)?$/, 'stylus-loader', loaderOptions.stylus)
+
+    // inject CSS extraction plugin
+    if (shouldExtract) {
+      webpackConfig
+        .plugin('extract-css')
+          .use(require('mini-css-extract-plugin'), [extractOptions])
+
+      // minify extracted CSS
+      webpackConfig.optimization
+        .minimizer('css')
+          .use(require('css-minimizer-webpack-plugin'), [{
+            parallel: rootOptions.parallel,
+            minimizerOptions: cssnanoOptions
+          }])
+    }
+  })
+}
+
+```
+
+
+
+最后在`init`时合并配置
+
+```javascript
+const userOptions = this.loadUserOptions()
+const loadedCallback = (loadedUserOptions) => {
+  this.projectOptions = defaultsDeep(loadedUserOptions, defaults())
+
+  debug('vue:project-config')(this.projectOptions)
+
+  // apply plugins.
+  this.plugins.forEach(({ id, apply }) => {
+    if (this.pluginsToSkip.has(id)) return
+    apply(new PluginAPI(id, this), this.projectOptions)
+  })
+
+  // apply webpack configs from project config file
+  if (this.projectOptions.chainWebpack) {
+    this.webpackChainFns.push(this.projectOptions.chainWebpack)
+  }
+  if (this.projectOptions.configureWebpack) {
+    this.webpackRawConfigFns.push(this.projectOptions.configureWebpack)
+  }
+}
+
+if (isPromise(userOptions)) {
+  return userOptions.then(loadedCallback)
+} else {
+  return loadedCallback(userOptions)
+}
+```
+
