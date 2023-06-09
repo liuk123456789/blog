@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Nginx指令</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    <link rel="icon" href="/my-blog/favicon.ico">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    
+    <link rel="preload" href="/my-blog/assets/css/0.styles.5d6174b8.css" as="style"><link rel="preload" href="/my-blog/assets/js/app.32be202e.js" as="script"><link rel="preload" href="/my-blog/assets/js/3.a0eaa787.js" as="script"><link rel="preload" href="/my-blog/assets/js/1.f46f4f66.js" as="script"><link rel="preload" href="/my-blog/assets/js/57.bb11633c.js" as="script"><link rel="prefetch" href="/my-blog/assets/js/10.d6af31bc.js"><link rel="prefetch" href="/my-blog/assets/js/100.27c20759.js"><link rel="prefetch" href="/my-blog/assets/js/101.cddb3339.js"><link rel="prefetch" href="/my-blog/assets/js/11.26feaf4f.js"><link rel="prefetch" href="/my-blog/assets/js/12.73c5de2a.js"><link rel="prefetch" href="/my-blog/assets/js/13.cea3cbf2.js"><link rel="prefetch" href="/my-blog/assets/js/14.47539c67.js"><link rel="prefetch" href="/my-blog/assets/js/15.25455bcd.js"><link rel="prefetch" href="/my-blog/assets/js/16.81dc735f.js"><link rel="prefetch" href="/my-blog/assets/js/17.3fa23e44.js"><link rel="prefetch" href="/my-blog/assets/js/18.bea49075.js"><link rel="prefetch" href="/my-blog/assets/js/19.0002a8d7.js"><link rel="prefetch" href="/my-blog/assets/js/20.fcc72e3d.js"><link rel="prefetch" href="/my-blog/assets/js/21.a1f59723.js"><link rel="prefetch" href="/my-blog/assets/js/22.de87bf53.js"><link rel="prefetch" href="/my-blog/assets/js/23.8cd9339b.js"><link rel="prefetch" href="/my-blog/assets/js/24.3db14a3d.js"><link rel="prefetch" href="/my-blog/assets/js/25.744fa5db.js"><link rel="prefetch" href="/my-blog/assets/js/26.3e0e53c0.js"><link rel="prefetch" href="/my-blog/assets/js/27.b6f44027.js"><link rel="prefetch" href="/my-blog/assets/js/28.c970796c.js"><link rel="prefetch" href="/my-blog/assets/js/29.e4674ee9.js"><link rel="prefetch" href="/my-blog/assets/js/30.141008aa.js"><link rel="prefetch" href="/my-blog/assets/js/31.ef5b99f3.js"><link rel="prefetch" href="/my-blog/assets/js/32.d134be95.js"><link rel="prefetch" href="/my-blog/assets/js/33.5b000d47.js"><link rel="prefetch" href="/my-blog/assets/js/34.bca35313.js"><link rel="prefetch" href="/my-blog/assets/js/35.c9d706bf.js"><link rel="prefetch" href="/my-blog/assets/js/36.b437ed1a.js"><link rel="prefetch" href="/my-blog/assets/js/37.e86ae065.js"><link rel="prefetch" href="/my-blog/assets/js/38.6a9b4673.js"><link rel="prefetch" href="/my-blog/assets/js/39.590649cf.js"><link rel="prefetch" href="/my-blog/assets/js/4.bb59c7a2.js"><link rel="prefetch" href="/my-blog/assets/js/40.41cede96.js"><link rel="prefetch" href="/my-blog/assets/js/41.6d8d864d.js"><link rel="prefetch" href="/my-blog/assets/js/42.94936add.js"><link rel="prefetch" href="/my-blog/assets/js/43.e8f1f6c8.js"><link rel="prefetch" href="/my-blog/assets/js/44.4818b939.js"><link rel="prefetch" href="/my-blog/assets/js/45.f16377b8.js"><link rel="prefetch" href="/my-blog/assets/js/46.8daeb3ae.js"><link rel="prefetch" href="/my-blog/assets/js/47.a117cb87.js"><link rel="prefetch" href="/my-blog/assets/js/48.c5860bd4.js"><link rel="prefetch" href="/my-blog/assets/js/49.dfd40b01.js"><link rel="prefetch" href="/my-blog/assets/js/5.773d3189.js"><link rel="prefetch" href="/my-blog/assets/js/50.31bbeafa.js"><link rel="prefetch" href="/my-blog/assets/js/51.ab2c25ee.js"><link rel="prefetch" href="/my-blog/assets/js/52.c3e9f72a.js"><link rel="prefetch" href="/my-blog/assets/js/53.31ad3196.js"><link rel="prefetch" href="/my-blog/assets/js/54.bc937597.js"><link rel="prefetch" href="/my-blog/assets/js/55.a1fbff76.js"><link rel="prefetch" href="/my-blog/assets/js/56.8f009313.js"><link rel="prefetch" href="/my-blog/assets/js/58.b1bb562e.js"><link rel="prefetch" href="/my-blog/assets/js/59.f87e0e56.js"><link rel="prefetch" href="/my-blog/assets/js/6.353538f7.js"><link rel="prefetch" href="/my-blog/assets/js/60.dfe5fc39.js"><link rel="prefetch" href="/my-blog/assets/js/61.a829790e.js"><link rel="prefetch" href="/my-blog/assets/js/62.686739ad.js"><link rel="prefetch" href="/my-blog/assets/js/63.bbedd1e1.js"><link rel="prefetch" href="/my-blog/assets/js/64.636aef4f.js"><link rel="prefetch" href="/my-blog/assets/js/65.139d5a5c.js"><link rel="prefetch" href="/my-blog/assets/js/66.dd6ee5ae.js"><link rel="prefetch" href="/my-blog/assets/js/67.e0d2ee76.js"><link rel="prefetch" href="/my-blog/assets/js/68.f622218a.js"><link rel="prefetch" href="/my-blog/assets/js/69.c0909036.js"><link rel="prefetch" href="/my-blog/assets/js/7.57ae79a3.js"><link rel="prefetch" href="/my-blog/assets/js/70.52ee9a86.js"><link rel="prefetch" href="/my-blog/assets/js/71.7471b31c.js"><link rel="prefetch" href="/my-blog/assets/js/72.0e2e2183.js"><link rel="prefetch" href="/my-blog/assets/js/73.b273bfc6.js"><link rel="prefetch" href="/my-blog/assets/js/74.015cb3a1.js"><link rel="prefetch" href="/my-blog/assets/js/75.d4b5c87b.js"><link rel="prefetch" href="/my-blog/assets/js/76.7d119663.js"><link rel="prefetch" href="/my-blog/assets/js/77.954ed03b.js"><link rel="prefetch" href="/my-blog/assets/js/78.5a078583.js"><link rel="prefetch" href="/my-blog/assets/js/79.351139e1.js"><link rel="prefetch" href="/my-blog/assets/js/8.55fa6f4d.js"><link rel="prefetch" href="/my-blog/assets/js/80.5d5f4b1e.js"><link rel="prefetch" href="/my-blog/assets/js/81.b720117f.js"><link rel="prefetch" href="/my-blog/assets/js/82.57c80203.js"><link rel="prefetch" href="/my-blog/assets/js/83.ebe18815.js"><link rel="prefetch" href="/my-blog/assets/js/84.83e42ca6.js"><link rel="prefetch" href="/my-blog/assets/js/85.7fcb0c21.js"><link rel="prefetch" href="/my-blog/assets/js/86.cc9b45c7.js"><link rel="prefetch" href="/my-blog/assets/js/87.579c23d5.js"><link rel="prefetch" href="/my-blog/assets/js/88.75d9615b.js"><link rel="prefetch" href="/my-blog/assets/js/89.ab3c9f8f.js"><link rel="prefetch" href="/my-blog/assets/js/9.96f51beb.js"><link rel="prefetch" href="/my-blog/assets/js/90.fb273928.js"><link rel="prefetch" href="/my-blog/assets/js/91.0f6e5009.js"><link rel="prefetch" href="/my-blog/assets/js/92.89770dba.js"><link rel="prefetch" href="/my-blog/assets/js/93.81087123.js"><link rel="prefetch" href="/my-blog/assets/js/94.0280bab1.js"><link rel="prefetch" href="/my-blog/assets/js/95.df83fca0.js"><link rel="prefetch" href="/my-blog/assets/js/96.14f4f56c.js"><link rel="prefetch" href="/my-blog/assets/js/97.6ebc8243.js"><link rel="prefetch" href="/my-blog/assets/js/98.dd2e6180.js"><link rel="prefetch" href="/my-blog/assets/js/99.2c402d96.js">
+    <link rel="stylesheet" href="/my-blog/assets/css/0.styles.5d6174b8.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container" data-v-7dd95ae2><div data-v-7dd95ae2><div class="password-shadow password-wrapper-out" style="display:none;" data-v-59e6cb88 data-v-7dd95ae2 data-v-7dd95ae2><h3 class="title" data-v-59e6cb88></h3> <p class="description" data-v-59e6cb88></p> <label id="box" class="inputBox" data-v-59e6cb88><input type="password" value="" data-v-59e6cb88> <span data-v-59e6cb88>Konck! Knock!</span> <button data-v-59e6cb88>OK</button></label> <div class="footer" data-v-59e6cb88><span data-v-59e6cb88><i class="iconfont reco-theme" data-v-59e6cb88></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-59e6cb88>vuePress-theme-reco</a></span> <span data-v-59e6cb88><i class="iconfont reco-copyright" data-v-59e6cb88></i> <a data-v-59e6cb88><span data-v-59e6cb88>科纳</span>
+          
+        <span data-v-59e6cb88>2018 - </span>
+        2023
+      </a></span></div></div> <div class="hide" data-v-7dd95ae2><header class="navbar" data-v-7dd95ae2><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/my-blog/" class="home-link router-link-active"><img src="/my-blog/logo.png" alt="" class="logo"> <!----></a> <div class="links"><div class="color-picker"><a class="color-button"><i class="iconfont reco-color"></i></a> <div class="color-picker-menu" style="display:none;"><div class="mode-options"><h4 class="title">Choose mode</h4> <ul class="color-mode-options"><li class="dark">dark</li><li class="auto active">auto</li><li class="light">light</li></ul></div></div></div> <div class="search-box"><i class="iconfont reco-search"></i> <input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/my-blog/" class="nav-link"><i class="iconfont reco-home"></i>
+  主页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-category"></i>
+      目录索引
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/my-blog/categories/Linux/" class="nav-link"><i class="undefined"></i>
+  Linux
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Webpack/" class="nav-link"><i class="undefined"></i>
+  Webpack
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/CI/" class="nav-link"><i class="undefined"></i>
+  CI
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Design Partten/" class="nav-link"><i class="undefined"></i>
+  Design Partten
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/ES6/" class="nav-link"><i class="undefined"></i>
+  ES6
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/日常整理/" class="nav-link"><i class="undefined"></i>
+  日常整理
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Nginx/" class="nav-link"><i class="undefined"></i>
+  Nginx
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Rollup/" class="nav-link"><i class="undefined"></i>
+  Rollup
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Sass/" class="nav-link"><i class="undefined"></i>
+  Sass
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/源码解读/" class="nav-link"><i class="undefined"></i>
+  源码解读
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/TypeScript/" class="nav-link"><i class="undefined"></i>
+  TypeScript
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Vue/" class="nav-link"><i class="undefined"></i>
+  Vue
+</a></li></ul></div></div><div class="nav-item"><a href="/my-blog/tag/" class="nav-link"><i class="iconfont reco-tag"></i>
+  标签索引
+</a></div><div class="nav-item"><a href="/my-blog/timeline/" class="nav-link"><i class="iconfont reco-date"></i>
+  时间线
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-message"></i>
+      相关链接
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/liuk123456789/blog" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-github"></i>
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask" data-v-7dd95ae2></div> <aside class="sidebar" data-v-7dd95ae2><div class="personal-info-wrapper" data-v-1fad0c41 data-v-7dd95ae2><img src="/my-blog/avatar.png" alt="author-avatar" class="personal-img" data-v-1fad0c41> <h3 class="name" data-v-1fad0c41>
+    科纳
+  </h3> <div class="num" data-v-1fad0c41><div data-v-1fad0c41><h3 data-v-1fad0c41>91</h3> <h6 data-v-1fad0c41>Articles</h6></div> <div data-v-1fad0c41><h3 data-v-1fad0c41>85</h3> <h6 data-v-1fad0c41>Tags</h6></div></div> <ul class="social-links" data-v-1fad0c41></ul> <hr data-v-1fad0c41></div> <nav class="nav-links"><div class="nav-item"><a href="/my-blog/" class="nav-link"><i class="iconfont reco-home"></i>
+  主页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-category"></i>
+      目录索引
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/my-blog/categories/Linux/" class="nav-link"><i class="undefined"></i>
+  Linux
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Webpack/" class="nav-link"><i class="undefined"></i>
+  Webpack
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/CI/" class="nav-link"><i class="undefined"></i>
+  CI
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Design Partten/" class="nav-link"><i class="undefined"></i>
+  Design Partten
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/ES6/" class="nav-link"><i class="undefined"></i>
+  ES6
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/日常整理/" class="nav-link"><i class="undefined"></i>
+  日常整理
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Nginx/" class="nav-link"><i class="undefined"></i>
+  Nginx
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Rollup/" class="nav-link"><i class="undefined"></i>
+  Rollup
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Sass/" class="nav-link"><i class="undefined"></i>
+  Sass
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/源码解读/" class="nav-link"><i class="undefined"></i>
+  源码解读
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/TypeScript/" class="nav-link"><i class="undefined"></i>
+  TypeScript
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Vue/" class="nav-link"><i class="undefined"></i>
+  Vue
+</a></li></ul></div></div><div class="nav-item"><a href="/my-blog/tag/" class="nav-link"><i class="iconfont reco-tag"></i>
+  标签索引
+</a></div><div class="nav-item"><a href="/my-blog/timeline/" class="nav-link"><i class="iconfont reco-date"></i>
+  时间线
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-message"></i>
+      相关链接
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/liuk123456789/blog" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-github"></i>
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div> <!----></nav> <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>nginx</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/my-blog/blogs/nginx/basic.html" class="sidebar-link">nginx 基本用法</a></li><li><a href="/my-blog/blogs/nginx/directive.html" aria-current="page" class="active sidebar-link">Nginx指令</a></li></ul></section></li></ul> </aside> <div class="password-shadow password-wrapper-in" style="display:none;" data-v-59e6cb88 data-v-7dd95ae2><h3 class="title" data-v-59e6cb88>Nginx指令</h3> <!----> <label id="box" class="inputBox" data-v-59e6cb88><input type="password" value="" data-v-59e6cb88> <span data-v-59e6cb88>Konck! Knock!</span> <button data-v-59e6cb88>OK</button></label> <div class="footer" data-v-59e6cb88><span data-v-59e6cb88><i class="iconfont reco-theme" data-v-59e6cb88></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-59e6cb88>vuePress-theme-reco</a></span> <span data-v-59e6cb88><i class="iconfont reco-copyright" data-v-59e6cb88></i> <a data-v-59e6cb88><span data-v-59e6cb88>科纳</span>
+          
+        <span data-v-59e6cb88>2018 - </span>
+        2023
+      </a></span></div></div> <div data-v-7dd95ae2><div data-v-7dd95ae2><main class="page"><section style="display:;"><div class="page-title"><h1 class="title">Nginx指令</h1> <div data-v-8a445198><i class="iconfont reco-account" data-v-8a445198><span data-v-8a445198>科纳</span></i> <i class="iconfont reco-date" data-v-8a445198><span data-v-8a445198>1/29/2023</span></i> <i class="iconfont reco-eye" data-v-8a445198><span id="/my-blog/blogs/nginx/directive.html" data-flag-title="Your Article Title" class="leancloud-visitors" data-v-8a445198><a class="leancloud-visitors-count" style="font-size:.9rem;font-weight:normal;color:#999;"></a></span></i> <i class="tags iconfont reco-tag" data-v-8a445198><span class="tag-item" data-v-8a445198>Nginx directive</span></i></div></div> <div class="theme-reco-content content__default"><h2 id="核心模块"><a href="#核心模块" class="header-anchor">#</a> 核心模块</h2> <h3 id="alias-root"><a href="#alias-root" class="header-anchor">#</a> alias&amp;root</h3> <p>上下文对象都是location,命中规则后</p> <p>root：会把请求的url的<code>ip/域名</code>+<code>port</code>替换为root的指定目录，访问资源</p> <p>alias：会把请求url的<code>ip/域名+port+匹配到的路径</code>替换为alias指定的目录，访问资源</p> <p>以请求http://example.com/foo/bar/hello.html 为例，location配置如下</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">root</span> /home/kn/</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>匹配到/foo，url中的http://example.com被替换为/home/kn/,实际访问路径：/home/kn/foo/bar/hello.html</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">alias</span> /home/kn/</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>匹配到/foo/bar，url的<code>ip/域名+port+匹配到的路径</code>替换为alias指定的目录，即url中的example.com/foo/bar被替换为/home/kn/bar/hello.htm</p> <ol><li><p>index</p> <p>在location内部其实默认配置了一条规则<code>index index.html</code>，补全后的规则如下</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">root</span> /home/kn/</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">index</span> index.html index.htm</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p>假设我们访问的url为http://example.com/foo/bar ，匹配到/foo，实际访问的路径为/home/hfy/foo/bar。如果我们的bar是一个文件夹，其中如果包含index.html文件，则会把该文件返回。所以index的作用是，当实际访问的是一个目录时，会返回该目录中index指定的文件，如果该目录中不存在index指定的文件，则会返回403。</p> <p>在访问http://example.com/foo/bar ，时我们打开浏览器的控制台，查看发送的请求，会发现发生了一个301重定向，http://example.com/foo/bar 被重定向为http://example.com/foo/bar/ ，由此引发了新的问题，为什么会发生重定向，url末尾的/，location 匹配路径末尾的/，以及root 指定目录末尾的/都表示什么意思</p></li> <li><p>location 解析url的工作流程</p> <p><img src="https://img-blog.csdnimg.cn/bea9508cc8b94ad9807c490e217cabd9.jpeg" alt=""></p> <p>上述的工作流程，假设了url末尾没有加/，如果末尾包含/，解析流程为上图中绿色部分。例如url为http://example.com/foo/ ，如果foo不存在或者是文件，则直接返回404，如果是foo是目录，则进入到绿色部分流程。如果foo目录中存在index指定的文件，则返回该文件。如果不存在返回403。从这个例子可以看出，url末尾加/表示要访问一个目录，如果实际是个文件，nginx会返回404。</p></li> <li><p>关于末尾'/'的含义</p> <ul><li><p>url末尾/的含义</p> <p>http://example.com/foo/bar 表示我们把bar当成一个文件，想要访问bar文件
+http://example.com/foo/bar/ 表示我们把bar当成一个目录，想要访问bar目录下index指定的文件</p></li> <li><p>location匹配路径末尾/的含义</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">root</span> /home/kn/</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">index</span> index.html index.htm</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p>/foo 既能匹配http://example.com/foo 也能匹配 http://example.com/foo/</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo/</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">root</span> /home/kn/</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">index</span> index.html</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p>/foo/只能匹配http://example.com/foo/</p></li> <li><p>root指定目录末尾/的含义</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">root</span> /home/kn/</span><span class="token punctuation">;</span>
+    <span class="token directive"><span class="token keyword">index</span> index.html index.htm</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br></div></div><p>/home/kn表示把kn当成目录或者文件</p> <p>/home/kn/表示把kn当成目录</p> <p><code>alias 后面必须要用'/'结束，否则会找不到下级目录</code></p> <p><code>root后面指定的都应该是目录</code></p></li></ul></li> <li><p>alias的基本用法</p> <p>以请求http://example.com/foo/bar/hello.html为例，location配置如下</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">alias</span> /home/kn/</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>匹配到/foo，url的<code>ip/域名+port+匹配到的路径</code>替换为alias指定的目录，即url中的<code>example.com/foo</code>被替换为了<code>/home/kn/bar/hello.html</code></p> <p>请求的url不变，更改location配置</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo/bar</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">alias</span> /home/kn/</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>匹配到/foo/bar，url的<code>ip/域名+port+匹配到的路径</code>替换为alias指定的目录，即url中的example.com/foo/bar被替换为/home/kn，实际访问路径/home/kn/hello.html</p> <p>alias其余特性，最左匹配、index、location解析url工作流程、末尾’/'与root一致。</p></li> <li><p>特殊情况</p> <ol><li><p>alias 指定文件</p> <ol><li><p>url: http://example.com/foo &amp; /home/kn/foo是一个文件</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo</span> <span class="token punctuation">{</span>
+	alias /home/kn/foo
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>实际访问路径/home/kn/foo，nginx<strong>返回foo文件</strong>。</p> <p>这就是上面说的特例，alias也可以指定文件，并且正常返回了要访问的文件。但是实际一般不会用alias指定文件。</p></li> <li><p>url: http://example.com/foo &amp; /home/kn/foo是一个文件</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">alias</span> /home/kn/foo/</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>实际访问路径/home/hfy/foo，alias指定 /home/hfy/foo/是一个目录，而foo是一个文件，<strong>返回404</strong>。</p></li> <li><p>url: http://example.com/foo/ &amp; /home/kn/foo是文件</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo/</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">alias</span> /home/kn/foo</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>实际访问路径/home/kn/foo/要访问目录，alias指定/home/kn/foo是目录或文件，而foo是一个文件，<strong>返回了500</strong>。</p></li> <li><p>url: http://example.com/ &amp; /home/kn/foo是一个文件</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">alias</span> /home/kn/foo</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>实际访问路径/home/kn/foo，<strong>但是返回了500</strong>。</p></li> <li><p>url: http://example.com/foo/  &amp; /home/kn/foo是一个文件</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo/</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">alias</span> /home/kn/foo/</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>实际访问路径/home/kn/foo/，alias指定/home/kn/foo/是一个目录，而foo是一个文件，<strong>返回了404</strong>。</p></li> <li><p>url：http://example.com/ &amp; /home/kn/foo是一个文件</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">alias</span> /home/kn/foo/</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>实际访问路径/home/hfy/foo/，<strong>返回404</strong>。</p></li></ol></li> <li><p>root 指定文件</p> <ol><li><p>url: http://example.com/foo &amp; /home/kn/foo是一个文件</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">root</span> /home/kn/foo</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>实际访问路径/home/kn/foo/foo, 不存在，返回404</p></li> <li><p>url: http://example.com/foo &amp; /home/kn/foo是一个文件</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">root</span> /home/kn/</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>实际访问路径/home/kn/foo，<strong>返回foo文件</strong></p></li> <li><p>url: http://example.com/foo/ &amp; /home/kn/foo是一个文件</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /foo</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">root</span> /home/kn/</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>实际访问路径/home/kn/foo/，/home/kn/foo是文件，<strong>返回404</strong></p></li> <li><p>url: http://example.com/ &amp; /home/kn/foo是一个文件</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">root</span> /home/kn/foo</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>实际访问路径/home/kn/foo，foo是一个文件，<strong>但是却返回404</strong>。</p></li> <li><p>url: http://example.com/ &amp; /home/kn/foo是一个文件</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> /</span> <span class="token punctuation">{</span>
+    <span class="token directive"><span class="token keyword">root</span> /home/kn/foo/</span><span class="token punctuation">;</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br></div></div><p>实际访问路径/home/hfy/foo，foo是一个文件，<strong>但是却返回404</strong>。</p></li></ol></li></ol></li></ol> <h3 id="location"><a href="#location" class="header-anchor">#</a> location</h3> <p>语法：location[=|~|~*|^~]/uri/{...}</p> <p>当匹配中符合条件的location，则执行内部指令；如果使用正则表达式，必须使用~<em>表明不区分大小写或者~区分大小写匹配；例如：location ~</em> .(gif|jpg|jpeg)$ ；当匹配成功后，将停止往下匹配；如果没有找到，则使用常规自字符串处理结果；</p> <p>如果不是用正则表达式；可使用=严格匹配；</p> <p>如果使用^~前缀用于一个常规字符串；表示如果路径匹配，则不测试正则表达式；</p> <p>总结：指令按下列顺序被接受</p> <p>1:=前缀的指令严格匹配这个查询；如果找到停止往下匹配</p> <p>2:剩下的常规字符串，长的在前，如果这个匹配使用^~前缀，匹配停止；</p> <p>3:正则表达式，按配置文件的顺序；</p> <p>4:如果第三步产生匹配。则使用这个结果；停止匹配；否则使用第二部的匹配结果；</p> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> = /</span> <span class="token punctuation">{</span>
+
+　　　　<span class="token comment">#只匹配／查询</span>
+
+　　<span class="token punctuation">}</span>
+
+　　<span class="token directive"><span class="token keyword">location</span> /</span> <span class="token punctuation">{</span>
+
+　　　　<span class="token comment">#匹配任何查询，所有请求都是以/开头。但是正则表达式规则和长的块规则将被优先匹配和查询；</span>
+
+　　<span class="token punctuation">}</span>
+
+　　<span class="token directive"><span class="token keyword">location</span> ^~ /images/</span> <span class="token punctuation">{</span>
+　　　　<span class="token comment"># 匹配任何已 /images/ 开头的任何查询并且停止搜索。任何正则表达式将不会被测试。</span>
+　　　　<span class="token punctuation">}</span>
+
+　　<span class="token directive"><span class="token keyword">location</span> ~* .(gif|jpg|png)$</span><span class="token punctuation">{</span>
+
+　　　　<span class="token comment">#匹配任何以gif、jpg、png结尾的请求。然后所有/images/目录的请求将使用第三个</span>
+
+　　<span class="token punctuation">}</span>
+
+　　例子请求:
+
+　　　　/ -&gt; configuration A
+
+　　　　/documents/document.html -&gt; configuration B
+
+　　　　/images/1.gif -&gt; configuration C
+
+　　　　/documents/1.jpg -&gt; configuration D
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br></div></div><h4 id="八个location案例"><a href="#八个location案例" class="header-anchor">#</a> 八个location案例</h4> <div class="language-nginx line-numbers-mode"><pre class="language-nginx"><code><span class="token directive"><span class="token keyword">location</span> = /</span> <span class="token punctuation">{</span>  <span class="token comment">#精确匹配，/后面不能加任何字符串，符合此条件就直接返回数据，不再向下匹配。</span>
+    // 如果/usr/local/ngnix/html/是目录
+    <span class="token directive"><span class="token keyword">if</span> (-d <span class="token variable">$request_filename</span>)</span> <span class="token punctuation">{</span>
+         <span class="token directive"><span class="token keyword">root</span> /usr/local/nginx/html/</span><span class="token punctuation">;</span>  <span class="token comment">#当用户访问newweb的时候，则显示此目录的内容，除此之外访问其他的任何目录都不匹配。</span>
+　　[动作A]
+<span class="token punctuation">}</span>
+
+<span class="token directive"><span class="token keyword">location</span>  /</span> <span class="token punctuation">{</span>
+  <span class="token comment"># 因为所有的地址都以/开头，所以这条规则将匹配到所有请求，但是非精确匹配会采取正则和最长字符串会优先匹配，因此还会向下继续匹配，比如当访问/bbs的时候，还需要看下面是否更精确的匹配。</span>
+  [ 动作B] 
+<span class="token punctuation">}</span>
+
+<span class="token directive"><span class="token keyword">location</span> /documents/</span> <span class="token punctuation">{</span>
+  <span class="token comment"># 匹配任何以 /documents/ 开头的地址，匹配符合以后，还要继续往下搜索</span>
+  <span class="token comment"># 如果后面的正则表达式都没有匹配到，就匹配这一条</span>
+  [动作C] 
+<span class="token punctuation">}</span>
+
+<span class="token directive"><span class="token keyword">location</span> ^~ /images/</span> <span class="token punctuation">{</span>   <span class="token comment">#匹配任何以/images/ 开头的任何请求并且停止搜索，后面任何正则表达式将不会被测试。</span>
+  <span class="token comment"># 匹配任何以 /images/ 开头的地址，匹配符合以后，停止往下搜索正则，采用这一条。</span>
+  [动作D] 
+<span class="token punctuation">}</span>
+
+<span class="token directive"><span class="token keyword">location</span> ~* .(gif|jpg|jpeg)$</span> <span class="token punctuation">{</span>  <span class="token comment">#~*为不区分大小写</span>
+  <span class="token comment"># 匹配所有以 gif,jpg或jpeg 结尾的请求</span>
+  <span class="token comment"># 然而，所有请求/images/下的图片会被动作D匹配处理，因为动作D有^~会优先匹配并终止匹配，所以到达不了这一条正则</span>
+  [动作E] 
+<span class="token punctuation">}</span>
+
+<span class="token directive"><span class="token keyword">location</span> /images/</span> <span class="token punctuation">{</span>
+  <span class="token comment"># 字符匹配到 /images/，继续往下，会发现 ^~ 存在，如果动作D存在，则这一条就不生效。</span>
+  [动作F] 
+<span class="token punctuation">}</span>
+
+<span class="token directive"><span class="token keyword">location</span> /images/abc</span> <span class="token punctuation">{</span>
+  <span class="token comment">#最长字符匹配到 /images/abc，继续往下，会发现 ^~ 存在，如果D存在，则这一条就不生效。</span>
+  <span class="token comment">#F与G的放置顺序是没有关系的</span>
+  [动作G] 
+<span class="token punctuation">}</span>
+
+<span class="token directive"><span class="token keyword">location</span> ~ /images/abc/</span> <span class="token punctuation">{</span>
+  <span class="token comment"># 动作D存在，这一条不生效，如果注销动作D，则会优先最长匹配 动作G 开头的地址，然后向下匹配，到这一条的时候就会匹配并生效。</span>
+    [ configuration H ] 
+<span class="token punctuation">}</span>
+
+ 匹配优先级，顺序 no优先级：
+(location =) &gt; (location 完整路径) &gt; (location ^~ 路径) &gt; (location ~,~* 正则顺序) &gt; (location 部分起始路径) &gt; (/)
+
+上面的匹配结果
+按照上面的location写法，以下的匹配示例成立：
+
+/ -&gt; config A
+精确完全匹配，即使/index.html也匹配不了
+
+/downloads/download.html -&gt; config B
+匹配B以后，往下没有任何匹配，采用B
+
+/images/1.gif -&gt; configuration D
+匹配到F，往下匹配到D，停止往下
+
+/images/abc/def -&gt; config D
+最长匹配到G，往下匹配D，停止往下
+你可以看到 任何以/images/开头的都会匹配到D并停止，FG写在这里是没有任何意义的，H是永远轮不到的，这里只是为了说明匹配顺序
+
+/documents/document.html -&gt; config C
+匹配到C，往下没有任何匹配，采用C
+
+/documents/1.jpg -&gt; configuration E
+匹配到C，往下正则匹配到E
+
+/documents/Abc.jpg -&gt; config CC
+最长匹配到C，往下正则顺序匹配到CC，不会往下到E
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br></div></div></div></section> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">更新时间: </span> <span class="time">6/9/2023, 4:06:17 AM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev"><a href="/my-blog/blogs/nginx/basic.html" class="prev">
+          nginx 基本用法
+        </a></span> <!----></p></div> <div class="comments-wrapper" style="display:none;"><!----></div></main></div> <!----></div> <ul class="sub-sidebar sub-sidebar-wrapper" style="width:12rem;" data-v-b57cc07c data-v-7dd95ae2><li class="level-2" data-v-b57cc07c><a href="/my-blog/blogs/nginx/directive.html#核心模块" class="sidebar-link reco-side-核心模块" data-v-b57cc07c>核心模块</a></li><li class="level-3" data-v-b57cc07c><a href="/my-blog/blogs/nginx/directive.html#alias-root" class="sidebar-link reco-side-alias-root" data-v-b57cc07c>alias&amp;root</a></li><li class="level-3" data-v-b57cc07c><a href="/my-blog/blogs/nginx/directive.html#location" class="sidebar-link reco-side-location" data-v-b57cc07c>location</a></li></ul></div></div></div><div class="global-ui"><div class="back-to-ceiling" style="right:1rem;bottom:6rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;display:none;" data-v-c6073ba8 data-v-c6073ba8><svg t="1574745035067" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5404" class="icon" data-v-c6073ba8><path d="M526.60727968 10.90185116a27.675 27.675 0 0 0-29.21455937 0c-131.36607665 82.28402758-218.69155461 228.01873535-218.69155402 394.07834331a462.20625001 462.20625001 0 0 0 5.36959153 69.94390903c1.00431239 6.55289093-0.34802892 13.13561351-3.76865779 18.80351572-32.63518765 54.11355614-51.75690182 118.55860487-51.7569018 187.94566865a371.06718723 371.06718723 0 0 0 11.50484808 91.98906777c6.53300375 25.50556257 41.68394495 28.14064038 52.69160883 4.22606766 17.37162448-37.73630017 42.14135425-72.50938081 72.80769204-103.21549295 2.18761121 3.04276886 4.15646224 6.24463696 6.40373557 9.22774369a1871.4375 1871.4375 0 0 0 140.04691725 5.34970492 1866.36093723 1866.36093723 0 0 0 140.04691723-5.34970492c2.24727335-2.98310674 4.21612437-6.18497483 6.3937923-9.2178004 30.66633723 30.70611158 55.4360664 65.4791928 72.80769147 103.21549355 11.00766384 23.91457269 46.15860503 21.27949489 52.69160879-4.22606768a371.15156223 371.15156223 0 0 0 11.514792-91.99901164c0-69.36717486-19.13165746-133.82216804-51.75690182-187.92578088-3.42062944-5.66790279-4.76302748-12.26056868-3.76865837-18.80351632a462.20625001 462.20625001 0 0 0 5.36959269-69.943909c-0.00994388-166.08943902-87.32547796-311.81420293-218.6915546-394.09823051zM605.93803103 357.87693858a93.93749974 93.93749974 0 1 1-187.89594924 6.1e-7 93.93749974 93.93749974 0 0 1 187.89594924-6.1e-7z" p-id="5405" data-v-c6073ba8></path><path d="M429.50777625 765.63860547C429.50777625 803.39355007 466.44236686 1000.39046097 512.00932183 1000.39046097c45.56695499 0 82.4922232-197.00623328 82.5015456-234.7518555 0-37.75494459-36.9345906-68.35043303-82.4922232-68.34111062-45.57627738-0.00932239-82.52019037 30.59548842-82.51086798 68.34111062z" p-id="5406" data-v-c6073ba8></path></svg></div></div></div>
+    <script src="/my-blog/assets/js/app.32be202e.js" defer></script><script src="/my-blog/assets/js/3.a0eaa787.js" defer></script><script src="/my-blog/assets/js/1.f46f4f66.js" defer></script><script src="/my-blog/assets/js/57.bb11633c.js" defer></script>
+  </body>
+</html>

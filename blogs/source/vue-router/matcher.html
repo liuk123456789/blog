@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>vue-router 第二篇</title>
+    <meta name="generator" content="VuePress 1.8.2">
+    <link rel="icon" href="/my-blog/favicon.ico">
+    <meta name="description" content="">
+    <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+    
+    <link rel="preload" href="/my-blog/assets/css/0.styles.5d6174b8.css" as="style"><link rel="preload" href="/my-blog/assets/js/app.32be202e.js" as="script"><link rel="preload" href="/my-blog/assets/js/3.a0eaa787.js" as="script"><link rel="preload" href="/my-blog/assets/js/1.f46f4f66.js" as="script"><link rel="preload" href="/my-blog/assets/js/79.351139e1.js" as="script"><link rel="prefetch" href="/my-blog/assets/js/10.d6af31bc.js"><link rel="prefetch" href="/my-blog/assets/js/100.27c20759.js"><link rel="prefetch" href="/my-blog/assets/js/101.cddb3339.js"><link rel="prefetch" href="/my-blog/assets/js/11.26feaf4f.js"><link rel="prefetch" href="/my-blog/assets/js/12.73c5de2a.js"><link rel="prefetch" href="/my-blog/assets/js/13.cea3cbf2.js"><link rel="prefetch" href="/my-blog/assets/js/14.47539c67.js"><link rel="prefetch" href="/my-blog/assets/js/15.25455bcd.js"><link rel="prefetch" href="/my-blog/assets/js/16.81dc735f.js"><link rel="prefetch" href="/my-blog/assets/js/17.3fa23e44.js"><link rel="prefetch" href="/my-blog/assets/js/18.bea49075.js"><link rel="prefetch" href="/my-blog/assets/js/19.0002a8d7.js"><link rel="prefetch" href="/my-blog/assets/js/20.fcc72e3d.js"><link rel="prefetch" href="/my-blog/assets/js/21.a1f59723.js"><link rel="prefetch" href="/my-blog/assets/js/22.de87bf53.js"><link rel="prefetch" href="/my-blog/assets/js/23.8cd9339b.js"><link rel="prefetch" href="/my-blog/assets/js/24.3db14a3d.js"><link rel="prefetch" href="/my-blog/assets/js/25.744fa5db.js"><link rel="prefetch" href="/my-blog/assets/js/26.3e0e53c0.js"><link rel="prefetch" href="/my-blog/assets/js/27.b6f44027.js"><link rel="prefetch" href="/my-blog/assets/js/28.c970796c.js"><link rel="prefetch" href="/my-blog/assets/js/29.e4674ee9.js"><link rel="prefetch" href="/my-blog/assets/js/30.141008aa.js"><link rel="prefetch" href="/my-blog/assets/js/31.ef5b99f3.js"><link rel="prefetch" href="/my-blog/assets/js/32.d134be95.js"><link rel="prefetch" href="/my-blog/assets/js/33.5b000d47.js"><link rel="prefetch" href="/my-blog/assets/js/34.bca35313.js"><link rel="prefetch" href="/my-blog/assets/js/35.c9d706bf.js"><link rel="prefetch" href="/my-blog/assets/js/36.b437ed1a.js"><link rel="prefetch" href="/my-blog/assets/js/37.e86ae065.js"><link rel="prefetch" href="/my-blog/assets/js/38.6a9b4673.js"><link rel="prefetch" href="/my-blog/assets/js/39.590649cf.js"><link rel="prefetch" href="/my-blog/assets/js/4.bb59c7a2.js"><link rel="prefetch" href="/my-blog/assets/js/40.41cede96.js"><link rel="prefetch" href="/my-blog/assets/js/41.6d8d864d.js"><link rel="prefetch" href="/my-blog/assets/js/42.94936add.js"><link rel="prefetch" href="/my-blog/assets/js/43.e8f1f6c8.js"><link rel="prefetch" href="/my-blog/assets/js/44.4818b939.js"><link rel="prefetch" href="/my-blog/assets/js/45.f16377b8.js"><link rel="prefetch" href="/my-blog/assets/js/46.8daeb3ae.js"><link rel="prefetch" href="/my-blog/assets/js/47.a117cb87.js"><link rel="prefetch" href="/my-blog/assets/js/48.c5860bd4.js"><link rel="prefetch" href="/my-blog/assets/js/49.dfd40b01.js"><link rel="prefetch" href="/my-blog/assets/js/5.773d3189.js"><link rel="prefetch" href="/my-blog/assets/js/50.31bbeafa.js"><link rel="prefetch" href="/my-blog/assets/js/51.ab2c25ee.js"><link rel="prefetch" href="/my-blog/assets/js/52.c3e9f72a.js"><link rel="prefetch" href="/my-blog/assets/js/53.31ad3196.js"><link rel="prefetch" href="/my-blog/assets/js/54.bc937597.js"><link rel="prefetch" href="/my-blog/assets/js/55.a1fbff76.js"><link rel="prefetch" href="/my-blog/assets/js/56.8f009313.js"><link rel="prefetch" href="/my-blog/assets/js/57.bb11633c.js"><link rel="prefetch" href="/my-blog/assets/js/58.b1bb562e.js"><link rel="prefetch" href="/my-blog/assets/js/59.f87e0e56.js"><link rel="prefetch" href="/my-blog/assets/js/6.353538f7.js"><link rel="prefetch" href="/my-blog/assets/js/60.dfe5fc39.js"><link rel="prefetch" href="/my-blog/assets/js/61.a829790e.js"><link rel="prefetch" href="/my-blog/assets/js/62.686739ad.js"><link rel="prefetch" href="/my-blog/assets/js/63.bbedd1e1.js"><link rel="prefetch" href="/my-blog/assets/js/64.636aef4f.js"><link rel="prefetch" href="/my-blog/assets/js/65.139d5a5c.js"><link rel="prefetch" href="/my-blog/assets/js/66.dd6ee5ae.js"><link rel="prefetch" href="/my-blog/assets/js/67.e0d2ee76.js"><link rel="prefetch" href="/my-blog/assets/js/68.f622218a.js"><link rel="prefetch" href="/my-blog/assets/js/69.c0909036.js"><link rel="prefetch" href="/my-blog/assets/js/7.57ae79a3.js"><link rel="prefetch" href="/my-blog/assets/js/70.52ee9a86.js"><link rel="prefetch" href="/my-blog/assets/js/71.7471b31c.js"><link rel="prefetch" href="/my-blog/assets/js/72.0e2e2183.js"><link rel="prefetch" href="/my-blog/assets/js/73.b273bfc6.js"><link rel="prefetch" href="/my-blog/assets/js/74.015cb3a1.js"><link rel="prefetch" href="/my-blog/assets/js/75.d4b5c87b.js"><link rel="prefetch" href="/my-blog/assets/js/76.7d119663.js"><link rel="prefetch" href="/my-blog/assets/js/77.954ed03b.js"><link rel="prefetch" href="/my-blog/assets/js/78.5a078583.js"><link rel="prefetch" href="/my-blog/assets/js/8.55fa6f4d.js"><link rel="prefetch" href="/my-blog/assets/js/80.5d5f4b1e.js"><link rel="prefetch" href="/my-blog/assets/js/81.b720117f.js"><link rel="prefetch" href="/my-blog/assets/js/82.57c80203.js"><link rel="prefetch" href="/my-blog/assets/js/83.ebe18815.js"><link rel="prefetch" href="/my-blog/assets/js/84.83e42ca6.js"><link rel="prefetch" href="/my-blog/assets/js/85.7fcb0c21.js"><link rel="prefetch" href="/my-blog/assets/js/86.cc9b45c7.js"><link rel="prefetch" href="/my-blog/assets/js/87.579c23d5.js"><link rel="prefetch" href="/my-blog/assets/js/88.75d9615b.js"><link rel="prefetch" href="/my-blog/assets/js/89.ab3c9f8f.js"><link rel="prefetch" href="/my-blog/assets/js/9.96f51beb.js"><link rel="prefetch" href="/my-blog/assets/js/90.fb273928.js"><link rel="prefetch" href="/my-blog/assets/js/91.0f6e5009.js"><link rel="prefetch" href="/my-blog/assets/js/92.89770dba.js"><link rel="prefetch" href="/my-blog/assets/js/93.81087123.js"><link rel="prefetch" href="/my-blog/assets/js/94.0280bab1.js"><link rel="prefetch" href="/my-blog/assets/js/95.df83fca0.js"><link rel="prefetch" href="/my-blog/assets/js/96.14f4f56c.js"><link rel="prefetch" href="/my-blog/assets/js/97.6ebc8243.js"><link rel="prefetch" href="/my-blog/assets/js/98.dd2e6180.js"><link rel="prefetch" href="/my-blog/assets/js/99.2c402d96.js">
+    <link rel="stylesheet" href="/my-blog/assets/css/0.styles.5d6174b8.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container" data-v-7dd95ae2><div data-v-7dd95ae2><div class="password-shadow password-wrapper-out" style="display:none;" data-v-59e6cb88 data-v-7dd95ae2 data-v-7dd95ae2><h3 class="title" data-v-59e6cb88></h3> <p class="description" data-v-59e6cb88></p> <label id="box" class="inputBox" data-v-59e6cb88><input type="password" value="" data-v-59e6cb88> <span data-v-59e6cb88>Konck! Knock!</span> <button data-v-59e6cb88>OK</button></label> <div class="footer" data-v-59e6cb88><span data-v-59e6cb88><i class="iconfont reco-theme" data-v-59e6cb88></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-59e6cb88>vuePress-theme-reco</a></span> <span data-v-59e6cb88><i class="iconfont reco-copyright" data-v-59e6cb88></i> <a data-v-59e6cb88><span data-v-59e6cb88>科纳</span>
+          
+        <span data-v-59e6cb88>2018 - </span>
+        2023
+      </a></span></div></div> <div class="hide" data-v-7dd95ae2><header class="navbar" data-v-7dd95ae2><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/my-blog/" class="home-link router-link-active"><img src="/my-blog/logo.png" alt="" class="logo"> <!----></a> <div class="links"><div class="color-picker"><a class="color-button"><i class="iconfont reco-color"></i></a> <div class="color-picker-menu" style="display:none;"><div class="mode-options"><h4 class="title">Choose mode</h4> <ul class="color-mode-options"><li class="dark">dark</li><li class="auto active">auto</li><li class="light">light</li></ul></div></div></div> <div class="search-box"><i class="iconfont reco-search"></i> <input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <nav class="nav-links can-hide"><div class="nav-item"><a href="/my-blog/" class="nav-link"><i class="iconfont reco-home"></i>
+  主页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-category"></i>
+      目录索引
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/my-blog/categories/Linux/" class="nav-link"><i class="undefined"></i>
+  Linux
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Webpack/" class="nav-link"><i class="undefined"></i>
+  Webpack
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/CI/" class="nav-link"><i class="undefined"></i>
+  CI
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Design Partten/" class="nav-link"><i class="undefined"></i>
+  Design Partten
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/ES6/" class="nav-link"><i class="undefined"></i>
+  ES6
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/日常整理/" class="nav-link"><i class="undefined"></i>
+  日常整理
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Nginx/" class="nav-link"><i class="undefined"></i>
+  Nginx
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Rollup/" class="nav-link"><i class="undefined"></i>
+  Rollup
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Sass/" class="nav-link"><i class="undefined"></i>
+  Sass
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/源码解读/" class="nav-link"><i class="undefined"></i>
+  源码解读
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/TypeScript/" class="nav-link"><i class="undefined"></i>
+  TypeScript
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Vue/" class="nav-link"><i class="undefined"></i>
+  Vue
+</a></li></ul></div></div><div class="nav-item"><a href="/my-blog/tag/" class="nav-link"><i class="iconfont reco-tag"></i>
+  标签索引
+</a></div><div class="nav-item"><a href="/my-blog/timeline/" class="nav-link"><i class="iconfont reco-date"></i>
+  时间线
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-message"></i>
+      相关链接
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/liuk123456789/blog" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-github"></i>
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div> <!----></nav></div></header> <div class="sidebar-mask" data-v-7dd95ae2></div> <aside class="sidebar" data-v-7dd95ae2><div class="personal-info-wrapper" data-v-1fad0c41 data-v-7dd95ae2><img src="/my-blog/avatar.png" alt="author-avatar" class="personal-img" data-v-1fad0c41> <h3 class="name" data-v-1fad0c41>
+    科纳
+  </h3> <div class="num" data-v-1fad0c41><div data-v-1fad0c41><h3 data-v-1fad0c41>91</h3> <h6 data-v-1fad0c41>Articles</h6></div> <div data-v-1fad0c41><h3 data-v-1fad0c41>85</h3> <h6 data-v-1fad0c41>Tags</h6></div></div> <ul class="social-links" data-v-1fad0c41></ul> <hr data-v-1fad0c41></div> <nav class="nav-links"><div class="nav-item"><a href="/my-blog/" class="nav-link"><i class="iconfont reco-home"></i>
+  主页
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-category"></i>
+      目录索引
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="/my-blog/categories/Linux/" class="nav-link"><i class="undefined"></i>
+  Linux
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Webpack/" class="nav-link"><i class="undefined"></i>
+  Webpack
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/CI/" class="nav-link"><i class="undefined"></i>
+  CI
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Design Partten/" class="nav-link"><i class="undefined"></i>
+  Design Partten
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/ES6/" class="nav-link"><i class="undefined"></i>
+  ES6
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/日常整理/" class="nav-link"><i class="undefined"></i>
+  日常整理
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Nginx/" class="nav-link"><i class="undefined"></i>
+  Nginx
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Rollup/" class="nav-link"><i class="undefined"></i>
+  Rollup
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Sass/" class="nav-link"><i class="undefined"></i>
+  Sass
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/源码解读/" class="nav-link"><i class="undefined"></i>
+  源码解读
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/TypeScript/" class="nav-link"><i class="undefined"></i>
+  TypeScript
+</a></li><li class="dropdown-item"><!----> <a href="/my-blog/categories/Vue/" class="nav-link"><i class="undefined"></i>
+  Vue
+</a></li></ul></div></div><div class="nav-item"><a href="/my-blog/tag/" class="nav-link"><i class="iconfont reco-tag"></i>
+  标签索引
+</a></div><div class="nav-item"><a href="/my-blog/timeline/" class="nav-link"><i class="iconfont reco-date"></i>
+  时间线
+</a></div><div class="nav-item"><div class="dropdown-wrapper"><a class="dropdown-title"><span class="title"><i class="iconfont reco-message"></i>
+      相关链接
+    </span> <span class="arrow right"></span></a> <ul class="nav-dropdown" style="display:none;"><li class="dropdown-item"><!----> <a href="https://github.com/liuk123456789/blog" target="_blank" rel="noopener noreferrer" class="nav-link external"><i class="iconfont reco-github"></i>
+  Github
+  <span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></li></ul></div></div> <!----></nav> <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>pinia</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>dayjs</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>vitual-scroll</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>vue cli</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading"><span>async validator</span> <span class="arrow right"></span></p> <!----></section></li><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>vue router</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/my-blog/blogs/source/vue-router/basic.html" class="sidebar-link">vue-router 第一篇</a></li><li><a href="/my-blog/blogs/source/vue-router/createRouter.html" class="sidebar-link">vue-router 第三篇</a></li><li><a href="/my-blog/blogs/source/vue-router/matcher.html" aria-current="page" class="active sidebar-link">vue-router 第二篇</a></li><li><a href="/my-blog/blogs/source/vue-router/push.html" class="sidebar-link">vue-router 第四篇</a></li><li><a href="/my-blog/blogs/source/vue-router/routerGuard.html" class="sidebar-link">vue-router 第五篇</a></li><li><a href="/my-blog/blogs/source/vue-router/use.html" class="sidebar-link">vue-router 第六篇</a></li></ul></section></li></ul> </aside> <div class="password-shadow password-wrapper-in" style="display:none;" data-v-59e6cb88 data-v-7dd95ae2><h3 class="title" data-v-59e6cb88>vue-router 第二篇</h3> <!----> <label id="box" class="inputBox" data-v-59e6cb88><input type="password" value="" data-v-59e6cb88> <span data-v-59e6cb88>Konck! Knock!</span> <button data-v-59e6cb88>OK</button></label> <div class="footer" data-v-59e6cb88><span data-v-59e6cb88><i class="iconfont reco-theme" data-v-59e6cb88></i> <a target="blank" href="https://vuepress-theme-reco.recoluan.com" data-v-59e6cb88>vuePress-theme-reco</a></span> <span data-v-59e6cb88><i class="iconfont reco-copyright" data-v-59e6cb88></i> <a data-v-59e6cb88><span data-v-59e6cb88>科纳</span>
+          
+        <span data-v-59e6cb88>2018 - </span>
+        2023
+      </a></span></div></div> <div data-v-7dd95ae2><div data-v-7dd95ae2><main class="page"><section style="display:;"><div class="page-title"><h1 class="title">vue-router 第二篇</h1> <div data-v-8a445198><i class="iconfont reco-account" data-v-8a445198><span data-v-8a445198>科纳</span></i> <i class="iconfont reco-date" data-v-8a445198><span data-v-8a445198>5/18/2023</span></i> <i class="iconfont reco-eye" data-v-8a445198><span id="/my-blog/blogs/source/vue-router/matcher.html" data-flag-title="Your Article Title" class="leancloud-visitors" data-v-8a445198><a class="leancloud-visitors-count" style="font-size:.9rem;font-weight:normal;color:#999;"></a></span></i> <i class="tags iconfont reco-tag" data-v-8a445198><span class="tag-item" data-v-8a445198>vue router</span></i></div></div> <div class="theme-reco-content content__default"><h2 id="_1-createroutermatcher"><a href="#_1-createroutermatcher" class="header-anchor">#</a> 1. createRouterMatcher</h2> <p>功能说明：定义的路由表每个路由都会被解析对应的<code>matcher</code>，路由的增删改查都是通过<code>matcher</code>完成，而<code>matcher</code>就是通过<code>createRouterMatcher</code>创建而来</p> <p><strong>参数说明</strong></p> <ul><li><p>routes：Readonly&lt;RouteRecordRaw[]&gt; 初始路由表</p></li> <li><p>globalOptions: PathParserOptions</p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token comment">/**
+ * @internal
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">_PathParserOptions</span> <span class="token punctuation">{</span>
+  <span class="token comment">/**
+   * Makes the RegExp case-sensitive.
+   *
+   * @defaultValue `false`
+   */</span>
+  sensitive<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span>
+
+  <span class="token comment">/**
+   * Whether to disallow a trailing slash or not.
+   *
+   * @defaultValue `false`
+   */</span>
+  strict<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span>
+
+  <span class="token comment">/**
+   * Should the RegExp match from the beginning by prepending a `^` to it.
+   * @internal
+   *
+   * @defaultValue `true`
+   */</span>
+  start<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span>
+
+  <span class="token comment">/**
+   * Should the RegExp match until the end by appending a `$` to it.
+   *
+   * @defaultValue `true`
+   */</span>
+  end<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">export</span> <span class="token keyword">type</span> <span class="token class-name">PathParserOptions</span> <span class="token operator">=</span> Pick<span class="token operator">&lt;</span>
+  _PathParserOptions<span class="token punctuation">,</span>
+  <span class="token string">'end'</span> <span class="token operator">|</span> <span class="token string">'sensitive'</span> <span class="token operator">|</span> <span class="token string">'strict'</span>
+<span class="token operator">&gt;</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br></div></div></li></ul> <p><strong>涉及的ts类型说明</strong></p> <ol><li><p>RouterMatcher</p> <p><code>createRouterMatcher</code>的返回类型</p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">RouterMatcher</span> <span class="token punctuation">{</span>
+  <span class="token function-variable function">addRoute</span><span class="token operator">:</span> <span class="token punctuation">(</span>record<span class="token operator">:</span> RouteRecordRaw<span class="token punctuation">,</span> parent<span class="token operator">?</span><span class="token operator">:</span> RouteRecordMatcher<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token keyword">void</span>
+  removeRoute<span class="token operator">:</span> <span class="token punctuation">{</span>
+    <span class="token punctuation">(</span>matcher<span class="token operator">:</span> RouteRecordMatcher<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span>
+    <span class="token punctuation">(</span>name<span class="token operator">:</span> RouteRecordName<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token keyword">void</span>
+  <span class="token punctuation">}</span>
+  <span class="token function-variable function">getRoutes</span><span class="token operator">:</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> RouteRecordMatcher<span class="token punctuation">[</span><span class="token punctuation">]</span>
+  <span class="token function-variable function">getRecordMatcher</span><span class="token operator">:</span> <span class="token punctuation">(</span>name<span class="token operator">:</span> RouteRecordName<span class="token punctuation">)</span> <span class="token operator">=&gt;</span> RouteRecordMatcher <span class="token operator">|</span> <span class="token keyword">undefined</span>
+
+  <span class="token comment">/**
+   * Resolves a location. Gives access to the route record that corresponds to the actual path as well as filling the corresponding params objects
+   *
+   * @param location - MatcherLocationRaw to resolve to a url
+   * @param currentLocation - MatcherLocation of the current location
+   */</span>
+  <span class="token function-variable function">resolve</span><span class="token operator">:</span> <span class="token punctuation">(</span>
+    location<span class="token operator">:</span> MatcherLocationRaw<span class="token punctuation">,</span>
+    currentLocation<span class="token operator">:</span> MatcherLocation
+  <span class="token punctuation">)</span> <span class="token operator">=&gt;</span> MatcherLocation
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br></div></div></li> <li><p>RouteRecordMatcher</p> <p>路由记录的<code>matcher</code></p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">RouteRecordMatcher</span> <span class="token keyword">extends</span> <span class="token class-name">PathParser</span> <span class="token punctuation">{</span>
+  record<span class="token operator">:</span> RouteRecord
+  parent<span class="token operator">:</span> RouteRecordMatcher <span class="token operator">|</span> <span class="token keyword">undefined</span>
+  children<span class="token operator">:</span> RouteRecordMatcher<span class="token punctuation">[</span><span class="token punctuation">]</span>
+  <span class="token comment">// aliases that must be removed when removing this record</span>
+  alias<span class="token operator">:</span> RouteRecordMatcher<span class="token punctuation">[</span><span class="token punctuation">]</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">PathParser</span> <span class="token punctuation">{</span>
+  <span class="token comment">/**
+   * The regexp used to match a url
+   */</span>
+  re<span class="token operator">:</span> RegExp
+
+  <span class="token comment">/**
+   * The score of the parser
+   */</span>
+  score<span class="token operator">:</span> <span class="token builtin">Array</span><span class="token operator">&lt;</span><span class="token builtin">number</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">&gt;</span>
+
+  <span class="token comment">/**
+   * Keys that appeared in the path
+   */</span>
+  keys<span class="token operator">:</span> PathParserParamKey<span class="token punctuation">[</span><span class="token punctuation">]</span>
+  <span class="token comment">/**
+   * Parses a url and returns the matched params or null if it doesn't match. An
+   * optional param that isn't preset will be an empty string. A repeatable
+   * param will be an array if there is at least one value.
+   *
+   * @param path - url to parse
+   * @returns a Params object, empty if there are no params. `null` if there is
+   * no match
+   */</span>
+  <span class="token function">parse</span><span class="token punctuation">(</span>path<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span><span class="token operator">:</span> PathParams <span class="token operator">|</span> <span class="token keyword">null</span>
+
+  <span class="token comment">/**
+   * Creates a string version of the url
+   *
+   * @param params - object of params
+   * @returns a url
+   */</span>
+  <span class="token function">stringify</span><span class="token punctuation">(</span>params<span class="token operator">:</span> PathParams<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">string</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br></div></div></li> <li><p>RouteRecordRaw</p> <p>路由记录原始数据</p></li></ol> <p><strong>返回说明</strong></p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token keyword">return</span> <span class="token punctuation">{</span>
+    addRoute<span class="token punctuation">,</span> <span class="token comment">// 新增路由</span>
+    resolve<span class="token punctuation">,</span> <span class="token comment">// 解析路由对象</span>
+    removeRoute<span class="token punctuation">,</span> <span class="token comment">// 删除路由</span>
+    getRoutes<span class="token punctuation">,</span> <span class="token comment">// 获取路由</span>
+    getRecordMatcher <span class="token comment">// 根据路由名获取对应matcher。</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br></div></div><h2 id="_2-addroute"><a href="#_2-addroute" class="header-anchor">#</a> 2. addRoute</h2> <p>参数：</p> <ul><li>record:  RouteRecordRaw 新增的路由</li> <li>parent?: RouteRecordMatcher  父matcher</li> <li>originalRecord?: RouteRecordMatcher 原始matcher</li></ul> <p>代码如下</p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code>  <span class="token keyword">function</span> <span class="token function">addRoute</span><span class="token punctuation">(</span>
+    record<span class="token operator">:</span> RouteRecordRaw<span class="token punctuation">,</span>
+    parent<span class="token operator">?</span><span class="token operator">:</span> RouteRecordMatcher<span class="token punctuation">,</span>
+    originalRecord<span class="token operator">?</span><span class="token operator">:</span> RouteRecordMatcher
+  <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// used later on to remove by name</span>
+    <span class="token keyword">const</span> isRootAdd <span class="token operator">=</span> <span class="token operator">!</span>originalRecord
+    <span class="token comment">// 标准化路由对象</span>
+    <span class="token keyword">const</span> mainNormalizedRecord <span class="token operator">=</span> <span class="token function">normalizeRouteRecord</span><span class="token punctuation">(</span>record<span class="token punctuation">)</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>__DEV__<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token function">checkChildMissingNameWithEmptyPath</span><span class="token punctuation">(</span>mainNormalizedRecord<span class="token punctuation">,</span> parent<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    <span class="token comment">// 路由对象是否是另外路由对象的别名</span>
+    mainNormalizedRecord<span class="token punctuation">.</span>aliasOf <span class="token operator">=</span> originalRecord <span class="token operator">&amp;&amp;</span> originalRecord<span class="token punctuation">.</span>record
+    <span class="token comment">// 合并配置选项</span>
+    <span class="token keyword">const</span> options<span class="token operator">:</span> PathParserOptions <span class="token operator">=</span> <span class="token function">mergeOptions</span><span class="token punctuation">(</span>globalOptions<span class="token punctuation">,</span> record<span class="token punctuation">)</span>
+    <span class="token comment">// 初始化一个标准化路由对象用于记录配置了alias的路由对象</span>
+    <span class="token keyword">const</span> normalizedRecords<span class="token operator">:</span> <span class="token punctuation">(</span><span class="token keyword">typeof</span> mainNormalizedRecord<span class="token punctuation">)</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span>
+      mainNormalizedRecord<span class="token punctuation">,</span>
+    <span class="token punctuation">]</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token string">'alias'</span> <span class="token keyword">in</span> record<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> aliases <span class="token operator">=</span>
+        <span class="token keyword">typeof</span> record<span class="token punctuation">.</span>alias <span class="token operator">===</span> <span class="token string">'string'</span> <span class="token operator">?</span> <span class="token punctuation">[</span>record<span class="token punctuation">.</span>alias<span class="token punctuation">]</span> <span class="token operator">:</span> record<span class="token punctuation">.</span>alias<span class="token operator">!</span>
+      <span class="token comment">// 遍历别名数组，并根据别名创建记录存储到normalizedRecords中</span>
+      <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> alias <span class="token keyword">of</span> aliases<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        normalizedRecords<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>
+          <span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> mainNormalizedRecord<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+            <span class="token comment">// this allows us to hold a copy of the `components` option</span>
+            <span class="token comment">// so that async components cache is hold on the original record</span>
+            components<span class="token operator">:</span> originalRecord
+              <span class="token operator">?</span> originalRecord<span class="token punctuation">.</span>record<span class="token punctuation">.</span>components
+              <span class="token operator">:</span> mainNormalizedRecord<span class="token punctuation">.</span>components<span class="token punctuation">,</span>
+            path<span class="token operator">:</span> alias<span class="token punctuation">,</span>
+            <span class="token comment">// 如果有原始记录，aliasOf为原始记录，如果没有原始记录就是它自己</span>
+            aliasOf<span class="token operator">:</span> originalRecord
+              <span class="token operator">?</span> originalRecord<span class="token punctuation">.</span>record
+              <span class="token operator">:</span> mainNormalizedRecord<span class="token punctuation">,</span>
+          <span class="token punctuation">}</span><span class="token punctuation">)</span> <span class="token keyword">as</span> <span class="token keyword">typeof</span> mainNormalizedRecord
+        <span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">let</span> matcher<span class="token operator">:</span> RouteRecordMatcher
+    <span class="token keyword">let</span> originalMatcher<span class="token operator">:</span> RouteRecordMatcher <span class="token operator">|</span> <span class="token keyword">undefined</span>
+	<span class="token comment">// 遍历标准化路由对象</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> normalizedRecord <span class="token keyword">of</span> normalizedRecords<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> <span class="token punctuation">{</span> path <span class="token punctuation">}</span> <span class="token operator">=</span> normalizedRecord
+	  <span class="token comment">// // 如果path不是以/开头，那么说明它不是根路由，需要拼接为完整的path</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>parent <span class="token operator">&amp;&amp;</span> path<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">!==</span> <span class="token string">'/'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> parentPath <span class="token operator">=</span> parent<span class="token punctuation">.</span>record<span class="token punctuation">.</span>path
+        <span class="token keyword">const</span> connectingSlash <span class="token operator">=</span>
+          parentPath<span class="token punctuation">[</span>parentPath<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">===</span> <span class="token string">'/'</span> <span class="token operator">?</span> <span class="token string">''</span> <span class="token operator">:</span> <span class="token string">'/'</span>
+        <span class="token comment">// 完整路径</span>
+        <span class="token comment">// 根路径的无需拼接/</span>
+        <span class="token comment">// 非根路径需要拼接/</span>
+        normalizedRecord<span class="token punctuation">.</span>path <span class="token operator">=</span>
+          parent<span class="token punctuation">.</span>record<span class="token punctuation">.</span>path <span class="token operator">+</span> <span class="token punctuation">(</span>path <span class="token operator">&amp;&amp;</span> connectingSlash <span class="token operator">+</span> path<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+	  <span class="token comment">// 提示*应使用正则表示式形式</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>__DEV__ <span class="token operator">&amp;&amp;</span> normalizedRecord<span class="token punctuation">.</span>path <span class="token operator">===</span> <span class="token string">'*'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span>
+          <span class="token string">'Catch all routes (&quot;*&quot;) must now be defined using a param with a custom regexp.\n'</span> <span class="token operator">+</span>
+            <span class="token string">'See more at https://next.router.vuejs.org/guide/migration/#removed-star-or-catch-all-routes.'</span>
+        <span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token comment">// 创建一个路由记录匹配器</span>
+      matcher <span class="token operator">=</span> <span class="token function">createRouteRecordMatcher</span><span class="token punctuation">(</span>normalizedRecord<span class="token punctuation">,</span> parent<span class="token punctuation">,</span> options<span class="token punctuation">)</span>
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>__DEV__ <span class="token operator">&amp;&amp;</span> parent <span class="token operator">&amp;&amp;</span> path<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">===</span> <span class="token string">'/'</span><span class="token punctuation">)</span>
+        <span class="token function">checkMissingParamsInAbsolutePath</span><span class="token punctuation">(</span>matcher<span class="token punctuation">,</span> parent<span class="token punctuation">)</span>
+
+      <span class="token comment">// if we are an alias we must tell the original record that we exist,</span>
+      <span class="token comment">// so we can be removed</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>originalRecord<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        originalRecord<span class="token punctuation">.</span>alias<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>matcher<span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>__DEV__<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token function">checkSameParams</span><span class="token punctuation">(</span>originalRecord<span class="token punctuation">,</span> matcher<span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+        <span class="token comment">// otherwise, the first record is the original and others are aliases</span>
+        originalMatcher <span class="token operator">=</span> originalMatcher <span class="token operator">||</span> matcher
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>originalMatcher <span class="token operator">!==</span> matcher<span class="token punctuation">)</span> originalMatcher<span class="token punctuation">.</span>alias<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>matcher<span class="token punctuation">)</span>
+
+        <span class="token comment">// remove the route if named and only for the top record (avoid in nested calls)</span>
+        <span class="token comment">// this works because the original record is the first one</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>isRootAdd <span class="token operator">&amp;&amp;</span> record<span class="token punctuation">.</span>name <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token function">isAliasRecord</span><span class="token punctuation">(</span>matcher<span class="token punctuation">)</span><span class="token punctuation">)</span>
+          <span class="token function">removeRoute</span><span class="token punctuation">(</span>record<span class="token punctuation">.</span>name<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>mainNormalizedRecord<span class="token punctuation">.</span>children<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> children <span class="token operator">=</span> mainNormalizedRecord<span class="token punctuation">.</span>children
+        <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> children<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token function">addRoute</span><span class="token punctuation">(</span>
+            children<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span>
+            matcher<span class="token punctuation">,</span>
+            originalRecord <span class="token operator">&amp;&amp;</span> originalRecord<span class="token punctuation">.</span>children<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+          <span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+
+      <span class="token comment">// if there was no original record, then the first one was not an alias and all</span>
+      <span class="token comment">// other aliases (if any) need to reference this record when adding children</span>
+      originalRecord <span class="token operator">=</span> originalRecord <span class="token operator">||</span> matcher
+
+      <span class="token comment">// TODO: add normalized records for more flexibility</span>
+      <span class="token comment">// if (parent &amp;&amp; isAliasRecord(originalRecord)) {</span>
+      <span class="token comment">//   parent.children.push(originalRecord)</span>
+      <span class="token comment">// }</span>
+
+      <span class="token comment">// Avoid adding a record that doesn't display anything. This allows passing through records without a component to</span>
+      <span class="token comment">// not be reached and pass through the catch all route</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>
+        <span class="token punctuation">(</span>matcher<span class="token punctuation">.</span>record<span class="token punctuation">.</span>components <span class="token operator">&amp;&amp;</span>
+          Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>matcher<span class="token punctuation">.</span>record<span class="token punctuation">.</span>components<span class="token punctuation">)</span><span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token operator">||</span>
+        matcher<span class="token punctuation">.</span>record<span class="token punctuation">.</span>name <span class="token operator">||</span>
+        matcher<span class="token punctuation">.</span>record<span class="token punctuation">.</span>redirect
+      <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">insertMatcher</span><span class="token punctuation">(</span>matcher<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> originalMatcher
+      <span class="token operator">?</span> <span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+          <span class="token comment">// since other matchers are aliases, they should be removed by the original matcher</span>
+          <span class="token function">removeRoute</span><span class="token punctuation">(</span>originalMatcher<span class="token operator">!</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+      <span class="token operator">:</span> noop
+  <span class="token punctuation">}</span>
+
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br><span class="line-number">121</span><br><span class="line-number">122</span><br><span class="line-number">123</span><br><span class="line-number">124</span><br><span class="line-number">125</span><br><span class="line-number">126</span><br><span class="line-number">127</span><br><span class="line-number">128</span><br><span class="line-number">129</span><br><span class="line-number">130</span><br></div></div><p>上述代码大部分都进行了注释标记功能，需要额外说明的是以下这些</p> <p><strong>createRouteRecordMatcher</strong></p> <p>用于创建路由记录的<code>matcher</code>，这个<code>matcher</code>到底是什么？然后具有什么作用，可以从<code>createRouteRecordMatcher</code>代码中进行验证，<code>createRouteRecordMatcher</code>的核心是<code>tokenizePath</code>，<code>tokensToParser</code></p> <ol><li><p><code>tokenizePath</code></p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token keyword">export</span> <span class="token keyword">function</span> <span class="token function">tokenizePath</span><span class="token punctuation">(</span>path<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">Array</span><span class="token operator">&lt;</span>Token<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment">// path 为空 返回[[]] </span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>path<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+  <span class="token comment">// 根路径 返回[[{ type: 0 value: '' }]]</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>path <span class="token operator">===</span> <span class="token string">'/'</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token punctuation">[</span><span class="token punctuation">[</span><span class="token constant">ROOT_TOKEN</span><span class="token punctuation">]</span><span class="token punctuation">]</span>
+  <span class="token comment">// path 格式不以 '/'开头</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>path<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span>
+      __DEV__
+        <span class="token operator">?</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Route paths should start with a &quot;/&quot;: &quot;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>path<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&quot; should be &quot;/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>path<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&quot;.</span><span class="token template-punctuation string">`</span></span>
+        <span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Invalid path &quot;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>path<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&quot;</span><span class="token template-punctuation string">`</span></span>
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// if (tokenCache.has(path)) return tokenCache.get(path)!</span>
+
+  <span class="token keyword">function</span> <span class="token function">crash</span><span class="token punctuation">(</span>message<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">ERR (</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>state<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)/&quot;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>buffer<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&quot;: </span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>message<span class="token interpolation-punctuation punctuation">}</span></span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// token状态	</span>
+  <span class="token keyword">let</span> state<span class="token operator">:</span> TokenizerState <span class="token operator">=</span> TokenizerState<span class="token punctuation">.</span>Static
+  <span class="token comment">// 前一个状态</span>
+  <span class="token keyword">let</span> previousState<span class="token operator">:</span> TokenizerState <span class="token operator">=</span> state
+  <span class="token keyword">const</span> tokens<span class="token operator">:</span> <span class="token builtin">Array</span><span class="token operator">&lt;</span>Token<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+  <span class="token comment">// segment片段，最终存放入tokens中</span>
+  <span class="token keyword">let</span> segment<span class="token operator">!</span><span class="token operator">:</span> Token<span class="token punctuation">[</span><span class="token punctuation">]</span>
+
+  <span class="token comment">// 重置segment片段  </span>
+  <span class="token keyword">function</span> <span class="token function">finalizeSegment</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>segment<span class="token punctuation">)</span> tokens<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>segment<span class="token punctuation">)</span>
+    segment <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// index on the path</span>
+  <span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span>
+  <span class="token comment">// char at index</span>
+  <span class="token keyword">let</span> char<span class="token operator">:</span> <span class="token builtin">string</span>
+  <span class="token comment">// buffer of the value read</span>
+  <span class="token keyword">let</span> buffer<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token operator">=</span> <span class="token string">''</span>
+  <span class="token comment">// custom regexp for a param</span>
+  <span class="token keyword">let</span> customRe<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token operator">=</span> <span class="token string">''</span>
+
+  <span class="token keyword">function</span> <span class="token function">consumeBuffer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>buffer<span class="token punctuation">)</span> <span class="token keyword">return</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>state <span class="token operator">===</span> TokenizerState<span class="token punctuation">.</span>Static<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      segment<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        type<span class="token operator">:</span> TokenType<span class="token punctuation">.</span>Static<span class="token punctuation">,</span>
+        value<span class="token operator">:</span> buffer<span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>
+      state <span class="token operator">===</span> TokenizerState<span class="token punctuation">.</span>Param <span class="token operator">||</span>
+      state <span class="token operator">===</span> TokenizerState<span class="token punctuation">.</span>ParamRegExp <span class="token operator">||</span>
+      state <span class="token operator">===</span> TokenizerState<span class="token punctuation">.</span>ParamRegExpEnd
+    <span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>segment<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> <span class="token punctuation">(</span>char <span class="token operator">===</span> <span class="token string">'*'</span> <span class="token operator">||</span> char <span class="token operator">===</span> <span class="token string">'+'</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token function">crash</span><span class="token punctuation">(</span>
+          <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">A repeatable param (</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>buffer<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">) must be alone in its segment. eg: '/:ids+.</span><span class="token template-punctuation string">`</span></span>
+        <span class="token punctuation">)</span>
+      segment<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+        type<span class="token operator">:</span> TokenType<span class="token punctuation">.</span>Param<span class="token punctuation">,</span>
+        value<span class="token operator">:</span> buffer<span class="token punctuation">,</span>
+        regexp<span class="token operator">:</span> customRe<span class="token punctuation">,</span>
+        repeatable<span class="token operator">:</span> char <span class="token operator">===</span> <span class="token string">'*'</span> <span class="token operator">||</span> char <span class="token operator">===</span> <span class="token string">'+'</span><span class="token punctuation">,</span>
+        optional<span class="token operator">:</span> char <span class="token operator">===</span> <span class="token string">'*'</span> <span class="token operator">||</span> char <span class="token operator">===</span> <span class="token string">'?'</span><span class="token punctuation">,</span>
+      <span class="token punctuation">}</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token function">crash</span><span class="token punctuation">(</span><span class="token string">'Invalid state to consume buffer'</span><span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+    buffer <span class="token operator">=</span> <span class="token string">''</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">function</span> <span class="token function">addCharToBuffer</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    buffer <span class="token operator">+=</span> char
+  <span class="token punctuation">}</span>
+  <span class="token comment">// path的几种格式</span>
+  <span class="token comment">// /test 常规路由 /test/:id 动添路由</span>
+  <span class="token comment">// 404等 /:path(.*)*</span>
+  <span class="token comment">// 正则路由 /:orderId(\\d+)  代表匹配orderId为数字的路由</span>
+  <span class="token comment">// 可重复路由 /:chapters+</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>i <span class="token operator">&lt;</span> path<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    char <span class="token operator">=</span> path<span class="token punctuation">[</span>i<span class="token operator">++</span><span class="token punctuation">]</span>
+	
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>char <span class="token operator">===</span> <span class="token string">'\\'</span> <span class="token operator">&amp;&amp;</span> state <span class="token operator">!==</span> TokenizerState<span class="token punctuation">.</span>ParamRegExp<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      previousState <span class="token operator">=</span> state
+      state <span class="token operator">=</span> TokenizerState<span class="token punctuation">.</span>EscapeNext
+      <span class="token keyword">continue</span>
+    <span class="token punctuation">}</span>
+    <span class="token keyword">switch</span> <span class="token punctuation">(</span>state<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">case</span> TokenizerState<span class="token punctuation">.</span>Static<span class="token operator">:</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>char <span class="token operator">===</span> <span class="token string">'/'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>buffer<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token function">consumeBuffer</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span>
+          <span class="token function">finalizeSegment</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>char <span class="token operator">===</span> <span class="token string">':'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token function">consumeBuffer</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+          state <span class="token operator">=</span> TokenizerState<span class="token punctuation">.</span>Param
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          <span class="token function">addCharToBuffer</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">break</span>
+
+      <span class="token keyword">case</span> TokenizerState<span class="token punctuation">.</span>EscapeNext<span class="token operator">:</span>
+        <span class="token function">addCharToBuffer</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        state <span class="token operator">=</span> previousState
+        <span class="token keyword">break</span>
+
+      <span class="token keyword">case</span> TokenizerState<span class="token punctuation">.</span>Param<span class="token operator">:</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>char <span class="token operator">===</span> <span class="token string">'('</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          state <span class="token operator">=</span> TokenizerState<span class="token punctuation">.</span>ParamRegExp
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token constant">VALID_PARAM_RE</span><span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>char<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token function">addCharToBuffer</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          <span class="token function">consumeBuffer</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+          state <span class="token operator">=</span> TokenizerState<span class="token punctuation">.</span>Static
+          <span class="token comment">// go back one character if we were not modifying</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>char <span class="token operator">!==</span> <span class="token string">'*'</span> <span class="token operator">&amp;&amp;</span> char <span class="token operator">!==</span> <span class="token string">'?'</span> <span class="token operator">&amp;&amp;</span> char <span class="token operator">!==</span> <span class="token string">'+'</span><span class="token punctuation">)</span> i<span class="token operator">--</span>
+        <span class="token punctuation">}</span>
+        <span class="token keyword">break</span>
+
+      <span class="token keyword">case</span> TokenizerState<span class="token punctuation">.</span>ParamRegExp<span class="token operator">:</span>
+        <span class="token comment">// TODO: is it worth handling nested regexp? like :p(?:prefix_([^/]+)_suffix)</span>
+        <span class="token comment">// it already works by escaping the closing )</span>
+        <span class="token comment">// https://paths.esm.dev/?p=AAMeJbiAwQEcDKbAoAAkP60PG2R6QAvgNaA6AFACM2ABuQBB#</span>
+        <span class="token comment">// is this really something people need since you can also write</span>
+        <span class="token comment">// /prefix_:p()_suffix</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>char <span class="token operator">===</span> <span class="token string">')'</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// handle the escaped )</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span>customRe<span class="token punctuation">[</span>customRe<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">==</span> <span class="token string">'\\'</span><span class="token punctuation">)</span>
+            customRe <span class="token operator">=</span> customRe<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token operator">+</span> char
+          <span class="token keyword">else</span> state <span class="token operator">=</span> TokenizerState<span class="token punctuation">.</span>ParamRegExpEnd
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+          customRe <span class="token operator">+=</span> char
+        <span class="token punctuation">}</span>
+        <span class="token keyword">break</span>
+
+      <span class="token keyword">case</span> TokenizerState<span class="token punctuation">.</span>ParamRegExpEnd<span class="token operator">:</span>
+        <span class="token comment">// same as finalizing a param</span>
+        <span class="token function">consumeBuffer</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+        state <span class="token operator">=</span> TokenizerState<span class="token punctuation">.</span>Static
+        <span class="token comment">// go back one character if we were not modifying</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>char <span class="token operator">!==</span> <span class="token string">'*'</span> <span class="token operator">&amp;&amp;</span> char <span class="token operator">!==</span> <span class="token string">'?'</span> <span class="token operator">&amp;&amp;</span> char <span class="token operator">!==</span> <span class="token string">'+'</span><span class="token punctuation">)</span> i<span class="token operator">--</span>
+        customRe <span class="token operator">=</span> <span class="token string">''</span>
+        <span class="token keyword">break</span>
+
+      <span class="token keyword">default</span><span class="token operator">:</span>
+        <span class="token function">crash</span><span class="token punctuation">(</span><span class="token string">'Unknown state'</span><span class="token punctuation">)</span>
+        <span class="token keyword">break</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>state <span class="token operator">===</span> TokenizerState<span class="token punctuation">.</span>ParamRegExp<span class="token punctuation">)</span>
+    <span class="token function">crash</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Unfinished custom RegExp for param &quot;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>buffer<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&quot;</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+
+  <span class="token function">consumeBuffer</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+  <span class="token function">finalizeSegment</span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+
+  <span class="token comment">// tokenCache.set(path, tokens)</span>
+
+  <span class="token keyword">return</span> tokens
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br><span class="line-number">121</span><br><span class="line-number">122</span><br><span class="line-number">123</span><br><span class="line-number">124</span><br><span class="line-number">125</span><br><span class="line-number">126</span><br><span class="line-number">127</span><br><span class="line-number">128</span><br><span class="line-number">129</span><br><span class="line-number">130</span><br><span class="line-number">131</span><br><span class="line-number">132</span><br><span class="line-number">133</span><br><span class="line-number">134</span><br><span class="line-number">135</span><br><span class="line-number">136</span><br><span class="line-number">137</span><br><span class="line-number">138</span><br><span class="line-number">139</span><br><span class="line-number">140</span><br><span class="line-number">141</span><br><span class="line-number">142</span><br><span class="line-number">143</span><br><span class="line-number">144</span><br><span class="line-number">145</span><br><span class="line-number">146</span><br><span class="line-number">147</span><br><span class="line-number">148</span><br><span class="line-number">149</span><br><span class="line-number">150</span><br><span class="line-number">151</span><br><span class="line-number">152</span><br><span class="line-number">153</span><br><span class="line-number">154</span><br><span class="line-number">155</span><br><span class="line-number">156</span><br><span class="line-number">157</span><br><span class="line-number">158</span><br><span class="line-number">159</span><br><span class="line-number">160</span><br><span class="line-number">161</span><br><span class="line-number">162</span><br></div></div><p><code>switch case</code>我们使用<code>path</code>为<code>/:orderId(\\d+)</code>进行梳理</p> <ol><li><code>i=0 char='/'</code>，进入<code>Static</code>分支，<code>buffer=null</code> <code>segment=[] i=1</code></li> <li><code>i=1 char=':'</code>，进入<code>Static</code>分支，执行<code>consumeBuffer</code>，因为<code>buffer=''</code>，所以<code>consumeBuffer</code>中什么都没做，最后<code>state=TokenizerState.Param</code>，该轮结束后发生变化的是<code>state=TokenizerState.Param; i=2; char=':'</code></li> <li><code>i=2 char='o'</code>，进入<code>Param</code>分支，此时<code>buffer='';</code>，执行<code>addCharToBuffer</code>，该轮结束后发生变化的是<code>buffer='o'; i=3; char='o';</code></li> <li>重复步骤3，直到<code>i=8 char=d</code>，进入<code>Param</code>分支，结束后，<code>buffer=orderId;i=9;char='d'</code></li> <li><code>i=9,char='('</code>，进入<code>Param</code>分支，此时<code>state=TokenizerState.ParamRegExp;char='(';i=10</code></li> <li><code>i=10,char='\\'</code>，进入<code>ParamRegExp</code>，此时<code>char='\\';buffer='orderId'</code>，执行<code>customRe+=char</code>，结束后，<code>i=11;char='\\';customRe='\\'</code></li> <li>重复步骤6，直到<code>i=12</code>，最终变化<code>i=13;char='+';customRe='\\d+'</code></li> <li><code>i=13,char=')'</code>，进入<code>ParamRegExp</code>，此时<code>state=TokenizerState.ParamRegExpEnd;char=')';i=14</code></li> <li><code>i=14</code>，</li> <li>结束遍历，执行<code>consumeBuffer</code>，向<code>segment</code>添加<code>{type: TokenType.Static, value: 'orderId'}</code>一条记录并将<code>buffer</code>置为空字符串。然后执行<code>finalizeSegment</code>，将<code>segment</code>添加到<code>tokens</code>中，并将<code>segment</code>置为空数组</li></ol> <p>最终的<code>tokens</code></p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token punctuation">[</span>
+  <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      type<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+      value<span class="token operator">:</span> <span class="token string">'orderId'</span><span class="token punctuation">,</span>
+      regexp<span class="token operator">:</span> <span class="token string">'\\d+'</span><span class="token punctuation">,</span>
+      repeatable<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+      optional<span class="token operator">:</span> <span class="token boolean">false</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><p>很明显，这段代码就是状态模式，通过<code>state</code>状态变化执行对应的逻辑</p></li> <li><p><code>tokensToParser</code></p> <p>逻辑就是通过传入的<code>segments</code>，获取路由记录的<code>score</code></p> <p><strong>涉及类型说明</strong></p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token comment">/**
+ * A param in a url like `/users/:id`
+ */</span>
+<span class="token keyword">interface</span> <span class="token class-name">PathParserParamKey</span> <span class="token punctuation">{</span>
+  name<span class="token operator">:</span> <span class="token builtin">string</span>
+  repeatable<span class="token operator">:</span> <span class="token builtin">boolean</span>
+  optional<span class="token operator">:</span> <span class="token builtin">boolean</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">/**
+ * @internal
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">_PathParserOptions</span> <span class="token punctuation">{</span>
+  <span class="token comment">/**
+   * Makes the RegExp case-sensitive.
+   *
+   * @defaultValue `false`
+   */</span>
+  sensitive<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span>
+
+  <span class="token comment">/**
+   * Whether to disallow a trailing slash or not.
+   *
+   * @defaultValue `false`
+   */</span>
+  strict<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span>
+
+  <span class="token comment">/**
+   * Should the RegExp match from the beginning by prepending a `^` to it.
+   * @internal
+   *
+   * @defaultValue `true`
+   */</span>
+  start<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span>
+
+  <span class="token comment">/**
+   * Should the RegExp match until the end by appending a `$` to it.
+   *
+   * @defaultValue `true`
+   */</span>
+  end<span class="token operator">?</span><span class="token operator">:</span> <span class="token builtin">boolean</span>
+<span class="token punctuation">}</span>
+
+<span class="token comment">// tokensToParser 的返回类型</span>
+<span class="token keyword">export</span> <span class="token keyword">interface</span> <span class="token class-name">PathParser</span> <span class="token punctuation">{</span>
+  <span class="token comment">/**
+   * The regexp used to match a url
+   */</span>
+  re<span class="token operator">:</span> RegExp
+
+  <span class="token comment">/**
+   * The score of the parser
+   */</span>
+  score<span class="token operator">:</span> <span class="token builtin">Array</span><span class="token operator">&lt;</span><span class="token builtin">number</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">&gt;</span>
+
+  <span class="token comment">/**
+   * Keys that appeared in the path
+   */</span>
+  keys<span class="token operator">:</span> PathParserParamKey<span class="token punctuation">[</span><span class="token punctuation">]</span>
+  <span class="token comment">/**
+   * Parses a url and returns the matched params or null if it doesn't match. An
+   * optional param that isn't preset will be an empty string. A repeatable
+   * param will be an array if there is at least one value.
+   *
+   * @param path - url to parse
+   * @returns a Params object, empty if there are no params. `null` if there is
+   * no match
+   */</span>
+  <span class="token function">parse</span><span class="token punctuation">(</span>path<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span><span class="token operator">:</span> PathParams <span class="token operator">|</span> <span class="token keyword">null</span>
+
+  <span class="token comment">/**
+   * Creates a string version of the url
+   *
+   * @param params - object of params
+   * @returns a url
+   */</span>
+  <span class="token function">stringify</span><span class="token punctuation">(</span>params<span class="token operator">:</span> PathParams<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">string</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br></div></div><p><strong>源码如下</strong></p> <p><code>segments</code>参考数据</p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token punctuation">[</span>
+  <span class="token punctuation">[</span>
+    <span class="token punctuation">{</span>
+      type<span class="token operator">:</span> <span class="token number">1</span><span class="token punctuation">,</span>
+      value<span class="token operator">:</span> <span class="token string">'orderId'</span><span class="token punctuation">,</span>
+      regexp<span class="token operator">:</span> <span class="token string">'\\d+'</span><span class="token punctuation">,</span>
+      repeatable<span class="token operator">:</span> <span class="token boolean">false</span><span class="token punctuation">,</span>
+      optional<span class="token operator">:</span> <span class="token boolean">true</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">]</span>
+<span class="token punctuation">]</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br></div></div><p>具体源码</p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token comment">/**
+ * Creates a path parser from an array of Segments (a segment is an array of Tokens)
+ *
+ * @param segments - array of segments returned by tokenizePath
+ * @param extraOptions - optional options for the regexp
+ * @returns a PathParser
+ */</span>
+<span class="token keyword">export</span> <span class="token keyword">function</span> <span class="token function">tokensToParser</span><span class="token punctuation">(</span>
+  segments<span class="token operator">:</span> <span class="token builtin">Array</span><span class="token operator">&lt;</span>Token<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">&gt;</span><span class="token punctuation">,</span>
+  extraOptions<span class="token operator">?</span><span class="token operator">:</span> _PathParserOptions
+<span class="token punctuation">)</span><span class="token operator">:</span> PathParser <span class="token punctuation">{</span>
+  <span class="token comment">// BASE_PATH_PARSE_OPTIONS = {</span>
+    	sentitive<span class="token operator">:</span> <span class="token boolean">false</span> <span class="token comment">// sensitive RegExp 区分大小写</span>
+    	strict<span class="token operator">:</span> <span class="token boolean">false</span> <span class="token comment">// strict 禁止尾部斜线</span>
+    	start<span class="token operator">:</span> <span class="token boolean">true</span> <span class="token comment">//  匹配开头</span>
+    	end<span class="token operator">:</span> <span class="token boolean">true</span> <span class="token comment">// RegExp 是否应该在末尾加一个 $ 以匹配到末尾</span>
+  <span class="token comment">// }</span>
+  <span class="token keyword">const</span> options <span class="token operator">=</span> <span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> <span class="token constant">BASE_PATH_PARSER_OPTIONS</span><span class="token punctuation">,</span> extraOptions<span class="token punctuation">)</span>
+
+  <span class="token keyword">const</span> score<span class="token operator">:</span> <span class="token builtin">Array</span><span class="token operator">&lt;</span><span class="token builtin">number</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token operator">&gt;</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+  
+  <span class="token comment">// 配置了start:true 那么pattern:'^'</span>
+  <span class="token keyword">let</span> pattern <span class="token operator">=</span> options<span class="token punctuation">.</span>start <span class="token operator">?</span> <span class="token string">'^'</span> <span class="token operator">:</span> <span class="token string">''</span>
+
+  <span class="token keyword">const</span> keys<span class="token operator">:</span> PathParserParamKey<span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+
+  <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> segment <span class="token keyword">of</span> segments<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 根路径 [PathScore.Root]</span>
+    <span class="token keyword">const</span> segmentScores<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> segment<span class="token punctuation">.</span>length <span class="token operator">?</span> <span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">:</span> <span class="token punctuation">[</span>PathScore<span class="token punctuation">.</span>Root<span class="token punctuation">]</span>
+
+    <span class="token comment">// 允许尾部斜线 用于匹配根路由</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>options<span class="token punctuation">.</span>strict <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>segment<span class="token punctuation">.</span>length<span class="token punctuation">)</span> pattern <span class="token operator">+=</span> <span class="token string">'/'</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> tokenIndex <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> tokenIndex <span class="token operator">&lt;</span> segment<span class="token punctuation">.</span>length<span class="token punctuation">;</span> tokenIndex<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> token <span class="token operator">=</span> segment<span class="token punctuation">[</span>tokenIndex<span class="token punctuation">]</span>
+      <span class="token comment">// resets the score if we are inside a sub-segment /:a-other-:b</span>
+      <span class="token keyword">let</span> subSegmentScore<span class="token operator">:</span> <span class="token builtin">number</span> <span class="token operator">=</span>
+        <span class="token comment">// 基础分数 + 是否区分大小写？BounsCaseSensitive : 0 </span>
+        PathScore<span class="token punctuation">.</span>Segment <span class="token operator">+</span>
+        <span class="token punctuation">(</span>options<span class="token punctuation">.</span>sensitive <span class="token operator">?</span> PathScore<span class="token punctuation">.</span>BonusCaseSensitive <span class="token operator">:</span> <span class="token number">0</span><span class="token punctuation">)</span>
+	  <span class="token comment">// 静态Type</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>token<span class="token punctuation">.</span>type <span class="token operator">===</span> TokenType<span class="token punctuation">.</span>Static<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// 如果是初始值，那么需要变成这种格式^/</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>tokenIndex<span class="token punctuation">)</span> pattern <span class="token operator">+=</span> <span class="token string">'/'</span>
+        <span class="token comment">// REGEX_CHARS_RE 正则的意思特殊字符需要进行转义</span>
+        pattern <span class="token operator">+=</span> token<span class="token punctuation">.</span>value<span class="token punctuation">.</span><span class="token function">replace</span><span class="token punctuation">(</span><span class="token constant">REGEX_CHARS_RE</span><span class="token punctuation">,</span> <span class="token string">'\\$&amp;'</span><span class="token punctuation">)</span>
+        <span class="token comment">// 静态路由的分数 </span>
+        subSegmentScore <span class="token operator">+=</span> PathScore<span class="token punctuation">.</span>Static
+      <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>token<span class="token punctuation">.</span>type <span class="token operator">===</span> TokenType<span class="token punctuation">.</span>Param<span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// 动态路由</span>
+        <span class="token keyword">const</span> <span class="token punctuation">{</span> value<span class="token punctuation">,</span> repeatable<span class="token punctuation">,</span> optional<span class="token punctuation">,</span> regexp <span class="token punctuation">}</span> <span class="token operator">=</span> token
+        keys<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span><span class="token punctuation">{</span>
+          name<span class="token operator">:</span> value<span class="token punctuation">,</span>
+          repeatable<span class="token punctuation">,</span>
+          optional<span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+        <span class="token comment">// 非自定义正则读默认值</span>
+        <span class="token keyword">const</span> re <span class="token operator">=</span> regexp <span class="token operator">?</span> regexp <span class="token operator">:</span> <span class="token constant">BASE_PARAM_PATTERN</span>
+        <span class="token comment">// 自定义正则，如：/:id(\\d+)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>re <span class="token operator">!==</span> <span class="token constant">BASE_PARAM_PATTERN</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token comment">// 那么需要加上自定义正则对应的得分 </span>
+          subSegmentScore <span class="token operator">+=</span> PathScore<span class="token punctuation">.</span>BonusCustomRegExp
+          <span class="token comment">// 校验路由中的正则是否合法</span>
+          <span class="token keyword">try</span> <span class="token punctuation">{</span>
+            <span class="token keyword">new</span> <span class="token class-name">RegExp</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">(</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>re<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span> <span class="token keyword">catch</span> <span class="token punctuation">(</span>err<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span>
+              <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Invalid custom RegExp for param &quot;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>value<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&quot; (</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>re<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">): </span><span class="token template-punctuation string">`</span></span> <span class="token operator">+</span>
+                <span class="token punctuation">(</span>err <span class="token keyword">as</span> Error<span class="token punctuation">)</span><span class="token punctuation">.</span>message
+            <span class="token punctuation">)</span>
+          <span class="token punctuation">}</span>
+        <span class="token punctuation">}</span>
+
+        <span class="token comment">// 是否可以重复 /:chapters* 或者 /:chapters+ 这种格式的路由</span>
+        <span class="token comment">// TODO: 如果可重复 生成的正则没看懂，否则取re</span>
+        <span class="token keyword">let</span> subPattern <span class="token operator">=</span> repeatable <span class="token operator">?</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">((?:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>re<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)(?:/(?:</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>re<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">))*)</span><span class="token template-punctuation string">`</span></span> <span class="token operator">:</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">(</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>re<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)</span><span class="token template-punctuation string">`</span></span>
+
+        <span class="token comment">// 如果是初始值，那么需要进行subPattern的拼接</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>tokenIndex<span class="token punctuation">)</span>
+          subPattern <span class="token operator">=</span>
+            <span class="token comment">// avoid an optional / if there are more segments e.g. /:p?-static</span>
+            <span class="token comment">// or /:p?-:p2</span>
+            optional <span class="token operator">&amp;&amp;</span> segment<span class="token punctuation">.</span>length <span class="token operator">&lt;</span> <span class="token number">2</span>
+              <span class="token operator">?</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">(?:/</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>subPattern<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)</span><span class="token template-punctuation string">`</span></span>
+              <span class="token operator">:</span> <span class="token string">'/'</span> <span class="token operator">+</span> subPattern
+        <span class="token comment">// 如果可配置，拼接?</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>optional<span class="token punctuation">)</span> subPattern <span class="token operator">+=</span> <span class="token string">'?'</span>
+		<span class="token comment">// 得到最后的正则</span>
+        pattern <span class="token operator">+=</span> subPattern
+		<span class="token comment">// subSegmentScore加上Dynamic对应的分数</span>
+        subSegmentScore <span class="token operator">+=</span> PathScore<span class="token punctuation">.</span>Dynamic
+        <span class="token comment">// 可配置 计算值加上BonusOptional</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>optional<span class="token punctuation">)</span> subSegmentScore <span class="token operator">+=</span> PathScore<span class="token punctuation">.</span>BonusOptional
+        <span class="token comment">// 重复参数路由 计算值加上BonusRepeatable</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>repeatable<span class="token punctuation">)</span> subSegmentScore <span class="token operator">+=</span> PathScore<span class="token punctuation">.</span>BonusRepeatable
+        <span class="token comment">// /:pathMatch(.*)* 异常类路由</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>re <span class="token operator">===</span> <span class="token string">'.*'</span><span class="token punctuation">)</span> subSegmentScore <span class="token operator">+=</span> PathScore<span class="token punctuation">.</span>BonusWildcard
+      <span class="token punctuation">}</span>
+	  
+      segmentScores<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>subSegmentScore<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// an empty array like /home/ -&gt; [[{home}], []]</span>
+    <span class="token comment">// if (!segment.length) pattern += '/'</span>
+
+    score<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>segmentScores<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// 如果禁止尾部斜线并且必须以$结尾的话</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>options<span class="token punctuation">.</span>strict <span class="token operator">&amp;&amp;</span> options<span class="token punctuation">.</span>end<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> i <span class="token operator">=</span> score<span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span>
+    score<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">[</span>score<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>length <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span> <span class="token operator">+=</span> PathScore<span class="token punctuation">.</span>BonusStrict
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// TODO: dev only warn double trailing slash</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>options<span class="token punctuation">.</span>strict<span class="token punctuation">)</span> pattern <span class="token operator">+=</span> <span class="token string">'/?'</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>options<span class="token punctuation">.</span>end<span class="token punctuation">)</span> pattern <span class="token operator">+=</span> <span class="token string">'$'</span>
+  <span class="token comment">// allow paths like /dynamic to only match dynamic or dynamic/... but not dynamic_something_else</span>
+  <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>options<span class="token punctuation">.</span>strict<span class="token punctuation">)</span> pattern <span class="token operator">+=</span> <span class="token string">'(?:/|$)'</span>
+
+  <span class="token keyword">const</span> re <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">RegExp</span><span class="token punctuation">(</span>pattern<span class="token punctuation">,</span> options<span class="token punctuation">.</span>sensitive <span class="token operator">?</span> <span class="token string">''</span> <span class="token operator">:</span> <span class="token string">'i'</span><span class="token punctuation">)</span>
+
+  <span class="token comment">// 具体path路径转成对象格式的参数</span>
+  <span class="token comment">// 如：matcher.parse('/2333-fddds') =&gt; { id: 23333, w: 'fdddds' }</span>
+  <span class="token keyword">function</span> <span class="token function">parse</span><span class="token punctuation">(</span>path<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">)</span><span class="token operator">:</span> PathParams <span class="token operator">|</span> <span class="token keyword">null</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> match <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">match</span><span class="token punctuation">(</span>re<span class="token punctuation">)</span>
+    <span class="token keyword">const</span> params<span class="token operator">:</span> PathParams <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>match<span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token keyword">null</span>
+
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">1</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> match<span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> value<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token operator">=</span> match<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">||</span> <span class="token string">''</span>
+      <span class="token keyword">const</span> key <span class="token operator">=</span> keys<span class="token punctuation">[</span>i <span class="token operator">-</span> <span class="token number">1</span><span class="token punctuation">]</span>
+      params<span class="token punctuation">[</span>key<span class="token punctuation">.</span>name<span class="token punctuation">]</span> <span class="token operator">=</span> value <span class="token operator">&amp;&amp;</span> key<span class="token punctuation">.</span>repeatable <span class="token operator">?</span> value<span class="token punctuation">.</span><span class="token function">split</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span> <span class="token operator">:</span> value
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> params
+  <span class="token punctuation">}</span>
+  
+  <span class="token comment">// 对象格式的参数转成具体路径</span>
+  <span class="token comment">// 如：matcher.stringify({ id: '2', w: 'hey' } =&gt; /2-hey  </span>
+  <span class="token keyword">function</span> <span class="token function">stringify</span><span class="token punctuation">(</span>params<span class="token operator">:</span> PathParams<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">string</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> path <span class="token operator">=</span> <span class="token string">''</span>
+    <span class="token comment">// for optional parameters to allow to be empty</span>
+    <span class="token keyword">let</span> avoidDuplicatedSlash<span class="token operator">:</span> <span class="token builtin">boolean</span> <span class="token operator">=</span> <span class="token boolean">false</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> segment <span class="token keyword">of</span> segments<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>avoidDuplicatedSlash <span class="token operator">||</span> <span class="token operator">!</span>path<span class="token punctuation">.</span><span class="token function">endsWith</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> path <span class="token operator">+=</span> <span class="token string">'/'</span>
+      avoidDuplicatedSlash <span class="token operator">=</span> <span class="token boolean">false</span>
+
+      <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> token <span class="token keyword">of</span> segment<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>token<span class="token punctuation">.</span>type <span class="token operator">===</span> TokenType<span class="token punctuation">.</span>Static<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          path <span class="token operator">+=</span> token<span class="token punctuation">.</span>value
+        <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>token<span class="token punctuation">.</span>type <span class="token operator">===</span> TokenType<span class="token punctuation">.</span>Param<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token keyword">const</span> <span class="token punctuation">{</span> value<span class="token punctuation">,</span> repeatable<span class="token punctuation">,</span> optional <span class="token punctuation">}</span> <span class="token operator">=</span> token
+          <span class="token keyword">const</span> param<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token operator">|</span> <span class="token keyword">readonly</span> <span class="token builtin">string</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span>
+            value <span class="token keyword">in</span> params <span class="token operator">?</span> params<span class="token punctuation">[</span>value<span class="token punctuation">]</span> <span class="token operator">:</span> <span class="token string">''</span>
+
+          <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isArray</span><span class="token punctuation">(</span>param<span class="token punctuation">)</span> <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>repeatable<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span>
+              <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Provided param &quot;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>value<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&quot; is an array but it is not repeatable (* or + modifiers)</span><span class="token template-punctuation string">`</span></span>
+            <span class="token punctuation">)</span>
+          <span class="token punctuation">}</span>
+
+          <span class="token keyword">const</span> text<span class="token operator">:</span> <span class="token builtin">string</span> <span class="token operator">=</span> <span class="token function">isArray</span><span class="token punctuation">(</span>param<span class="token punctuation">)</span>
+            <span class="token operator">?</span> <span class="token punctuation">(</span>param <span class="token keyword">as</span> <span class="token builtin">string</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span>
+            <span class="token operator">:</span> <span class="token punctuation">(</span>param <span class="token keyword">as</span> <span class="token builtin">string</span><span class="token punctuation">)</span>
+          <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>text<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+            <span class="token keyword">if</span> <span class="token punctuation">(</span>optional<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+              <span class="token comment">// if we have more than one optional param like /:a?-static we don't need to care about the optional param</span>
+              <span class="token keyword">if</span> <span class="token punctuation">(</span>segment<span class="token punctuation">.</span>length <span class="token operator">&lt;</span> <span class="token number">2</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+                <span class="token comment">// remove the last slash as we could be at the end</span>
+                <span class="token keyword">if</span> <span class="token punctuation">(</span>path<span class="token punctuation">.</span><span class="token function">endsWith</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> path <span class="token operator">=</span> path<span class="token punctuation">.</span><span class="token function">slice</span><span class="token punctuation">(</span><span class="token number">0</span><span class="token punctuation">,</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span>
+                <span class="token comment">// do not append a slash on the next iteration</span>
+                <span class="token keyword">else</span> avoidDuplicatedSlash <span class="token operator">=</span> <span class="token boolean">true</span>
+              <span class="token punctuation">}</span>
+            <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">throw</span> <span class="token keyword">new</span> <span class="token class-name">Error</span><span class="token punctuation">(</span><span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Missing required param &quot;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>value<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&quot;</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+          <span class="token punctuation">}</span>
+          path <span class="token operator">+=</span> text
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token comment">// avoid empty path when we have multiple optional params</span>
+    <span class="token keyword">return</span> path <span class="token operator">||</span> <span class="token string">'/'</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> <span class="token punctuation">{</span>
+    re<span class="token punctuation">,</span>
+    score<span class="token punctuation">,</span>
+    keys<span class="token punctuation">,</span>
+    parse<span class="token punctuation">,</span>
+    stringify<span class="token punctuation">,</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br><span class="line-number">110</span><br><span class="line-number">111</span><br><span class="line-number">112</span><br><span class="line-number">113</span><br><span class="line-number">114</span><br><span class="line-number">115</span><br><span class="line-number">116</span><br><span class="line-number">117</span><br><span class="line-number">118</span><br><span class="line-number">119</span><br><span class="line-number">120</span><br><span class="line-number">121</span><br><span class="line-number">122</span><br><span class="line-number">123</span><br><span class="line-number">124</span><br><span class="line-number">125</span><br><span class="line-number">126</span><br><span class="line-number">127</span><br><span class="line-number">128</span><br><span class="line-number">129</span><br><span class="line-number">130</span><br><span class="line-number">131</span><br><span class="line-number">132</span><br><span class="line-number">133</span><br><span class="line-number">134</span><br><span class="line-number">135</span><br><span class="line-number">136</span><br><span class="line-number">137</span><br><span class="line-number">138</span><br><span class="line-number">139</span><br><span class="line-number">140</span><br><span class="line-number">141</span><br><span class="line-number">142</span><br><span class="line-number">143</span><br><span class="line-number">144</span><br><span class="line-number">145</span><br><span class="line-number">146</span><br><span class="line-number">147</span><br><span class="line-number">148</span><br><span class="line-number">149</span><br><span class="line-number">150</span><br><span class="line-number">151</span><br><span class="line-number">152</span><br><span class="line-number">153</span><br><span class="line-number">154</span><br><span class="line-number">155</span><br><span class="line-number">156</span><br><span class="line-number">157</span><br><span class="line-number">158</span><br><span class="line-number">159</span><br><span class="line-number">160</span><br><span class="line-number">161</span><br><span class="line-number">162</span><br><span class="line-number">163</span><br><span class="line-number">164</span><br><span class="line-number">165</span><br><span class="line-number">166</span><br><span class="line-number">167</span><br><span class="line-number">168</span><br><span class="line-number">169</span><br><span class="line-number">170</span><br><span class="line-number">171</span><br><span class="line-number">172</span><br><span class="line-number">173</span><br><span class="line-number">174</span><br><span class="line-number">175</span><br><span class="line-number">176</span><br><span class="line-number">177</span><br><span class="line-number">178</span><br><span class="line-number">179</span><br><span class="line-number">180</span><br><span class="line-number">181</span><br><span class="line-number">182</span><br><span class="line-number">183</span><br><span class="line-number">184</span><br><span class="line-number">185</span><br><span class="line-number">186</span><br><span class="line-number">187</span><br><span class="line-number">188</span><br><span class="line-number">189</span><br><span class="line-number">190</span><br><span class="line-number">191</span><br><span class="line-number">192</span><br><span class="line-number">193</span><br></div></div><p><strong>PathScore</strong>枚举配置</p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token keyword">const</span> <span class="token keyword">enum</span> PathScore <span class="token punctuation">{</span>
+  _multiplier <span class="token operator">=</span> <span class="token number">10</span><span class="token punctuation">,</span>
+  Root <span class="token operator">=</span> <span class="token number">9</span> <span class="token operator">*</span> _multiplier<span class="token punctuation">,</span> <span class="token comment">// just / 根路径</span>
+  Segment <span class="token operator">=</span> <span class="token number">4</span> <span class="token operator">*</span> _multiplier<span class="token punctuation">,</span> <span class="token comment">// /a-segment</span>
+  SubSegment <span class="token operator">=</span> <span class="token number">3</span> <span class="token operator">*</span> _multiplier<span class="token punctuation">,</span> <span class="token comment">// /multiple-:things-in-one-:segment</span>
+  Static <span class="token operator">=</span> <span class="token number">4</span> <span class="token operator">*</span> _multiplier<span class="token punctuation">,</span> <span class="token comment">// /static</span>
+  Dynamic <span class="token operator">=</span> <span class="token number">2</span> <span class="token operator">*</span> _multiplier<span class="token punctuation">,</span> <span class="token comment">// /:someId</span>
+  BonusCustomRegExp <span class="token operator">=</span> <span class="token number">1</span> <span class="token operator">*</span> _multiplier<span class="token punctuation">,</span> <span class="token comment">// /:someId(\\d+)</span>
+  BonusWildcard <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">4</span> <span class="token operator">*</span> _multiplier <span class="token operator">-</span> BonusCustomRegExp<span class="token punctuation">,</span> <span class="token comment">// /:namedWildcard(.*) we remove the bonus added by the custom regexp</span>
+  BonusRepeatable <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">2</span> <span class="token operator">*</span> _multiplier<span class="token punctuation">,</span> <span class="token comment">// /:w+ or /:w*</span>
+  BonusOptional <span class="token operator">=</span> <span class="token operator">-</span><span class="token number">0.8</span> <span class="token operator">*</span> _multiplier<span class="token punctuation">,</span> <span class="token comment">// /:w? or /:w*</span>
+  <span class="token comment">// these two have to be under 0.1 so a strict /:page is still lower than /:a-:b</span>
+  BonusStrict <span class="token operator">=</span> <span class="token number">0.07</span> <span class="token operator">*</span> _multiplier<span class="token punctuation">,</span> <span class="token comment">// when options strict: true is passed, as the regex omits \/?</span>
+  BonusCaseSensitive <span class="token operator">=</span> <span class="token number">0.025</span> <span class="token operator">*</span> _multiplier<span class="token punctuation">,</span> <span class="token comment">// when options strict: true is passed, as the regex omits \/?</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br></div></div><p><strong>其中存在一些pattern的拼接，个人正则确实不怎么好，所以有些地方进行TODO标记</strong></p></li></ol> <p>回到<code>createRouteRecordMatcher</code></p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token keyword">export</span> <span class="token keyword">function</span> <span class="token function">createRouteRecordMatcher</span><span class="token punctuation">(</span>
+  record<span class="token operator">:</span> Readonly<span class="token operator">&lt;</span>RouteRecord<span class="token operator">&gt;</span><span class="token punctuation">,</span>
+  parent<span class="token operator">:</span> RouteRecordMatcher <span class="token operator">|</span> <span class="token keyword">undefined</span><span class="token punctuation">,</span>
+  options<span class="token operator">?</span><span class="token operator">:</span> PathParserOptions
+<span class="token punctuation">)</span><span class="token operator">:</span> RouteRecordMatcher <span class="token punctuation">{</span>
+  <span class="token comment">// 生成parser对象 </span>
+  <span class="token keyword">const</span> parser <span class="token operator">=</span> <span class="token function">tokensToParser</span><span class="token punctuation">(</span><span class="token function">tokenizePath</span><span class="token punctuation">(</span>record<span class="token punctuation">.</span>path<span class="token punctuation">)</span><span class="token punctuation">,</span> options<span class="token punctuation">)</span>
+
+  <span class="token comment">// 如果有重复的动态参数命名进行提示</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>__DEV__<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> existingKeys <span class="token operator">=</span> <span class="token keyword">new</span> <span class="token class-name">Set<span class="token operator">&lt;</span><span class="token builtin">string</span><span class="token operator">&gt;</span></span><span class="token punctuation">(</span><span class="token punctuation">)</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">const</span> key <span class="token keyword">of</span> parser<span class="token punctuation">.</span>keys<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>existingKeys<span class="token punctuation">.</span><span class="token function">has</span><span class="token punctuation">(</span>key<span class="token punctuation">.</span>name<span class="token punctuation">)</span><span class="token punctuation">)</span>
+        <span class="token function">warn</span><span class="token punctuation">(</span>
+          <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Found duplicated params with name &quot;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>key<span class="token punctuation">.</span>name<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&quot; for path &quot;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>record<span class="token punctuation">.</span>path<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&quot;. Only the last one will be available on &quot;$route.params&quot;.</span><span class="token template-punctuation string">`</span></span>
+        <span class="token punctuation">)</span>
+      existingKeys<span class="token punctuation">.</span><span class="token function">add</span><span class="token punctuation">(</span>key<span class="token punctuation">.</span>name<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+  <span class="token comment">// 将record，parent合并到parser中，同时新增children，alias属性，默认值为空数组</span>
+  <span class="token keyword">const</span> matcher<span class="token operator">:</span> RouteRecordMatcher <span class="token operator">=</span> <span class="token function">assign</span><span class="token punctuation">(</span>parser<span class="token punctuation">,</span> <span class="token punctuation">{</span>
+    record<span class="token punctuation">,</span>
+    parent<span class="token punctuation">,</span>
+    <span class="token comment">// these needs to be populated by the parent</span>
+    children<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+    alias<span class="token operator">:</span> <span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span>
+  <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>parent<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+	<span class="token comment">// 两者都是alias或两者都不是alias</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>matcher<span class="token punctuation">.</span>record<span class="token punctuation">.</span>aliasOf <span class="token operator">===</span> <span class="token operator">!</span>parent<span class="token punctuation">.</span>record<span class="token punctuation">.</span>aliasOf<span class="token punctuation">)</span>
+      parent<span class="token punctuation">.</span>children<span class="token punctuation">.</span><span class="token function">push</span><span class="token punctuation">(</span>matcher<span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> matcher
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br></div></div><h2 id="_3-resolve"><a href="#_3-resolve" class="header-anchor">#</a> 3. resolve</h2> <p><code>resolve</code>根据传入的<code>location</code>进行路由匹配，找到对应的<code>matcher</code>的路由信息。方法接收一个<code>location</code>和<code>currentLocation</code>参数，返回一个<code>MatcherLocation</code>类型的对象，该对象的属性包含：<code>name</code>、<code>path</code>、<code>params</code>、<code>matched</code>、<code>meta</code>。</p> <p><strong>代码如下</strong></p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token keyword">function</span> <span class="token function">resolve</span><span class="token punctuation">(</span>
+    location<span class="token operator">:</span> Readonly<span class="token operator">&lt;</span>MatcherLocationRaw<span class="token operator">&gt;</span><span class="token punctuation">,</span>
+    currentLocation<span class="token operator">:</span> Readonly<span class="token operator">&lt;</span>MatcherLocation<span class="token operator">&gt;</span>
+  <span class="token punctuation">)</span><span class="token operator">:</span> MatcherLocation <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> matcher<span class="token operator">:</span> RouteRecordMatcher <span class="token operator">|</span> <span class="token keyword">undefined</span>
+    <span class="token keyword">let</span> params<span class="token operator">:</span> PathParams <span class="token operator">=</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+    <span class="token keyword">let</span> path<span class="token operator">:</span> MatcherLocation<span class="token punctuation">[</span><span class="token string">'path'</span><span class="token punctuation">]</span>
+    <span class="token keyword">let</span> name<span class="token operator">:</span> MatcherLocation<span class="token punctuation">[</span><span class="token string">'name'</span><span class="token punctuation">]</span>
+    <span class="token comment">// 匹配路由记录的name</span>
+    <span class="token comment">// 如：resolve({ name: '', params: {} })</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token string">'name'</span> <span class="token keyword">in</span> location <span class="token operator">&amp;&amp;</span> location<span class="token punctuation">.</span>name<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      matcher <span class="token operator">=</span> matcherMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>location<span class="token punctuation">.</span>name<span class="token punctuation">)</span>
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>matcher<span class="token punctuation">)</span>
+        <span class="token keyword">throw</span> <span class="token generic-function"><span class="token function">createRouterError</span><span class="token generic class-name"><span class="token operator">&lt;</span>MatcherError<span class="token operator">&gt;</span></span></span><span class="token punctuation">(</span>ErrorTypes<span class="token punctuation">.</span><span class="token constant">MATCHER_NOT_FOUND</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+          location<span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+
+      <span class="token comment">// warn if the user is passing invalid params so they can debug it better when they get removed</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>__DEV__<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token keyword">const</span> invalidParams<span class="token operator">:</span> <span class="token builtin">string</span><span class="token punctuation">[</span><span class="token punctuation">]</span> <span class="token operator">=</span> Object<span class="token punctuation">.</span><span class="token function">keys</span><span class="token punctuation">(</span>
+          location<span class="token punctuation">.</span>params <span class="token operator">||</span> <span class="token punctuation">{</span><span class="token punctuation">}</span>
+        <span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span>paramName <span class="token operator">=&gt;</span> <span class="token operator">!</span>matcher<span class="token operator">!</span><span class="token punctuation">.</span>keys<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>k <span class="token operator">=&gt;</span> k<span class="token punctuation">.</span>name <span class="token operator">===</span> paramName<span class="token punctuation">)</span><span class="token punctuation">)</span>
+
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>invalidParams<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+          <span class="token function">warn</span><span class="token punctuation">(</span>
+            <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">Discarded invalid param(s) &quot;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>invalidParams<span class="token punctuation">.</span><span class="token function">join</span><span class="token punctuation">(</span>
+              <span class="token string">'&quot;, &quot;'</span>
+            <span class="token punctuation">)</span><span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&quot; when navigating. See https://github.com/vuejs/router/blob/main/packages/router/CHANGELOG.md#414-2022-08-22 for more details.</span><span class="token template-punctuation string">`</span></span>
+          <span class="token punctuation">)</span>
+        <span class="token punctuation">}</span>
+      <span class="token punctuation">}</span>
+
+      name <span class="token operator">=</span> matcher<span class="token punctuation">.</span>record<span class="token punctuation">.</span>name
+      params <span class="token operator">=</span> <span class="token function">assign</span><span class="token punctuation">(</span>
+        <span class="token comment">// paramsFromLocation is a new object</span>
+        <span class="token function">paramsFromLocation</span><span class="token punctuation">(</span>
+          currentLocation<span class="token punctuation">.</span>params<span class="token punctuation">,</span>
+          <span class="token comment">// only keep params that exist in the resolved location</span>
+          <span class="token comment">// TODO: only keep optional params coming from a parent record</span>
+          matcher<span class="token punctuation">.</span>keys<span class="token punctuation">.</span><span class="token function">filter</span><span class="token punctuation">(</span>k <span class="token operator">=&gt;</span> <span class="token operator">!</span>k<span class="token punctuation">.</span>optional<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>k <span class="token operator">=&gt;</span> k<span class="token punctuation">.</span>name<span class="token punctuation">)</span>
+        <span class="token punctuation">)</span><span class="token punctuation">,</span>
+        <span class="token comment">// discard any existing params in the current location that do not exist here</span>
+        <span class="token comment">// #1497 this ensures better active/exact matching</span>
+        location<span class="token punctuation">.</span>params <span class="token operator">&amp;&amp;</span>
+          <span class="token function">paramsFromLocation</span><span class="token punctuation">(</span>
+            location<span class="token punctuation">.</span>params<span class="token punctuation">,</span>
+            matcher<span class="token punctuation">.</span>keys<span class="token punctuation">.</span><span class="token function">map</span><span class="token punctuation">(</span>k <span class="token operator">=&gt;</span> k<span class="token punctuation">.</span>name<span class="token punctuation">)</span>
+          <span class="token punctuation">)</span>
+      <span class="token punctuation">)</span>
+      <span class="token comment">// throws if cannot be stringified</span>
+      path <span class="token operator">=</span> matcher<span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>params<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token string">'path'</span> <span class="token keyword">in</span> location<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+ 	   <span class="token comment">// 匹配路由记录的path</span>
+       <span class="token comment">// 如：resolve({ name: '', params: {} })</span>
+      <span class="token comment">// no need to resolve the path with the matcher as it was provided</span>
+      <span class="token comment">// this also allows the user to control the encoding</span>
+      path <span class="token operator">=</span> location<span class="token punctuation">.</span>path
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>__DEV__ <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>path<span class="token punctuation">.</span><span class="token function">startsWith</span><span class="token punctuation">(</span><span class="token string">'/'</span><span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token function">warn</span><span class="token punctuation">(</span>
+          <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">The Matcher cannot resolve relative paths but received &quot;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>path<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&quot;. Unless you directly called \`matcher.resolve(&quot;</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span>path<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">&quot;)\`, this is probably a bug in vue-router. Please open an issue at https://new-issue.vuejs.org/?repo=vuejs/router.</span><span class="token template-punctuation string">`</span></span>
+        <span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+
+      matcher <span class="token operator">=</span> matchers<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>m <span class="token operator">=&gt;</span> m<span class="token punctuation">.</span>re<span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token comment">// matcher should have a value after the loop</span>
+
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>matcher<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        <span class="token comment">// we know the matcher works because we tested the regexp</span>
+        params <span class="token operator">=</span> matcher<span class="token punctuation">.</span><span class="token function">parse</span><span class="token punctuation">(</span>path<span class="token punctuation">)</span><span class="token operator">!</span>
+        name <span class="token operator">=</span> matcher<span class="token punctuation">.</span>record<span class="token punctuation">.</span>name
+      <span class="token punctuation">}</span>
+      <span class="token comment">// location is a relative path</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 匹配当前路由</span>
+      matcher <span class="token operator">=</span> currentLocation<span class="token punctuation">.</span>name
+        <span class="token operator">?</span> matcherMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>currentLocation<span class="token punctuation">.</span>name<span class="token punctuation">)</span>
+        <span class="token operator">:</span> matchers<span class="token punctuation">.</span><span class="token function">find</span><span class="token punctuation">(</span>m <span class="token operator">=&gt;</span> m<span class="token punctuation">.</span>re<span class="token punctuation">.</span><span class="token function">test</span><span class="token punctuation">(</span>currentLocation<span class="token punctuation">.</span>path<span class="token punctuation">)</span><span class="token punctuation">)</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>matcher<span class="token punctuation">)</span>
+        <span class="token keyword">throw</span> <span class="token generic-function"><span class="token function">createRouterError</span><span class="token generic class-name"><span class="token operator">&lt;</span>MatcherError<span class="token operator">&gt;</span></span></span><span class="token punctuation">(</span>ErrorTypes<span class="token punctuation">.</span><span class="token constant">MATCHER_NOT_FOUND</span><span class="token punctuation">,</span> <span class="token punctuation">{</span>
+          location<span class="token punctuation">,</span>
+          currentLocation<span class="token punctuation">,</span>
+        <span class="token punctuation">}</span><span class="token punctuation">)</span>
+      name <span class="token operator">=</span> matcher<span class="token punctuation">.</span>record<span class="token punctuation">.</span>name
+      <span class="token comment">// since we are navigating to the same location, we don't need to pick the</span>
+      <span class="token comment">// params like when `name` is provided</span>
+      params <span class="token operator">=</span> <span class="token function">assign</span><span class="token punctuation">(</span><span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span> currentLocation<span class="token punctuation">.</span>params<span class="token punctuation">,</span> location<span class="token punctuation">.</span>params<span class="token punctuation">)</span>
+      path <span class="token operator">=</span> matcher<span class="token punctuation">.</span><span class="token function">stringify</span><span class="token punctuation">(</span>params<span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">const</span> matched<span class="token operator">:</span> MatcherLocation<span class="token punctuation">[</span><span class="token string">'matched'</span><span class="token punctuation">]</span> <span class="token operator">=</span> <span class="token punctuation">[</span><span class="token punctuation">]</span>
+    <span class="token keyword">let</span> parentMatcher<span class="token operator">:</span> RouteRecordMatcher <span class="token operator">|</span> <span class="token keyword">undefined</span> <span class="token operator">=</span> matcher
+    <span class="token comment">// 递归下，让父级路由位于数组头部</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>parentMatcher<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// reversed order so parents are at the beginning</span>
+
+      matched<span class="token punctuation">.</span><span class="token function">unshift</span><span class="token punctuation">(</span>parentMatcher<span class="token punctuation">.</span>record<span class="token punctuation">)</span>
+      parentMatcher <span class="token operator">=</span> parentMatcher<span class="token punctuation">.</span>parent
+    <span class="token punctuation">}</span>
+
+    <span class="token keyword">return</span> <span class="token punctuation">{</span>
+      name<span class="token punctuation">,</span>
+      path<span class="token punctuation">,</span>
+      params<span class="token punctuation">,</span>
+      matched<span class="token punctuation">,</span>
+      meta<span class="token operator">:</span> <span class="token function">mergeMetaFields</span><span class="token punctuation">(</span>matched<span class="token punctuation">)</span><span class="token punctuation">,</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br><span class="line-number">26</span><br><span class="line-number">27</span><br><span class="line-number">28</span><br><span class="line-number">29</span><br><span class="line-number">30</span><br><span class="line-number">31</span><br><span class="line-number">32</span><br><span class="line-number">33</span><br><span class="line-number">34</span><br><span class="line-number">35</span><br><span class="line-number">36</span><br><span class="line-number">37</span><br><span class="line-number">38</span><br><span class="line-number">39</span><br><span class="line-number">40</span><br><span class="line-number">41</span><br><span class="line-number">42</span><br><span class="line-number">43</span><br><span class="line-number">44</span><br><span class="line-number">45</span><br><span class="line-number">46</span><br><span class="line-number">47</span><br><span class="line-number">48</span><br><span class="line-number">49</span><br><span class="line-number">50</span><br><span class="line-number">51</span><br><span class="line-number">52</span><br><span class="line-number">53</span><br><span class="line-number">54</span><br><span class="line-number">55</span><br><span class="line-number">56</span><br><span class="line-number">57</span><br><span class="line-number">58</span><br><span class="line-number">59</span><br><span class="line-number">60</span><br><span class="line-number">61</span><br><span class="line-number">62</span><br><span class="line-number">63</span><br><span class="line-number">64</span><br><span class="line-number">65</span><br><span class="line-number">66</span><br><span class="line-number">67</span><br><span class="line-number">68</span><br><span class="line-number">69</span><br><span class="line-number">70</span><br><span class="line-number">71</span><br><span class="line-number">72</span><br><span class="line-number">73</span><br><span class="line-number">74</span><br><span class="line-number">75</span><br><span class="line-number">76</span><br><span class="line-number">77</span><br><span class="line-number">78</span><br><span class="line-number">79</span><br><span class="line-number">80</span><br><span class="line-number">81</span><br><span class="line-number">82</span><br><span class="line-number">83</span><br><span class="line-number">84</span><br><span class="line-number">85</span><br><span class="line-number">86</span><br><span class="line-number">87</span><br><span class="line-number">88</span><br><span class="line-number">89</span><br><span class="line-number">90</span><br><span class="line-number">91</span><br><span class="line-number">92</span><br><span class="line-number">93</span><br><span class="line-number">94</span><br><span class="line-number">95</span><br><span class="line-number">96</span><br><span class="line-number">97</span><br><span class="line-number">98</span><br><span class="line-number">99</span><br><span class="line-number">100</span><br><span class="line-number">101</span><br><span class="line-number">102</span><br><span class="line-number">103</span><br><span class="line-number">104</span><br><span class="line-number">105</span><br><span class="line-number">106</span><br><span class="line-number">107</span><br><span class="line-number">108</span><br><span class="line-number">109</span><br></div></div><h2 id="_4-removeroute"><a href="#_4-removeroute" class="header-anchor">#</a> 4. removeRoute</h2> <p>删除路由。参数是<code>matcherRef</code>，<code>removeRoute</code>会将<code>matcherRef</code>对应的<code>matcher</code>从<code>matcherMap</code>和<code>matchers</code>中删除，并清空<code>matcherRef</code>对应<code>matcher</code>的<code>children</code>与<code>alias</code>属性。由于<code>matcherRef</code>对应的<code>matcher</code>被删除后，其子孙及别名也就没用了，也需要把他们从<code>matcherMap</code>中和<code>matchers</code>中删除。</p> <p><strong>代码如下</strong></p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token keyword">function</span> <span class="token function">removeRoute</span><span class="token punctuation">(</span>matcherRef<span class="token operator">:</span> RouteRecordName <span class="token operator">|</span> RouteRecordMatcher<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isRouteName</span><span class="token punctuation">(</span>matcherRef<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token keyword">const</span> matcher <span class="token operator">=</span> matcherMap<span class="token punctuation">.</span><span class="token function">get</span><span class="token punctuation">(</span>matcherRef<span class="token punctuation">)</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>matcher<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        matcherMap<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>matcherRef<span class="token punctuation">)</span>
+      	<span class="token comment">// TODO: 这里我存在疑惑，因为matcherRef类型 RouteRecordName</span>
+        <span class="token comment">// matchers类型 RouteRecordMatcher[]</span>
+        <span class="token comment">// 所以感觉这里的index似乎永远都是-1</span>
+        matchers<span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span>matchers<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>matcher<span class="token punctuation">)</span><span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        matcher<span class="token punctuation">.</span>children<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>removeRoute<span class="token punctuation">)</span>
+        matcher<span class="token punctuation">.</span>alias<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>removeRoute<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token punctuation">{</span>
+      <span class="token comment">// TODO: 这里我存在疑惑，因为matcherRef 类型时RouteRecordMatcher</span>
+      <span class="token comment">// matchers类型 RouteRecordMatcher[]</span>
+      <span class="token comment">// 所以感觉这里的index似乎永远都是-1</span>
+      <span class="token keyword">const</span> index <span class="token operator">=</span> matchers<span class="token punctuation">.</span><span class="token function">indexOf</span><span class="token punctuation">(</span>matcherRef<span class="token punctuation">)</span>
+      <span class="token keyword">if</span> <span class="token punctuation">(</span>index <span class="token operator">&gt;</span> <span class="token operator">-</span><span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+        matchers<span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span>index<span class="token punctuation">,</span> <span class="token number">1</span><span class="token punctuation">)</span>
+        <span class="token keyword">if</span> <span class="token punctuation">(</span>matcherRef<span class="token punctuation">.</span>record<span class="token punctuation">.</span>name<span class="token punctuation">)</span> matcherMap<span class="token punctuation">.</span><span class="token function">delete</span><span class="token punctuation">(</span>matcherRef<span class="token punctuation">.</span>record<span class="token punctuation">.</span>name<span class="token punctuation">)</span>
+        matcherRef<span class="token punctuation">.</span>children<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>removeRoute<span class="token punctuation">)</span>
+        matcherRef<span class="token punctuation">.</span>alias<span class="token punctuation">.</span><span class="token function">forEach</span><span class="token punctuation">(</span>removeRoute<span class="token punctuation">)</span>
+      <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br></div></div><h2 id="_5-insertmatcher"><a href="#_5-insertmatcher" class="header-anchor">#</a> 5. insertMatcher</h2> <p><strong>代码如下</strong></p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token keyword">function</span> <span class="token function">insertMatcher</span><span class="token punctuation">(</span>matcher<span class="token operator">:</span> RouteRecordMatcher<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span>
+    <span class="token keyword">while</span> <span class="token punctuation">(</span>
+      i <span class="token operator">&lt;</span> matchers<span class="token punctuation">.</span>length <span class="token operator">&amp;&amp;</span>
+      <span class="token function">comparePathParserScore</span><span class="token punctuation">(</span>matcher<span class="token punctuation">,</span> matchers<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span> <span class="token operator">&gt;=</span> <span class="token number">0</span> <span class="token operator">&amp;&amp;</span>
+      <span class="token comment">// Adding children with empty path should still appear before the parent</span>
+      <span class="token comment">// https://github.com/vuejs/router/issues/1124</span>
+      <span class="token punctuation">(</span>matcher<span class="token punctuation">.</span>record<span class="token punctuation">.</span>path <span class="token operator">!==</span> matchers<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">.</span>record<span class="token punctuation">.</span>path <span class="token operator">||</span>
+        <span class="token operator">!</span><span class="token function">isRecordChildOf</span><span class="token punctuation">(</span>matcher<span class="token punctuation">,</span> matchers<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+    <span class="token punctuation">)</span>
+      i<span class="token operator">++</span>
+    matchers<span class="token punctuation">.</span><span class="token function">splice</span><span class="token punctuation">(</span>i<span class="token punctuation">,</span> <span class="token number">0</span><span class="token punctuation">,</span> matcher<span class="token punctuation">)</span>
+    <span class="token comment">// only add the original record to the name map</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>matcher<span class="token punctuation">.</span>record<span class="token punctuation">.</span>name <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span><span class="token function">isAliasRecord</span><span class="token punctuation">(</span>matcher<span class="token punctuation">)</span><span class="token punctuation">)</span>
+      matcherMap<span class="token punctuation">.</span><span class="token function">set</span><span class="token punctuation">(</span>matcher<span class="token punctuation">.</span>record<span class="token punctuation">.</span>name<span class="token punctuation">,</span> matcher<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br></div></div><p><strong>核心方法comparePathParserScore</strong></p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token keyword">export</span> <span class="token keyword">function</span> <span class="token function">comparePathParserScore</span><span class="token punctuation">(</span>a<span class="token operator">:</span> PathParser<span class="token punctuation">,</span> b<span class="token operator">:</span> PathParser<span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">number</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span>
+  <span class="token keyword">const</span> aScore <span class="token operator">=</span> a<span class="token punctuation">.</span>score
+  <span class="token keyword">const</span> bScore <span class="token operator">=</span> b<span class="token punctuation">.</span>score
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>i <span class="token operator">&lt;</span> aScore<span class="token punctuation">.</span>length <span class="token operator">&amp;&amp;</span> i <span class="token operator">&lt;</span> bScore<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> comp <span class="token operator">=</span> <span class="token function">compareScoreArray</span><span class="token punctuation">(</span>aScore<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span> bScore<span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">)</span>
+    <span class="token comment">// do not return if both are equal</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>comp<span class="token punctuation">)</span> <span class="token keyword">return</span> comp
+
+    i<span class="token operator">++</span>
+  <span class="token punctuation">}</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>Math<span class="token punctuation">.</span><span class="token function">abs</span><span class="token punctuation">(</span>bScore<span class="token punctuation">.</span>length <span class="token operator">-</span> aScore<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token operator">===</span> <span class="token number">1</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isLastScoreNegative</span><span class="token punctuation">(</span>aScore<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token number">1</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token function">isLastScoreNegative</span><span class="token punctuation">(</span>bScore<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token keyword">return</span> <span class="token operator">-</span><span class="token number">1</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// if a and b share the same score entries but b has more, sort b first</span>
+  <span class="token keyword">return</span> bScore<span class="token punctuation">.</span>length <span class="token operator">-</span> aScore<span class="token punctuation">.</span>length
+  <span class="token comment">// this is the ternary version</span>
+  <span class="token comment">// return aScore.length &lt; bScore.length</span>
+  <span class="token comment">//   ? 1</span>
+  <span class="token comment">//   : aScore.length &gt; bScore.length</span>
+  <span class="token comment">//   ? -1</span>
+  <span class="token comment">//   : 0</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br><span class="line-number">25</span><br></div></div><p><code>compareScoreArray</code></p> <div class="language-typescript line-numbers-mode"><pre class="language-typescript"><code><span class="token keyword">function</span> <span class="token function">compareScoreArray</span><span class="token punctuation">(</span>a<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">,</span> b<span class="token operator">:</span> <span class="token builtin">number</span><span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token builtin">number</span> <span class="token punctuation">{</span>
+  <span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span>
+  <span class="token keyword">while</span> <span class="token punctuation">(</span>i <span class="token operator">&lt;</span> a<span class="token punctuation">.</span>length <span class="token operator">&amp;&amp;</span> i <span class="token operator">&lt;</span> b<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">const</span> diff <span class="token operator">=</span> b<span class="token punctuation">[</span>i<span class="token punctuation">]</span> <span class="token operator">-</span> a<span class="token punctuation">[</span>i<span class="token punctuation">]</span>
+    <span class="token comment">// only keep going if diff === 0</span>
+    <span class="token keyword">if</span> <span class="token punctuation">(</span>diff<span class="token punctuation">)</span> <span class="token keyword">return</span> diff
+
+    i<span class="token operator">++</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token comment">// if the last subsegment was Static, the shorter segments should be sorted first</span>
+  <span class="token comment">// otherwise sort the longest segment first</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>a<span class="token punctuation">.</span>length <span class="token operator">&lt;</span> b<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> a<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> a<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">===</span> PathScore<span class="token punctuation">.</span>Static <span class="token operator">+</span> PathScore<span class="token punctuation">.</span>Segment
+      <span class="token operator">?</span> <span class="token operator">-</span><span class="token number">1</span>
+      <span class="token operator">:</span> <span class="token number">1</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>a<span class="token punctuation">.</span>length <span class="token operator">&gt;</span> b<span class="token punctuation">.</span>length<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token keyword">return</span> b<span class="token punctuation">.</span>length <span class="token operator">===</span> <span class="token number">1</span> <span class="token operator">&amp;&amp;</span> b<span class="token punctuation">[</span><span class="token number">0</span><span class="token punctuation">]</span> <span class="token operator">===</span> PathScore<span class="token punctuation">.</span>Static <span class="token operator">+</span> PathScore<span class="token punctuation">.</span>Segment
+      <span class="token operator">?</span> <span class="token number">1</span>
+      <span class="token operator">:</span> <span class="token operator">-</span><span class="token number">1</span>
+  <span class="token punctuation">}</span>
+
+  <span class="token keyword">return</span> <span class="token number">0</span>
+<span class="token punctuation">}</span>
+</code></pre> <div class="line-numbers-wrapper"><span class="line-number">1</span><br><span class="line-number">2</span><br><span class="line-number">3</span><br><span class="line-number">4</span><br><span class="line-number">5</span><br><span class="line-number">6</span><br><span class="line-number">7</span><br><span class="line-number">8</span><br><span class="line-number">9</span><br><span class="line-number">10</span><br><span class="line-number">11</span><br><span class="line-number">12</span><br><span class="line-number">13</span><br><span class="line-number">14</span><br><span class="line-number">15</span><br><span class="line-number">16</span><br><span class="line-number">17</span><br><span class="line-number">18</span><br><span class="line-number">19</span><br><span class="line-number">20</span><br><span class="line-number">21</span><br><span class="line-number">22</span><br><span class="line-number">23</span><br><span class="line-number">24</span><br></div></div><p><strong>🌰如下：</strong></p> <p>假设<code>matcherA</code>是需要添加的，<code>matchers</code>中此时只有一个<code>matcherB</code>，<code>matcherA.score=[[20, 30]]</code>，<code>matcherB.score=[[20,40]</code>，那么<code>matcherA</code>是怎么添加到<code>matchers</code>中的呢？过程如下：</p> <ol><li>比较<code>matcherA.score[0][0]</code>和<code>matcherB.score[0][0]</code>，<code>matcherB.score[0][0]-matcherA.score[0][0] === 0</code>继续比较</li> <li><code>matcherA.score[0][1]</code>和<code>matcherB.score[0][1]</code>，因为<code>matcherB.score[0][1]-matcherA.score[0][1] &gt; 0</code>，所以<code>i++</code></li> <li><code>i=1</code>，因为<code>i===matcherA.length</code>，循环结束</li> <li>将目标<code>matcher</code>插入到源<code>matcher</code>中</li></ol></div></section> <footer class="page-edit"><!----> <div class="last-updated"><span class="prefix">更新时间: </span> <span class="time">6/9/2023, 4:06:17 AM</span></div></footer> <div class="page-nav"><p class="inner"><span class="prev"><a href="/my-blog/blogs/source/vue-router/createRouter.html" class="prev">
+          vue-router 第三篇
+        </a></span> <span class="next"><a href="/my-blog/blogs/source/vue-router/push.html">
+          vue-router 第四篇
+        </a></span></p></div> <div class="comments-wrapper" style="display:none;"><!----></div></main></div> <!----></div> <ul class="sub-sidebar sub-sidebar-wrapper" style="width:12rem;" data-v-b57cc07c data-v-7dd95ae2><li class="level-2" data-v-b57cc07c><a href="/my-blog/blogs/source/vue-router/matcher.html#_1-createroutermatcher" class="sidebar-link reco-side-_1-createroutermatcher" data-v-b57cc07c>1. createRouterMatcher</a></li><li class="level-2" data-v-b57cc07c><a href="/my-blog/blogs/source/vue-router/matcher.html#_2-addroute" class="sidebar-link reco-side-_2-addroute" data-v-b57cc07c>2. addRoute</a></li><li class="level-2" data-v-b57cc07c><a href="/my-blog/blogs/source/vue-router/matcher.html#_3-resolve" class="sidebar-link reco-side-_3-resolve" data-v-b57cc07c>3. resolve</a></li><li class="level-2" data-v-b57cc07c><a href="/my-blog/blogs/source/vue-router/matcher.html#_4-removeroute" class="sidebar-link reco-side-_4-removeroute" data-v-b57cc07c>4. removeRoute</a></li><li class="level-2" data-v-b57cc07c><a href="/my-blog/blogs/source/vue-router/matcher.html#_5-insertmatcher" class="sidebar-link reco-side-_5-insertmatcher" data-v-b57cc07c>5. insertMatcher</a></li></ul></div></div></div><div class="global-ui"><div class="back-to-ceiling" style="right:1rem;bottom:6rem;width:2.5rem;height:2.5rem;border-radius:.25rem;line-height:2.5rem;display:none;" data-v-c6073ba8 data-v-c6073ba8><svg t="1574745035067" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="5404" class="icon" data-v-c6073ba8><path d="M526.60727968 10.90185116a27.675 27.675 0 0 0-29.21455937 0c-131.36607665 82.28402758-218.69155461 228.01873535-218.69155402 394.07834331a462.20625001 462.20625001 0 0 0 5.36959153 69.94390903c1.00431239 6.55289093-0.34802892 13.13561351-3.76865779 18.80351572-32.63518765 54.11355614-51.75690182 118.55860487-51.7569018 187.94566865a371.06718723 371.06718723 0 0 0 11.50484808 91.98906777c6.53300375 25.50556257 41.68394495 28.14064038 52.69160883 4.22606766 17.37162448-37.73630017 42.14135425-72.50938081 72.80769204-103.21549295 2.18761121 3.04276886 4.15646224 6.24463696 6.40373557 9.22774369a1871.4375 1871.4375 0 0 0 140.04691725 5.34970492 1866.36093723 1866.36093723 0 0 0 140.04691723-5.34970492c2.24727335-2.98310674 4.21612437-6.18497483 6.3937923-9.2178004 30.66633723 30.70611158 55.4360664 65.4791928 72.80769147 103.21549355 11.00766384 23.91457269 46.15860503 21.27949489 52.69160879-4.22606768a371.15156223 371.15156223 0 0 0 11.514792-91.99901164c0-69.36717486-19.13165746-133.82216804-51.75690182-187.92578088-3.42062944-5.66790279-4.76302748-12.26056868-3.76865837-18.80351632a462.20625001 462.20625001 0 0 0 5.36959269-69.943909c-0.00994388-166.08943902-87.32547796-311.81420293-218.6915546-394.09823051zM605.93803103 357.87693858a93.93749974 93.93749974 0 1 1-187.89594924 6.1e-7 93.93749974 93.93749974 0 0 1 187.89594924-6.1e-7z" p-id="5405" data-v-c6073ba8></path><path d="M429.50777625 765.63860547C429.50777625 803.39355007 466.44236686 1000.39046097 512.00932183 1000.39046097c45.56695499 0 82.4922232-197.00623328 82.5015456-234.7518555 0-37.75494459-36.9345906-68.35043303-82.4922232-68.34111062-45.57627738-0.00932239-82.52019037 30.59548842-82.51086798 68.34111062z" p-id="5406" data-v-c6073ba8></path></svg></div></div></div>
+    <script src="/my-blog/assets/js/app.32be202e.js" defer></script><script src="/my-blog/assets/js/3.a0eaa787.js" defer></script><script src="/my-blog/assets/js/1.f46f4f66.js" defer></script><script src="/my-blog/assets/js/79.351139e1.js" defer></script>
+  </body>
+</html>
